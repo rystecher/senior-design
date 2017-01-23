@@ -21,6 +21,7 @@ export function Header(props, context) {
       <div className={styles.content}>
         <h1 className={styles['site-title']}>
           <Link to="/" ><FormattedMessage id="siteTitle" /></Link>
+          <Link to="/create-contest" >Create Contest</Link>
         </h1>
         {
           context.router.isActive('/', true)
