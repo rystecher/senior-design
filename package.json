@@ -46,6 +46,7 @@
     "react-router": "^2.4.1",
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0",
+    "request": "^2.79.0",
     "sanitize-html": "^1.11.4"
   },
   "devDependencies": {
@@ -100,9 +101,9 @@
     "style-loader": "^0.13.1",
     "supertest": "^1.2.0",
     "url-loader": "^0.5.7",
-    "webpack": "2.1.0-beta.8",
+    "webpack": "^1.14.0",
     "webpack-dev-middleware": "^1.6.1",
-    "webpack-dev-server": "^2.1.0-beta.0",
+    "webpack-dev-server": "^1.16.2",
     "webpack-externals-plugin": "^1.0.0",
     "webpack-hot-middleware": "^2.10.0",
     "webpack-manifest-plugin": "^1.0.1"
