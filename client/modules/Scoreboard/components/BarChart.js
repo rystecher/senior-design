@@ -9,7 +9,7 @@ const options = {
   elements: {
     rectangle: {
       borderWidth: 2,
-      borderColor: 'rgb(0, 255, 0)',
+      borderColor: '#ff6384',
       borderSkipped: 'bottom'
     }
   },
@@ -26,8 +26,8 @@ var BarChart = React.createClass({
       datasets: [ // could add more datasets in this list if we wanted to list problems separately in the score board
                   // since we probably don't want to do this just add each score for the team in the data field
         {
-          label: 'Team Scores',
-          backgroundColor: "rgba(220,220,220,0.5)",
+          label: this.props.names,
+          fillColor: "rgba(220,220,220,0.5)",
           data: this.props.scores
         }
       ]
@@ -35,10 +35,10 @@ var BarChart = React.createClass({
   },
 
   randmizeData() {
+    myObjBar.datasets[0].bars[0].fillColor = "green";
     const zero = Math.random() < 0.2 ? true : false;
     this.state.datasets.forEach((dataset) => {
       Object.assign(dataset, {
-        backgroundColor: ("0,0,0"),
         data: dataset.data.map(function() {
           return zero
             ? 0.0
