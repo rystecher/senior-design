@@ -1,4 +1,5 @@
 import React from 'react';
+import handleSubmit from '../components/SubmitProblem';
 import NavBar from '../components/ProblemView/NavBar.js';
 
 var problems =  [{
@@ -98,12 +99,16 @@ var competition = [
 
 
 
+
 export default class ProblemPage extends React.Component {
     render() {
         return (
             <div>
               <h1> Hello </h1>
                 <NavBar competition={competition[0]} />
+                 This is the problem page!
+                <br/>
+                <button onClick={handleSubmit}>RUN</button>
             </div>
         );
     }

@@ -84,6 +84,13 @@ module.exports = {
     }),
   ],
 
+  // Necessary for the npm request package
+  node: {
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty'
+  },
+
   postcss: () => [
     postcssFocus(),
     cssnext({

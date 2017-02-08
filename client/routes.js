@@ -20,6 +20,7 @@ if (process.env.NODE_ENV !== 'production') {
   require('./modules/Post/pages/PostListPage/PostListPage');
   require('./modules/Post/pages/PostDetailPage/PostDetailPage');
   require('./modules/Problem/pages/ProblemPage');
+  require('./modules/Contests/pages/MyContests/MyContests');
 }
 
 // react-router setup with code-splitting
@@ -62,6 +63,14 @@ export default (
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
           cb(null, require('./modules/Scoreboard/pages/ScoreboardPage').default);
+        });
+      }}
+    />
+    <Route
+      path="my"
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./modules/Contests/pages/MyContests/MyContests').default);
         });
       }}
     />
