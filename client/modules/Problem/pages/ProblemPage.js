@@ -1,4 +1,5 @@
 import React from 'react';
+import { handleSubmit } from '../components/SubmitProblem';
 
 export default class ProblemPage extends React.Component {
 
@@ -6,6 +7,8 @@ export default class ProblemPage extends React.Component {
         return (
             <div>
                 This is the problem page!
+                <br/>
+                <button onClick={handleSubmit}>RUN</button>
             </div>
         );
     }
