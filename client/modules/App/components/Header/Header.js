@@ -23,6 +23,7 @@ export function Header(props, context) {
           <Link to="/" ><FormattedMessage id="siteTitle" /></Link>
           <Link to="/create-contest" >Create Contest</Link>
           <Link to="/problem" >Problem Page</Link>
+          <Link to="/scoreboard" >ScoreBoard Page</Link>
         </h1>
         {
           context.router.isActive('/', true)

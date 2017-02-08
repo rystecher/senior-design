@@ -57,5 +57,13 @@ export default (
         });
       }}
     />
+    <Route
+      path="scoreboard"
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./modules/Scoreboard/pages/ScoreboardPage').default);
+        });
+      }}
+    />
     </Route>
 );
