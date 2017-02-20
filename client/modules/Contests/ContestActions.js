@@ -1,7 +1,6 @@
 import callApi from '../../util/apiCaller';
 
 // Export Constants
-
 export const ADD_CONTEST = 'ADD_CONTEST';
 export const GET_CONTESTS = 'GET_CONTESTS';
 export const GET_MY_CONTESTS = 'GET_MY_CONTESTS';
@@ -65,7 +64,7 @@ export function fetchContest(cuid) {
 }
 
 export function fetchScoreboardData(cuid) {
-    return callApi(`contests/${cuid}/scoreboard`).then(res => console.log(res));
+  return callApi(`contests/${cuid}/scoreboard`);
 }
 
 export function getMyContests(contests) {
