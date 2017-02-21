@@ -4,7 +4,6 @@ import React, { PropTypes } from 'react';
 //import PostListItem from './PostListItem/PostListItem';
 
 function ContestList(props) {
-    console.log(props);
     if (!props.contests.length || props.contests.length == 0)
         return (<div>Nothing</div>);
     return (
