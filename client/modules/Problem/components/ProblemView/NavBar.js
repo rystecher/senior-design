@@ -11,6 +11,9 @@ import PDF from 'react-pdf-js';
  */
 var NavBar = React.createClass({
 
+  /*
+    sets the initial states to be the first problem in the list
+   */
   getInitialState: function () {
     return {
       prompt_text: this.props.competition.problems[0].prompt,
@@ -31,12 +34,17 @@ var NavBar = React.createClass({
     });
   },
 
+  /*
+
+   */
   _onPdfCompleted: function(page, pages){
     this.setState({page: page, pages: pages});
   },
 
+  /*
+    creates the buttons to allow problem navigation.
+   */
   render: function () {
-
     const handleClick = this.handleClick;
     const problem_list = this.props.competition.problems;
     const team = this.props.competition.teams[0];
