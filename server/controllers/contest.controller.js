@@ -1,7 +1,12 @@
-import Contest, {Team} from '../models/contest';
+import Contest, {Team, TeamProblem} from '../models/contest';
 import cuid from 'cuid';
 import slug from 'limax';
 import sanitizeHtml from 'sanitize-html';
+import fs from 'fs';
+import {hackerrankCall} from './hackerRank.controller';
+
+// TODO get problem file, add judge,
+// modify contest after it started
 
 /**
  * Get all contests
@@ -24,8 +29,8 @@ export function getContests(req, res) {
  * @param res
  * @returns void
  */
-export function addContest(req, res) {
-    if (!req.body.contest.name || !req.body.contest.adminList) {
+export function createContest(req, res) {
+    if (!req.body.contest.name || !req.body.contest.admin) {
         res.status(403).end();
     }
     req.body.contest.teams = [];
@@ -61,30 +66,26 @@ export function addTeamToContest(req, res) {
     // Let's sanitize inputs
     newTeam.name = sanitizeHtml(newTeam.name);
     newTeam.slug = slug(newTeam.name.toLowerCase(), { lowercase: true });
-    newTeam.cuid = cuid();
     let teamNameConflict = false;
     Contest.findOne({cuid: req.params.contest_id}).select('teams').exec((err, contest) => {
         if (err) {
             res.status(500).send(err);
         }
-        contest.teams.forEach(team => {
-            if (team.name == newTeam.name) {
-                teamNameConflict = true;
-            }
-        });
-        if (teamNameConflict) {
-            const nameConflictError = {error: "TEAM_NAME_CONFLICT"};
-            res.json({ nameConflictError });
+        if (contest.teams.findIndex(team => team.name === newTeam.name) !== -1) {
+            res.json({ err: "TEAM_NAME_CONFLICT"});
         } else {
-            Contest.findOneAndUpdate({cuid: req.params.contest_id},
-                {$push: {teams: newTeam}}, (err, saved) => {
-                    if (err) {
-                        res.status(500).send(err);
-                    }
-                    //console.log(saved);
-                    res.json({ team: saved });
+            const teamProblems = Array(contest.problems.length).fill({
+              solved: false, attempFileNames: []
+            });
+            newTeam.problem_attempts = teamProblems;
+            contest.teams.push(newTeam);
+            contest.save((err, saved) => {
+                if (err) {
+                    res.status(500).send(err);
                 }
-            );
+                //console.log(saved);
+                res.json({ team: saved });
+            });
         }
     });
 }
@@ -100,18 +101,129 @@ export function addAccountToTeam(req, res) {
     if (!req.params.contest_id || !req.params.team_id || !req.body.account_id) {
         res.status(403).end();
     }
+    Contest.findOne({cuid: req.params.contest_id}, (err, contest) => {
+        if (err) {
+            res.status(500).send(err);
+        }
+        const team = contest.teams.id(req.params.team_id);
+        if (team.memberList.indexOf(req.body.account_id) == -1) {
+            team.memberList.push(req.body.account_id);
+            contest.save((err, saved) => {
+                if (err) {
+                    res.status(500).send(err);
+                }
+                res.json({ contest: saved });
+            })
+        } else {
+            res.json({ err: "ACCOUNT_ALREADY_ON_TEAM"});
+        }
+    });
+}
 
-    Contest.findOneAndUpdate({
-            cuid: req.params.contest_id,
-            'teams.cuid': req.params.team_id,
-        }, {'teams.memberList': {$push: req.body.account_id}}, (err, saved) => {
+/**
+ * Add a problem to a team
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function addProblemAttempt(req, res) {
+    if (!req.params.contest_id || !req.params.team_id || !req.body.problem) {
+        res.status(403).end();
+    }
+    const {number, code, lang} = req.body.problem;
+    Contest.findOne({cuid: req.params.contest_id}, (err, contest) => {
+        if (err) {
+            res.status(500).send(err);
+        }
+        const team = contest.teams.id(req.params.team_id);
+        const problem = contest.teams.id(req.params.team_id).problem_attempts[number];
+        if (problem.solved || problem.attempts.indexOf(code) != -1) {
+            // Problem is already solved do nothing
+        } else {
+            console.log("Test cases: ", contest.problems[number].testCases.input);
+            hackerrankCall(code, lang, contest.problems[number].testCases.input);
+            // problem.attempts.push(code);
+            // problem.solved = solved;
+            // if (problem.solved) {
+            //     problem.timestamp = new Date();
+            //     team.score += 5; // need to calculate new score based on attemps
+            //     if(!contest.problems[number].solved) {
+            //         contest.problems[number].solved = true;
+            //         contest.problems[number].solvedBy = req.params.team_id;
+            //         // alert judges
+            //     }
+            // }
+        }
+        contest.save((err, saved) => {
             if (err) {
                 res.status(500).send(err);
             }
-            //console.log(saved);
-            res.json({ team: saved });
+            res.json({ contest: saved });
+        })
+    });
+}
+
+/**
+ * Sends the solved arrays for the contest
+ * specified by id and team specified by id
+ * both parameters are passed in req.params
+ *
+ * Response format:
+ * solved:
+ *      solvedInContest: [Boolean]
+ *      solvedByTeam: [Boolean]
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getSolvedArrays(req, res) {
+    if (!req.params.contest_id || !req.params.team_id) {
+        res.status(403).end();
+    }
+    Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+        if (err) {
+            res.status(500).send(err);
         }
-    );
+        const solvedInContest = contest.problems.map((problem) => problem.solved);
+        const team = contest.teams.id(req.params.team_id);
+        const solvedByTeam = team.problem_attempts.map((problem) => problem.solved);
+        res.json({ solved: {solvedInContest, solvedByTeam}});
+    });
+}
+
+/**
+ * Sends the problem file requested
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getProblemFile(req, res) {
+    if (!req.params.contest_id || !req.params.problem_no) {
+        res.status(403).end();
+    }
+    const problem_no = req.params.problem_no;
+    Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+        if (err) {
+            res.status(500).send(err);
+        }
+        if (problem_no < contest.problems.length) {
+            //const fileName = contest.problems[problem_no].fileName;
+            const fileName = "test.pdf";
+            //const fileName = "test.txt";
+            const file = fs.createReadStream(fileName);
+            const stat = fs.statSync(fileName);
+            res.setHeader('Content-Length', stat.size);
+            if(fileName.endsWith("pdf")) {
+                res.setHeader('Content-Type', 'application/pdf');
+            } else {
+                res.setHeader('Content-Type', 'application/text');
+            }
+            res.setHeader('Content-Disposition', `attachment; filename=problem${problem_no}.pdf`);
+            file.pipe(res);
+        } else {
+            res.json({err: "Invalid problem number"});
+        }
+    });
 }
 
 /**
@@ -130,7 +242,13 @@ export function getContest(req, res) {
 }
 
 /**
- * Returns an array of teams
+ * Sends an array of teams
+ *
+ * Response format:
+ * teams:
+ *      teamNames: [Strings]
+ *      teamScores: [Numbers]
+ *      teamTimestamps: [Dates]
  * @param req
  * @param res
  * @returns void
@@ -140,21 +258,63 @@ export function getTeamScores(req, res) {
         if (err) {
             res.status(500).send(err);
         }
-        const teamNames = contest.teams.map(team => {
-            return (team.name);
-        })
-        const teamScores = contest.teams.map(team => {
-            return (team.score);
-        })
-        const teamTimestamps = contest.teams.map(team => {
-            return (team.timestamp);
-        })
-        const teams = {
-            teamNames: teamNames,
-            teamScores: teamScores,
-            teamTimestamps: teamTimestamps,
-        };
-        res.json({ teams });
+        if (contest == null) {
+            console.log("null contest");
+        }
+        const teamNames = contest.teams.map(team => team.name);
+        const teamScores = contest.teams.map(team => team.score);
+        const teamTimestamps = contest.teams.map(team => team.timestamp);
+        res.json({ teams: {teamNames, teamScores, teamTimestamps} });
+    });
+}
+
+/**
+ * Toggles the scoreboard visibility
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function hideScoreboard(req, res) {
+    if (!req.params.contest_id) {
+        res.status(403).end();
+    }
+
+    Contest.findOne({cuid: req.params.contest_id}).exec((err, contest) => {
+        if (err) {
+            res.status(500).send(err);
+        }
+        contest.scoreboardVisible = false;
+        contest.save((err, saved) => {
+            if (err) {
+                res.status(500).send(err);
+            }
+            res.json({ success: true });
+        });
+    });
+}
+
+/**
+ * Toggles the scoreboard visibility
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function showScoreboard(req, res) {
+    if (!req.params.contest_id) {
+        res.status(403).end();
+    }
+
+    Contest.findOne({cuid: req.params.contest_id}).exec((err, contest) => {
+        if (err) {
+            res.status(500).send(err);
+        }
+        contest.scoreboardVisible = true;
+        contest.save((err, saved) => {
+            if (err) {
+                res.status(500).send(err);
+            }
+            res.json({ success: true });
+        });
     });
 }
 
