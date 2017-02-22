@@ -1,4 +1,4 @@
-import callApi from '../../util/apiCaller';
+import callApi, {callApiForFile} from '../../util/apiCaller';
 
 // Export Constants
 export const ADD_CONTEST = 'ADD_CONTEST';
@@ -35,11 +35,9 @@ export function addTeamToContestRequest(contest_id, team) {
 }
 
 export function addAccountToTeam(contest_id, team_id, account_id) {
-  return (dispatch) => {
-    return callApi(`contests/${contest_id}/${team_id}`, 'post', {
-      account_id: account_id,
-  }).then(res => dispatch(addContest(res.team)));
-  };
+    callApi(`contests/${contest_id}/teams/${team_id}`, 'post', {
+        account_id: account_id,
+    }).then(res => console.log(res));
 }
 
 export function getContests(contests) {
@@ -67,6 +65,20 @@ export function fetchScoreboardData(cuid) {
   return callApi(`contests/${cuid}/scoreboard`);
 }
 
+export function fetchSolvedArrays(contest_id, team_id) {
+    callApi(`contests/${contest_id}/teams/${team_id}/solved`).then(res => console.log(res));
+}
+
+export function fetchProblem(contest_id, problem_no) {
+    callApiForFile(`contests/${contest_id}/problem/${problem_no}`);
+}
+
+export function submitCode(contest_id, team_id, code, lang, number) {
+    callApi(`contests/${contest_id}/teams/${team_id}/submit`, 'post', {
+        problem: {code, lang, number}
+    }).then(res => console.log(res));
+}
+
 export function getMyContests(contests) {
   return {
     type: GET_MY_CONTESTS,
@@ -88,11 +100,14 @@ export function getNotMyContests(contests) {
 }
 
 export function fetchNotMyContests(cuids) {
-    addTeamToContestRequest("cikqgkv4q01ck7453ualdn3hh", {name: "Team one", score: 5});
-    addTeamToContestRequest("cikqgkv4q01ck7453ualdn3hh", {name: "Team two", score: 10});
-    addTeamToContestRequest("cikqgkv4q01ck7453ualdn3hh", {name: "Team three", score: 7});
-    fetchContest("cikqgkv4q01ck7453ualdn3hj");
-    fetchScoreboardData("cikqgkv4q01ck7453ualdn3hj");
+    addAccountToTeam("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "5");
+    addAccountToTeam("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "5");
+    addAccountToTeam("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "7");
+    fetchSolvedArrays("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300");
+    fetchProblem("cikqgkv4q01ck7453ualdn3hn", "1");
+    fetchProblem("cikqgkv4q01ck7453ualdn3hn", "7");
+    fetchScoreboardData("cikqgkv4q01ck7453ualdn3hn");
+    submitCode("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "print 1", 5, 0);
     //addAccountToTeam(contest_id, team_id, "account_id");
   return (dispatch) => {
     return callApi(`contests/join`, "get", cuids).then(res => dispatch(getNotMyContests(res.contests)));
