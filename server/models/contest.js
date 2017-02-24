@@ -8,10 +8,11 @@ const teamProblem = new Schema({
 
 const teamSchema = new Schema({
     name: { type: 'String', required: true },
-    password: { type: 'String'},
+    numSolved: { type: 'Number', default: 0, required: true },
     score: { type: 'Number', default: 0, required: true },
-    timestamp: { type: 'Date'},
     memberList: [String],
+    messages: [String],
+    password: { type: 'String'},
     problem_attempts: [teamProblem]
 });
 
@@ -38,7 +39,7 @@ const contestSchema = new Schema({
     problems: [contestProblem],
     scoreboardVisible: { type: 'Boolean', default: true, required: true},
     slug: { type: 'String', required: true },
-    start: { type: 'Date'},
+    start: { type: 'Number'},
     teams: [teamSchema],
 });
 

@@ -34,6 +34,8 @@ import routes from '../client/routes';
 import { fetchComponentData } from './util/fetchData';
 import posts from './routes/post.routes';
 import contests from './routes/contest.routes';
+import submissions from './routes/submission.routes';
+import teams from './routes/team.routes';
 import hackerRank from './routes/hackerRank.routes';
 import dummyData from './dummyData';
 import dummyContests from './dummyContests';
@@ -61,6 +63,8 @@ app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }));
 app.use(Express.static(path.resolve(__dirname, '../dist')));
 app.use('/api', posts);
 app.use('/api', contests);
+app.use('/api', submissions);
+app.use('/api', teams);
 app.use('/api', hackerRank);
 
 // Render Initial HTML

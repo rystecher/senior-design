@@ -12,7 +12,7 @@ router.route('/contests/my').get(ContestController.getContestsFromIds);
 router.route('/contests/join').get(ContestController.getContestsNotInIds);
 
 // Get one contest by cuid
-router.route('/contests/:cuid').get(ContestController.getContest);
+router.route('/contests/:contest_id').get(ContestController.getContest);
 
 // Creates a new Contest
 router.route('/contests').post(ContestController.createContest);
