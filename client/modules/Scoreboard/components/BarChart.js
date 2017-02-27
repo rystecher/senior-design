@@ -2,7 +2,6 @@ const React = require('react');
 const {Bar} = require("react-chartjs");
 
 // https://ledsun.github.io/react-chartjs-example/bar/
-
 const options = {
   // Elements options apply to all of the options unless overridden in a dataset
   // In this case, we are setting the border of each bar to be 2px wide and green
@@ -15,9 +14,11 @@ const options = {
   },
   responsive: true,
   legend: {
+    display: true,
     position: 'top'
-  }
-}
+  },
+  showTooltips: false, // disables tool tips because they didn't update with new data
+};
 
 
 var BarChart = React.createClass({
@@ -26,35 +27,28 @@ var BarChart = React.createClass({
       datasets: [ // could add more datasets in this list if we wanted to list problems separately in the score board
                   // since we probably don't want to do this just add each score for the team in the data field
         {
-          label: this.props.names,
+          label: "Score", // "The label for the dataset which appears in the legend and tooltips"
           fillColor: "rgba(220,220,220,0.5)",
           data: this.props.scores
         }
       ],
-      labels: this.props.names
+      labels: this.props.names // labels for the bars
     }
   },
 
-  /*
-   Warning: setState(...): Cannot update during an existing state transition
-   (such as within `render` or another component's constructor).
-   Render methods should be a pure function of props and state; constructor side-effects are an anti-pattern,
-   but can be moved to `componentWillMount`.
-   printWarning @ warning.js?8a56:36
-
-   BarChart.js?aeb6:50 in bar chart, scores = undefined
-   */
-
   randmizeData() {
-    this.props.update();
+    this.props.update(); // call the update method from Scoreboard.js.. this calls fetchScoreboardData, sets the states
+                         // in scoreboard.js causing a rerender of the page, this will rerender the barchart.. eg sending
+                         // those new states from the data base into this class, so we can reset the states from the props now
     this.setState({
       datasets: [
         {
-          label: this.props.names,
+          //label: "Problems Solved",
           fillColor: "rgba(220,220,0,0.5)",
           data: this.props.scores
         }
       ],
+      labels: this.props.names
     });
     console.log("in bar chart, scores = " + this.state.scores);
     //this.forceUpdate();
@@ -64,23 +58,18 @@ var BarChart = React.createClass({
    * called before a render()
    */
   componentWillMount() {
-    console.log("in component will mount");
+    console.log("in bar chart component will mount");
     this.randmizeData();
   },
 
   render() {
     console.log("in bar chart render props = " + this.props.names);
+    this.props.update();
     return <div>
-      <Bar data={this.state} options={options} ref={(ref) => this.Bar = ref}/>
+      <Bar type='bar' data={this.state} options={options} ref={(ref) => this.Bar = ref}/>
       <button onClick={this.randmizeData}>Update Data</button>
     </div>
   }
-})
-
-function randomScalingFactor() {
-  return (Math.random() > 0.5
-      ? 1.0
-      : 1.0) * Math.round(Math.random() * 100)
-}
+});
 
 export default BarChart;
