@@ -70,7 +70,7 @@ export function fetchSolvedArrays(contest_id, team_id) {
 }
 
 export function fetchProblem(contest_id, problem_no) {
-    callApiForFile(`contests/${contest_id}/problem/${problem_no}`);
+    return callApiForFile(`contests/${contest_id}/problem/${problem_no}`);
 }
 
 export function submitCode(contest_id, team_id, code, lang, number) {
