@@ -2,7 +2,8 @@ import Contest, {Team, TeamProblem} from '../models/contest';
 import cuid from 'cuid';
 import slug from 'limax';
 import sanitizeHtml from 'sanitize-html';
-import fs from 'fs';
+import fs from 'fs'; // for reading and writing problem pdfs
+import shortid from 'shortid'; // for file name generation
 import {hackerrankCall} from './hackerRank.controller';
 
 // TODO get problem file, add judge,
@@ -233,20 +234,21 @@ export function getProblemFile(req, res) {
  * @returns void
  */
 export function createProblem(req, res) {
-    if (!req.params.contest_id) {
+    if (!req.params.contest_id || !req.params.filename) {
         res.status(403).end();
     }
     Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
         if (err) {
             res.status(500).send(err);
         } else {
-            //let myString = "";
-            // Object.keys(req).forEach((key) => {
-            //     myString += key + ": " + req[key] + "\n";
-            // });
-            res.json({ success: true });
-            const stream = fs.createWriteStream("/tmp/test")
-            stream.on('open', () => req.pipe(stream));
+            const fileName = 'pdfs/' + shortid.generate();
+            contest.problems.push({ name: fileName, fileName });
+            const stream = fs.createWriteStream(fileName);
+            stream.on('open', () => {
+                req.pipe(stream);
+                res.json({ success: true });
+            });
+            contest.save();
         }
     });
 }
