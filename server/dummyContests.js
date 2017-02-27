@@ -76,17 +76,11 @@ const dummyProblems = [{
 }];
 
 export default function () {
-  Contest.count().exec((err, count) => {
-    if (count > 0) {
-      return;
-    }
+    Contest.count().exec((err, count) => {
+        if (count > 0) {
+            return;
+        }
 
-    const contest1 = new Contest({ name: 'Bucknell Spring 2015', slug: 'bucknell-spring-2015', cuid: 'cikqgkv4q01ck7453ualdn3hl', teams: dummyTeams});
-
-    Contest.create([contest1, contest2], (error) => {
-      if (!error) {
-        // console.log('ready to go....');
-      }
         const contest1 = new Contest({ name: 'Bucknell Spring 2015', slug: 'bucknell-spring-2015', cuid: 'cikqgkv4q01ck7453ualdn3hl'});
         const contest2 = new Contest({
             name: 'Bucknell Spring 2019',
@@ -98,10 +92,9 @@ export default function () {
 
         Contest.create([contest1, contest2], (error) => {
             if (!error) {
-                // console.log('ready to go....');
+            // console.log('ready to go....');
             }
             console.log(error);
         });
     });
-  });
 }
