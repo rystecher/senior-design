@@ -55,7 +55,6 @@ var BarChart = React.createClass({
           data: this.props.scores
         }
       ],
-      labels: this.props.names
     });
     console.log("in bar chart, scores = " + this.state.scores);
     //this.forceUpdate();

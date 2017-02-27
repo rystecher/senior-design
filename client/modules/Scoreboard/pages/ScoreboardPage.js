@@ -34,37 +34,28 @@ export default class ScoreBardPage extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      labels: ["empty", "not set"],
-      scores: [1, 2],
-      contest_id: "cikqgkv4q01ck7453ualdn3hn"
-    };
-
     var contest_id = "cikqgkv4q01ck7453ualdn3hn";
+    var labels;
+    var scores;
     fetchScoreboardData(contest_id).then(res => {
-      this.setState({
-        labels: res.teams.teamNames,
-        scores: res.teams.teamScores
-      });
+      labels = res.teams.teamNames;
+      scores = res.teams.teamScores;
     });
 
-   /*
-    this.state = {
-      labels: ["empty", "not set"],
-      scores: [1, 2],
-      contest_id: "cikqgkv4q01ck7453ualdn3hn"
-    }; */
+    this.state = { // because lables and scores aren't set yet at this time..
+      labels: ["hello", "hi", "hey"],
+      scores: [3, 3, 3],
+      contest_id: contest_id
+    };
+
+    console.log("in constructor, state.labels is: " + labels);
   }
 
-  updateId(new_id) {
-    this.state.contest_id = new_id;
-    console.log("new id set");
-    this.render();
-  }
-
+  /**
+   * updates the bar chart data (makes sense to call this when data base info changes)
+   */
   update(){
-    var contest_id = this.state.contest_id;
-    fetchScoreboardData(contest_id).then(res => {
+    fetchScoreboardData(this.state.contest_id).then(res => {
       this.setState({
           labels: res.teams.teamNames,
           scores: res.teams.teamScores
@@ -78,12 +69,7 @@ export default class ScoreBardPage extends React.Component {
 
 
   render() {
-    //var contest_id = this.state.contest_id;
-    //var data1 = fetchScoreboardData(contest_id);
-    //console.log(data1); //data is only a promise until it rerenders later
-    //console.log("re rendering");
-    //console.log("Current contest id = " + this.state.contest_id)
-      // so you could make contest id a state and then change the state and it will rerender
+      // make contest id a state and then change the state and it will rerender
 
     const scores = this.state.scores;
     const labels = this.state.labels;
