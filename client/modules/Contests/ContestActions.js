@@ -56,13 +56,23 @@ export function fetchContests() {
 }
 
 export function fetchContest(cuid) {
-  return (dispatch) => {
-    return callApi(`contests/${cuid}`).then(res => console.log(res));
-  };
+    return (dispatch) => {
+        return callApi(`contests/${cuid}`).then(res => console.log(res));
+    };
 }
 
 export function fetchScoreboardData(cuid) {
-  return callApi(`contests/${cuid}/scoreboard`);
+    return callApi(`contests/${cuid}/scoreboard`);
+}
+
+export function fetchTeamMessages(contest_id, team_id) {
+    return callApi(`contests/${contest_id}/team/${team_id}/messages`).then(res => {
+        if (res.status) {
+
+        } else {
+            return res.body.messages;
+        }
+    });
 }
 
 export function fetchSolvedArrays(contest_id, team_id) {
