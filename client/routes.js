@@ -74,5 +74,21 @@ export default (
         });
       }}
     />
+  /*<Route
+      path="register"
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./modules/Login/pages/RegisterPage').default);
+        });
+      }}
+    />*/
+    <Route
+      path="login"
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./modules/Login/pages/LoginPage').default);
+        });
+      }}
+    />
     </Route>
 );
