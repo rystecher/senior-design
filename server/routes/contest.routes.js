@@ -42,6 +42,9 @@ router.route('/contests/:contest_id/teams/:team_id/solved').get(ContestControlle
 // Gets the pdf or txt file for the specified problem
 router.route('/contests/:contest_id/problem/:problem_no').get(ContestController.getProblemFile);
 
+// Uploads a pdf for the specified contest
+router.route('/contests/:contest_id/problem/').post(ContestController.createProblem);
+
 // Run the code submitted
 router.route('/contests/:contest_id/teams/:team_id/submit').post(ContestController.addProblemAttempt);
 

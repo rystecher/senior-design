@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import ProblemButton from './ProblemButton.js';
-import PDF from 'react-pdf-js';
+//import PDF from 'react-pdf-js';
 
 /**
  *

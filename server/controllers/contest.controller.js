@@ -227,6 +227,31 @@ export function getProblemFile(req, res) {
 }
 
 /**
+ * Creates a new problem for a contest given a pdf file
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function createProblem(req, res) {
+    if (!req.params.contest_id) {
+        res.status(403).end();
+    }
+    Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            //let myString = "";
+            // Object.keys(req).forEach((key) => {
+            //     myString += key + ": " + req[key] + "\n";
+            // });
+            res.json({ success: true });
+            const stream = fs.createWriteStream("/tmp/test")
+            stream.on('open', () => req.pipe(stream));
+        }
+    });
+}
+
+/**
  * Get a single contest
  * @param req
  * @param res
