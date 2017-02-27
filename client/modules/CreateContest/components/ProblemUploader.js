@@ -1,7 +1,7 @@
 import React from 'react';
 import Dropzone from 'react-dropzone';
-import fetch from 'isomorphic-fetch';
 import request from 'superagent';
+import shortid from 'shortid';
 
 export default class ProblemUploader extends React.Component {
 
@@ -12,14 +12,19 @@ export default class ProblemUploader extends React.Component {
     }
 
     onDrop(files) {
-        console.log('Received files: ', files);
         this.setState({ files: files })
-        var req = request.post('/api/contests/cikqgkv4q01ck7453ualdn3hn/problem');
+        const filename = shortid.generate();
+        const contest_id = 'cikqgkv4q01ck7453ualdn3hn';
+        var req = request.post(`/api/contests/${contest_id}/problem/${filename}`);
         req.set('Content-Length', files[0].size);
         req.set('Content-Type', 'application/pdf');
         req.set('Content-Disposition', `attachment; filename=new.pdf`);
         req.attach('file', files[0]);
         req.end();
+        // setProblemMetaData(contest_id, filename, {
+        //     name:   'New Problem Name',
+        //     testCases: { input: [''], output: ['']}
+        // })
     }
 
     render() {

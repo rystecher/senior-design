@@ -3,7 +3,6 @@ import cuid from 'cuid';
 import slug from 'limax';
 import sanitizeHtml from 'sanitize-html';
 import fs from 'fs'; // for reading and writing problem pdfs
-import shortid from 'shortid'; // for file name generation
 import {hackerrankCall} from './hackerRank.controller';
 
 // TODO get problem file, add judge,
@@ -241,7 +240,7 @@ export function createProblem(req, res) {
         if (err) {
             res.status(500).send(err);
         } else {
-            const fileName = 'pdfs/' + shortid.generate();
+            const fileName = 'pdfs/' + req.params.filename + '.pdf';
             contest.problems.push({ name: fileName, fileName });
             const stream = fs.createWriteStream(fileName);
             stream.on('open', () => {
