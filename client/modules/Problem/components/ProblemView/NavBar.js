@@ -2,7 +2,6 @@ import React from 'react';
 import ProblemButton from './ProblemButton.js';
 import {fetchProblem} from '../../../Contests/ContestActions';
 import spdf from "simple-react-pdf";
-import shortid from 'shortid'; // for file name generation
 
 class NavBar extends React.Component {
 
