@@ -1,57 +1,23 @@
-import React, { PropTypes } from 'react';
-import { Link } from 'react-router';
-import { Card, CardText } from 'material-ui/Card';
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
+import React from 'react';
+import RegisterForm from '../components/RegisterForm2';
+import {connect} from 'react-redux';
+import { userRegisterRequest } from '../actions/registerActions';
 
-
-const RegisterPage = ({
-  onSubmit,
-  onChange,
-  errors,
-  user,
-}) => (
-  <Card className="container">
-    <form action="/" onSubmit={onSubmit}>
-      <h2 className="card-heading">Sign Up</h2>
-
-      {errors.summary && <p className="error-message">{errors.summary}</p>}
-
-      <div className="field-line">
-        <TextField
-          floatingLabelText="Email"
-          name="email"
-          errorText={errors.email}
-          onChange={onChange}
-          value={user.email}
-        />
+class RegisterPage extends React.Component {
+  render() {
+    const { userRegisterRequest } = this.props;
+    return (
+      <div className="row">
+        <div className="col-md-4 col-md-offset-4">
+          <RegisterForm userRegisterRequest={userRegisterRequest}/>
+        </div>
       </div>
-
-      <div className="field-line">
-        <TextField
-          floatingLabelText="Password"
-          type="password"
-          name="password"
-          onChange={onChange}
-          errorText={errors.password}
-          value={user.password}
-        />
-      </div>
-
-      <div className="button-line">
-        <RaisedButton type="submit" label="Create New Account" primary />
-      </div>
-
-      <CardText>Already have an account? <Link to={'/login'}>Log in</Link></CardText>
-    </form>
-  </Card>
-);
+    );
+  }
+}
 
 RegisterPage.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired
-};
+  userRegisterRequest: React.PropTypes.func.isRequired
+}
 
-export default RegisterPage;
+export default connect(null, { userRegisterRequest })(RegisterPage);
