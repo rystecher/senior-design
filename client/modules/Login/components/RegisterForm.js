@@ -41,9 +41,13 @@ class RegisterForm extends React.Component {
       this.props.userRegisterRequest(this.state).then(
         // here is where you redirect
         () => {
+          this.props.addFlashMessage({
+            type: 'success',
+            text: 'You signed up successfully. Welcome!'
+          });
           this.context.router.push('/');
         },
-        ({ response }) => this.setState({ errors: response.data, isLoading: false })
+        ({ err }) => this.setState({ errors: err.response.data, isLoading: false })
       );
     }
   }
@@ -92,7 +96,8 @@ class RegisterForm extends React.Component {
 }
 
 RegisterForm.propTypes = {
-  userRegisterRequest: React.PropTypes.func.isRequired
+  userRegisterRequest: React.PropTypes.func.isRequired,
+  addFlashMessage: React.PropTypes.func.isRequired
 }
 
 RegisterForm.contextTypes = {
