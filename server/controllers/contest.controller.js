@@ -2,7 +2,7 @@ import Contest, {Team, TeamProblem} from '../models/contest';
 import cuid from 'cuid';
 import slug from 'limax';
 import sanitizeHtml from 'sanitize-html';
-import fs from 'fs';
+import fs from 'fs'; // for reading and writing problem pdfs
 import {hackerrankCall} from './hackerRank.controller';
 
 // TODO get problem file, add judge,
@@ -222,6 +222,32 @@ export function getProblemFile(req, res) {
             file.pipe(res);
         } else {
             res.json({err: "Invalid problem number"});
+        }
+    });
+}
+
+/**
+ * Creates a new problem for a contest given a pdf file
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function createProblem(req, res) {
+    if (!req.params.contest_id || !req.params.filename) {
+        res.status(403).end();
+    }
+    Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            const fileName = 'pdfs/' + req.params.filename + '.pdf';
+            contest.problems.push({ name: fileName, fileName });
+            const stream = fs.createWriteStream(fileName);
+            stream.on('open', () => {
+                req.pipe(stream);
+                res.json({ success: true });
+            });
+            contest.save();
         }
     });
 }

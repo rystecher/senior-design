@@ -1,5 +1,6 @@
 import React from 'react';
 import ContestForm from '../components/ContestForm';
+import ProblemUploader from '../components/ProblemUploader';
 import * as Utility from '../Forms';
 
 export default class CreateContestReview extends React.Component {
@@ -39,6 +40,7 @@ export default class CreateContestReview extends React.Component {
                 >
                     Create Contest
                 </button>
+                <ProblemUploader/>
             </div>
         );
     }
