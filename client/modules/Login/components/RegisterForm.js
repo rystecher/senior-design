@@ -39,7 +39,10 @@ class RegisterForm extends React.Component {
       this.setState({ errors: {}, isLoading: true });
       //console.log(this.state);
       this.props.userRegisterRequest(this.state).then(
-        () => {},
+        // here is where you redirect
+        () => {
+          this.context.router.push('/');
+        },
         ({ response }) => this.setState({ errors: response.data, isLoading: false })
       );
     }
@@ -92,5 +95,8 @@ RegisterForm.propTypes = {
   userRegisterRequest: React.PropTypes.func.isRequired
 }
 
+RegisterForm.contextTypes = {
+  router: React.PropTypes.object.isRequired
+}
 
 export default RegisterForm;
