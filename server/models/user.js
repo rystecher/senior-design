@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 const Schema = mongoose.Schema;
 
 var SALT_WORK_FACTOR = 10,
@@ -96,6 +97,15 @@ UserSchema.statics.getAuthenticated = function(username, password, cb) {
 
             // check if the password was a match
             if (isMatch) {
+                var doc = {
+                        username: doc.username,
+                        id: doc.id,
+                };
+
+                // return the jwt
+                var token = jsonwebtoken.sign(doc, 'somesecretkeyforjsonwebtoken', {
+                  expiresInMinutes: 10080});
+
                 // if there's no lock or failed attempts, just return the user
                 if (!user.loginAttempts && !user.lockUntil) return cb(null, user);
                 // reset attempts and lock info
@@ -105,7 +115,7 @@ UserSchema.statics.getAuthenticated = function(username, password, cb) {
                 };
                 return user.update(updates, function(err) {
                     if (err) return cb(err);
-                    return cb(null, user);
+                    return cb(null, token, user);
                 });
             }
 

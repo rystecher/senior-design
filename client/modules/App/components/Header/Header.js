@@ -25,6 +25,7 @@ export function Header(props, context) {
           <Link to="/problem" >Problem Page</Link>
           <Link to="/scoreboard" >ScoreBoard Page</Link>
           <Link to="/register">Register</Link>
+          <Link to="/login">Login</Link>
         </h1>
         {
           context.router.isActive('/', true)
