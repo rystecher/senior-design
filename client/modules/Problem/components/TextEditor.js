@@ -39,8 +39,12 @@ export default class TextEditor extends React.Component {
     });
   }
 
-  onRunClick() {
-    // pass this.state.code and this.state.mode to HackerRank API
+  onTestClick() {
+    // TODO: pass this.state.code and this.state.mode to HackerRank API
+  }
+
+  onSubmitClick() {
+    // TODO: pass this.state.code and this.state.mode to submit API
   }
 
   render() {
@@ -59,7 +63,8 @@ export default class TextEditor extends React.Component {
 
         <CodeMirror ref="editor" value={this.state.code} onChange={this.updateCode} options={options} />
 
-        <button ref="runButton"onClick={this.onRunClick}>Run</button>
+        <button ref="runButton"onClick={this.onTestClick}>Test</button>
+        <button ref="runButton"onClick={this.onSubmitClick}>Submit</button>
         <span id="results">Test</span>
       </div>
     );

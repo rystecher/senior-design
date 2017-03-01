@@ -73,6 +73,7 @@ export function fetchProblem(contest_id, problem_no) {
     return callApiForFile(`contests/${contest_id}/problem/${problem_no}`);
 }
 
+// TODO: Move this into it's own file and write an additional testCode() call
 export function submitCode(contest_id, team_id, code, lang, number) {
     callApi(`contests/${contest_id}/teams/${team_id}/submit`, 'post', {
         problem: {code, lang, number}
