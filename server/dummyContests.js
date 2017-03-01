@@ -79,7 +79,7 @@ export default function () {
 
         Contest.create([contest1, contest2], (error) => {
             if (!error) {
-                // console.log('ready to go....');
+            // console.log('ready to go....');
             }
             console.log(error);
         });

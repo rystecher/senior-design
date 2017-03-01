@@ -1,7 +1,6 @@
 import callApi, {callApiForFile} from '../../util/apiCaller';
 
 // Export Constants
-
 export const ADD_CONTEST = 'ADD_CONTEST';
 export const GET_CONTESTS = 'GET_CONTESTS';
 export const GET_MY_CONTESTS = 'GET_MY_CONTESTS';
@@ -63,7 +62,7 @@ export function fetchContest(cuid) {
 }
 
 export function fetchScoreboardData(cuid) {
-    return callApi(`contests/${cuid}/scoreboard`).then(res => console.log(res));
+  return callApi(`contests/${cuid}/scoreboard`);
 }
 
 export function fetchSolvedArrays(contest_id, team_id) {
@@ -75,7 +74,7 @@ export function fetchSubmissions(contest_id) {
 }
 
 export function fetchProblem(contest_id, problem_no) {
-    callApiForFile(`contests/${contest_id}/problem/${problem_no}`);
+    return callApiForFile(`contests/${contest_id}/problem/${problem_no}`);
 }
 
 export function submitCode(contest_id, team_id, code, lang, number) {

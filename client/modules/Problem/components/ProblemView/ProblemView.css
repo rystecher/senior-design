@@ -1,0 +1,29 @@
+.button {
+  color: #FFFFFF;
+  padding: 15px 32px;
+  border-radius: 12px;
+}
+.done {
+  color: black;
+  padding: 10px 20px;
+  border-radius: 12px;
+  background: whitesmoke;
+  border-bottom-style: solid;
+  border-bottom-color: #DC143C;
+  border-bottom-width: 8pt;
+  border-top-style: solid;
+  border-top-color: #DC143C;
+  border-top-width: 8pt;
+}
+.not {
+  color: black;
+  padding: 10px 20px;
+  border-radius: 12px;
+  background: whitesmoke;
+  border-bottom-style: solid;
+  border-bottom-color: #3CB371;
+  border-bottom-width: 8pt;
+  border-top-style: solid;
+  border-top-color: #3CB371;
+  border-top-width: 8pt;
+}
