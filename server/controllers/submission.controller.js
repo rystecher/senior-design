@@ -1,5 +1,5 @@
 import Submission from '../models/Submission';
-import {sendTeamMessage} from '../controllers/team.controller';
+import {sendTeamMessage} from '../controllers/messaging.controller';
 
 /**
  * Get all submissions for a contest
@@ -69,7 +69,7 @@ export function deleteSubmission(req, res) {
         if (err) {
             res.status(500).send(err);
         } else {
-            Contest.findOne({ cuid: submission.contestID }).exec((err), contest) => {
+            Contest.findOne({ cuid: submission.contestID }).exec((err, contest) => {
                 if (err) {
                     res.status(500).send(err);
                 } else {
@@ -80,7 +80,7 @@ export function deleteSubmission(req, res) {
                         res.status(200).end();
                     });
                 }
-            }
+            });
         }
     });
 }

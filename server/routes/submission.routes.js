@@ -11,7 +11,4 @@ router.route('/submissions/feedback/:submission_id').post(SubmissionController.s
 // Posts feedback for a submission
 router.route('/submissions/:submission_id').delete(SubmissionController.deleteSubmission);
 
-// Gets feedback for a submission
-router.route('/submissions/feedback/:submission_id').get(SubmissionController.getFeedback);
-
 export default router;

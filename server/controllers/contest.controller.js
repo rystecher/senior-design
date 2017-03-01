@@ -322,7 +322,7 @@ export function startContest(req, res) {
                 res.status(500).send(err);
             } else {
                 contest.start = Date.now();
-                contest.save((err, saved) {
+                contest.save((err) => {
                     if (err) {
                         res.status(500).send(err);
                     } else {
