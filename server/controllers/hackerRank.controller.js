@@ -44,21 +44,16 @@ export function submit(req, res) {
 
 }
 
-export function hackerrankCall(source, lang, testCases) {
-    const options = {
+export function hackerrankCall(source, lang, inputs, callback) {
+    const options =  {
         url: 'http://api.hackerrank.com/checker/submission.json',
         form: {
             source,
             lang,
-            testcases: JSON.stringify(testCases),
+            testcases: JSON.stringify(inputs),
             api_key: 'hackerrank|1761054-1191|25bcc1c3bcaeafaffc31a072b0a9ff725533893c',
             format: 'json'
         }
     };
-
-    return request.post(options, (error, response) => {
-        const respObj = JSON.parse(response.body);
-        console.log("stderr: ", respObj.result.stderr);
-        console.log('stdout: ', respObj.result.stdout);
-    });
+    return request.post(options, (error, response) => callback(error, response));
 }

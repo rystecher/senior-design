@@ -1,35 +1,22 @@
 import Contest from './models/contest';
 
-const team_problems = [{
-    solved: false,
-}, {
-    solved: false,
-}, {
-    solved: false,
-}, {
-    solved: false,
-}, {
-    solved: false,
-}];
+const team_problems = Array(5).fill({ solved: false });
 
 const dummyTeams = [{
     name:"Team",
     _id:"58a2140af3c57bd14d9f0300",
     score:15,
     problem_attempts: team_problems,
-    timestamp: new Date("2017-02-18T16:00:00Z"),
 }, {
     name:"Another team",
     _id:"58a2140af3c57bd14d9f0301",
     score:20,
     problem_attempts: team_problems,
-    timestamp: new Date("2017-02-18T16:30:00Z"),
 }, {
     name:"Losing team",
     _id:"58a2140af3c57bd14d9f0302",
     score:12,
     problem_attempts: team_problems,
-    timestamp: new Date("2017-02-18T16:20:00Z"),
 }];
 
 const dummyProblems = [{
@@ -39,14 +26,14 @@ const dummyProblems = [{
     solvedBy: "Cat in the hat",
     testCases: {
         input: [''],
-        output: ["1"],
+        output: ["1\n"],
     },
 }, {
     name: "The Grape Escape",
     fileName: 'the-grape-escape',
     testCases: {
         input: [''],
-        output: ["2"],
+        output: ["2\n"],
     },
 }, {
     name: "Three wise mice",
@@ -55,14 +42,14 @@ const dummyProblems = [{
     solvedBy: "Despereaux",
     testCases: {
         input: [''],
-        output: ["3"],
+        output: ["3\n"],
     },
 }, {
     name: "The men who stare at boats",
     fileName: 'the-men-who-stare-at-boats',
     testCases: {
         input: [''],
-        output: ["4"],
+        output: ["4\n"],
     },
 }, {
     name: "Iron pan",
@@ -71,7 +58,7 @@ const dummyProblems = [{
     solvedBy: "Tony Stark",
     testCases: {
         input: [''],
-        output: ["5"],
+        output: ["5\n"],
     },
 }];
 
