@@ -35,7 +35,7 @@ import { fetchComponentData } from './util/fetchData';
 import posts from './routes/post.routes';
 import contests from './routes/contest.routes';
 import submissions from './routes/submission.routes';
-import teams from './routes/team.routes';
+import messages from './routes/messaging.routes';
 import hackerRank from './routes/hackerRank.routes';
 import dummyData from './dummyData';
 import dummyContests from './dummyContests';
@@ -64,7 +64,7 @@ app.use(Express.static(path.resolve(__dirname, '../dist')));
 app.use('/api', posts);
 app.use('/api', contests);
 app.use('/api', submissions);
-app.use('/api', teams);
+app.use('/api', messages);
 app.use('/api', hackerRank);
 
 // Render Initial HTML

@@ -5,8 +5,18 @@ export function sendTeamMessageApi(req, res) {
     if (!contest_id || !team_id || !req.body.message) {
         res.status(403).end();
     } else {
-        sendTeamMessage(req.body.message, contest_id, team_id);
+        sendTeamMessage({ from: 'Judges', message: req.body.message }, contest_id, team_id);
         res.json({success: true});
+    }
+}
+
+export function sendJudgeMessage(req, res) {
+    const {contest_id, team_id} = req.params;
+    if (!contest_id || !team_id || !req.body.message) {
+        res.status(403).end();
+    } else {
+        sendTeamMessage({ from: 'Team', message: req.body.message }, contest_id, team_id);
+        res.json({ success: true });
     }
 }
 
@@ -22,8 +32,32 @@ export function getTeamMessages(req, res) {
                 if (team == null) {
                     res.status(500).send(err);
                 } else {
+                    if (req.body.judgeRequest) {
+                        team.messagedJudge = false;
+                        team.save();
+                    }
                     res.json({ messages: team.messages});
                 }
+            }
+        });
+    }
+}
+
+export function getJudgeMessages(req, res) {
+    if (!req.params.contest_id) {
+        res.status(403).end();
+    } else {
+        Contest.findOne({cuid: contest_id}, (err, contest) => {
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                const teamNames = Array(contest.teams.length);
+                const teamMessagedJudge = Array(contest.teams.length);
+                contest.teams.forEach((team, index) => {
+                    teamNames[index] = team.name;
+                    teamMessagedJudge[index] = team.messagedJudge;
+                })
+                res.json({ teamNames, teamMessagedJudge });
             }
         });
     }
@@ -38,7 +72,7 @@ export function broadcastMessage(req, res) {
                 res.status(500).send(err);
             } else {
                 contest.teams.forEach(team => {
-                    team.messages.push(req.body.message);
+                    team.messages.push({ from: 'Judges', message: req.body.message });
                 });
                 contest.save((err) => {
                     if (err) {
@@ -54,11 +88,13 @@ export function broadcastMessage(req, res) {
 
 export function sendTeamMessage(message, contest_id, team_id) {
     Contest.findOne({cuid: contest_id}, (err, contest) => {
-        if (err) {
-            res.status(500).send(err);
+        if (!err) {
+            const team = contest.teams.id(team_id);
+            team.messages.push(message);
+            if (message.from == 'Team') {
+                team.messagedJudge = true;
+            }
+            team.save((err) => err == null);
         }
-        const team = contest.teams.id(req.params.team_id);
-        team.messages.push(message);
-        team.save((err) => err == null);
     });
 }

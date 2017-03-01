@@ -341,7 +341,7 @@ export function startContest(req, res) {
  * teams:
  *      teamNames: [Strings]
  *      teamScores: [Numbers]
- *      teamTimestamps: [Dates]
+ *      teamNumSolved: [Numbers]
  * @param req
  * @param res
  * @returns void
@@ -354,9 +354,14 @@ export function getTeamScores(req, res) {
             if (err) {
                 res.status(500).send(err);
             } else {
-                const teamNames = contest.teams.map(team => team.name);
-                const teamScores = contest.teams.map(team => team.score);
-                const teamNumSolved = contest.teams.map(team => team.numSolved);
+                const teamNames = Array(contest.teams.length);
+                const teamScores = Array(contest.teams.length);
+                const teamNumSolved = Array(contest.teams.length);
+                contest.teams.forEach((team, index) => {
+                    teamNames[index] = team.name;
+                    teamScores[index] = team.score;
+                    teamNumSolved[index] = team.numSolved;
+                })
                 res.json({ teams: {teamNames, teamScores, teamNumSolved} });
             }
         });

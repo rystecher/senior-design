@@ -71,7 +71,7 @@ export function deleteSubmission(req, res) {
         } else {
             Contest.findOne({ cuid: submission.contestID }).exec((err), contest) => {
                 if (err) {
-
+                    res.status(500).send(err);
                 } else {
                     const team = contest.teams.id(submission.teamID);
                     const problem = team.problem_attempts[number].attempts.pop();
@@ -86,8 +86,11 @@ export function deleteSubmission(req, res) {
 }
 
 function genSubmissionResponse(submission) {
-    return `Judge: Your submission for problem #${submission.problemNumber},
-        ${submission.problemName}, has been marked: ${submission.feedback}`;
+    return {
+        from: 'Judges',
+        message: `Judge: Your submission for problem #${submission.problemNumber},
+        ${submission.problemName}, has been marked: ${submission.feedback}`,
+    }
 }
 
 export function computeScore(contestStart, numAttempts) {
@@ -102,5 +105,5 @@ export function createFeedbackMessage(correct, compilemessage) {
     } else if (compilemessage != null) {
         message = compilemessage;
     }
-    return message;
+    return { from: 'Automated', message };
 }

@@ -13,7 +13,8 @@ const teamSchema = new Schema({
     memberList: [String],
     messages: [String],
     password: { type: 'String'},
-    problem_attempts: [teamProblem]
+    problem_attempts: [teamProblem],
+    messagedJudge: { type: 'Boolean', default: false, required: true},
 });
 
 const testCase = new Schema({
