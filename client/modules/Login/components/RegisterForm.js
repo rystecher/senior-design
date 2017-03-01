@@ -10,11 +10,13 @@ class RegisterForm extends React.Component {
       password: '',
       passwordConfirmation: '',
       errors: {},
-      isLoading: false
+      isLoading: false,
+      invalid: false
     }
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.checkUserExists = this.checkUserExists.bind(this);
 
   }
 
@@ -30,6 +32,25 @@ class RegisterForm extends React.Component {
     }
 
     return isValid;
+  }
+
+  checkUserExists(e) {
+    const field = e.target.name;
+    const val = e.target.value;
+    if (val !== '') {
+      this.props.isUserExists(val).then(res => {
+        let errors = this.state.errors;
+        let invalid;
+        if (res.data.user.length > 0) {
+          errors[field] = field + ' already taken';
+          invalid = true;
+        } else {
+          errors[field] = '';
+          invalid = false;
+        }
+        this.setState({ errors, invalid });
+      });
+    }
   }
 
   onSubmit(e) {
@@ -56,7 +77,7 @@ class RegisterForm extends React.Component {
     const { errors } = this.state;
     return (
       <form onSubmit={this.onSubmit}>
-        <h1>Join our community!</h1>
+        <h1>Join the 2017 ACM Programming Contest!</h1>
 
         <TextFieldGroup
           error={errors.username}
@@ -86,7 +107,7 @@ class RegisterForm extends React.Component {
         />
 
         <div className="form-group">
-          <button disabled={this.state.isLoading} className="btn btn-primary btn-lg">
+          <button disabled={this.state.isLoading || this.state.invalid} className="btn btn-primary btn-lg">
             Register
           </button>
         </div>
@@ -97,7 +118,8 @@ class RegisterForm extends React.Component {
 
 RegisterForm.propTypes = {
   userRegisterRequest: React.PropTypes.func.isRequired,
-  addFlashMessage: React.PropTypes.func.isRequired
+  addFlashMessage: React.PropTypes.func.isRequired,
+  isUserExists: React.PropTypes.func.isRequired
 }
 
 RegisterForm.contextTypes = {

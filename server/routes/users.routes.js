@@ -8,10 +8,10 @@ const router = new Router();
 function validateInput(data, otherValidations) {
   let { errors } = otherValidations(data);
 
-  return User.find({ username: data.username })
+  return User.find({username: data.username})
   .then(user => {
-    if (user) {
-        errors.username = 'There is user with such username';
+    if (user.length > 0) {
+        errors.username = 'Username already taken';
     }
     return {
       errors,
@@ -19,6 +19,13 @@ function validateInput(data, otherValidations) {
     };
   })
 }
+
+router.get('/:identifier', (req, res) => {
+  User.find({ username: req.params.identifier }, {_id: 0,username: 1})
+  .then(user => {
+    res.json({ user });
+  });
+});
 
 router.post('/', (req, res) => {
   //console.log(req.body);
