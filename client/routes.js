@@ -43,7 +43,7 @@ export default (
       }}
     />
     <Route
-      path="create-contest"
+      path="/create-contest"
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
           cb(null, require('./modules/CreateContest/pages/CreateContestReview').default);
@@ -51,7 +51,7 @@ export default (
       }}
     />
     <Route
-      path="problem"
+      path="/problem"
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
           cb(null, require('./modules/Problem/pages/ProblemPage').default);
@@ -59,7 +59,7 @@ export default (
       }}
     />
     <Route
-      path="scoreboard"
+      path="/scoreboard"
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
           cb(null, require('./modules/Scoreboard/pages/ScoreboardPage').default);
@@ -67,10 +67,18 @@ export default (
       }}
     />
     <Route
-      path="my"
+      path="/my"
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
           cb(null, require('./modules/Contests/pages/MyContests/MyContests').default);
+        });
+      }}
+    />
+  <Route
+      path="/register"
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./modules/Login/pages/RegisterPage').default);
         });
       }}
     />
