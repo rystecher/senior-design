@@ -8,7 +8,7 @@ export default class ContestForm extends React.Component {
         this.saveAnswer = this.saveAnswer.bind(this);
     }
 
-    componentWillMount(){
+    componentWillMount() {
         this.state = {
             answer: this.props.answer,
         }
