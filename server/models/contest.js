@@ -6,12 +6,17 @@ const teamProblem = new Schema({
     solved: { type: 'Boolean', default: false, required: true},
 });
 
+const Message = new Schema({
+    from: String,
+    message: String,
+});
+
 const teamSchema = new Schema({
     name: { type: 'String', required: true },
     numSolved: { type: 'Number', default: 0, required: true },
     score: { type: 'Number', default: 0, required: true },
     memberList: [String],
-    messages: [String],
+    messages: [Message],
     password: { type: 'String'},
     problem_attempts: [teamProblem],
     messagedJudge: { type: 'Boolean', default: false, required: true},
