@@ -1,6 +1,7 @@
 import React from 'react';
 import handleSubmit from '../components/SubmitProblem';
 import NavBar from '../components/ProblemView/NavBar.js';
+import MessageComponent from '../components/MessageComponent.js';
 
 
 /*
@@ -85,6 +86,7 @@ export default class ProblemPage extends React.Component {
                  This is the problem page!
                 <br/>
                 <button onClick={handleSubmit}>RUN</button>
+                <MessageComponent/>
             </div>
         );
     }

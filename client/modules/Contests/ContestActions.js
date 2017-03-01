@@ -66,6 +66,24 @@ export function fetchScoreboardData(cuid) {
 }
 
 export function fetchTeamMessages(contest_id, team_id) {
+    const messages =  [
+        {from: 'Judges', message: 'What do u want for dinner'},
+        {from: 'Automated', message: 'This is an automated message'},
+        {from: 'Team', message: 'I\'ll tell you what i want what i really really want'},
+        {from: 'Judges', message: 'So tell me what you want what you really really want'},
+        {from: 'Team', message: 'I want pizza'},
+        {from: 'Team', message: 'I\'ll tell you what i want what i really really want'},
+        {from: 'Judges', message: 'So tell me what you want what you really really want'},
+        {from: 'Team', message: 'I want pizza'},
+        {from: 'Team', message: 'I\'ll tell you what i want what i really really want'},
+        {from: 'Judges', message: 'So tell me what you want what you really really want'},
+        {from: 'Team', message: 'I want pizza'},
+    ];
+    return new Promise(function(resolve, reject){
+        setTimeout(function(){
+            resolve(messages); //Yay! Everything went well!
+        }, 250);
+    });
     return callApi(`contests/${contest_id}/team/${team_id}/messages`).then(res => {
         if (res.status) {
 
