@@ -47,7 +47,7 @@ class RegisterForm extends React.Component {
           });
           this.context.router.push('/');
         },
-        ({ err }) => this.setState({ errors: err.response.data, isLoading: false })
+        ({ response }) => this.setState({ errors: response.data, isLoading: false })
       );
     }
   }
