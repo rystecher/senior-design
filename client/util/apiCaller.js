@@ -21,17 +21,9 @@ export default function callApi(endpoint, method = 'get', body) {
 }
 
 export function callApiForFile(endpoint, method = 'get', body) {
-  return fetch(`${API_URL}/${endpoint}`, {
-    headers: { 'content-type': 'application/json' },
-    method,
-    body: JSON.stringify(body),
-  })
-  .then(response => {
-      //debugger;
-      response.blob().then(blob => {
-          //const file = new Blob([blob], { type: 'application/pdf' });
-          const fileURL = URL.createObjectURL(blob);
-          window.open(fileURL);
-      });
-  });
+    return fetch(`${API_URL}/${endpoint}`, {
+        headers: { 'content-type': 'application/json' },
+        method,
+        body: JSON.stringify(body),
+    });
 }
