@@ -6,13 +6,20 @@ const teamProblem = new Schema({
     solved: { type: 'Boolean', default: false, required: true},
 });
 
+const Message = new Schema({
+    from: String,
+    message: String,
+});
+
 const teamSchema = new Schema({
     name: { type: 'String', required: true },
-    password: { type: 'String'},
+    numSolved: { type: 'Number', default: 0, required: true },
     score: { type: 'Number', default: 0, required: true },
-    timestamp: { type: 'Date'},
     memberList: [String],
-    problem_attempts: [teamProblem]
+    messages: [Message],
+    password: { type: 'String'},
+    problem_attempts: [teamProblem],
+    messagedJudge: { type: 'Boolean', default: false, required: true},
 });
 
 const testCase = new Schema({
@@ -38,7 +45,7 @@ const contestSchema = new Schema({
     problems: [contestProblem],
     scoreboardVisible: { type: 'Boolean', default: true, required: true},
     slug: { type: 'String', required: true },
-    start: { type: 'Date'},
+    start: { type: 'Number'},
     teams: [teamSchema],
 });
 
