@@ -98,13 +98,12 @@ UserSchema.statics.getAuthenticated = function(username, password, cb) {
             // check if the password was a match
             if (isMatch) {
                 var doc = {
-                        username: doc.username,
-                        id: doc.id,
+                        username: user.username,
+                        id: user.id,
                 };
 
                 // return the jwt
-                var token = jsonwebtoken.sign(doc, 'somesecretkeyforjsonwebtoken', {
-                  expiresInMinutes: 10080});
+                var token = jwt.sign(doc, 'somesecretkeyforjsonwebtoken');
 
                 // if there's no lock or failed attempts, just return the user
                 if (!user.loginAttempts && !user.lockUntil) return cb(null, user);
