@@ -35,6 +35,7 @@ import { fetchComponentData } from './util/fetchData';
 import posts from './routes/post.routes';
 import contests from './routes/contest.routes';
 import hackerRank from './routes/hackerRank.routes';
+import users from './routes/users.routes';
 import dummyData from './dummyData';
 import dummyContests from './dummyContests';
 import serverConfig from './config';
@@ -62,6 +63,7 @@ app.use(Express.static(path.resolve(__dirname, '../dist')));
 app.use('/api', posts);
 app.use('/api', contests);
 app.use('/api', hackerRank);
+app.use('/api/users', users)
 
 // Render Initial HTML
 const renderFullPage = (html, initialState) => {
