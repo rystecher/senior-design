@@ -2,7 +2,7 @@ import React from 'react';
 import TextFieldGroup from './TextFieldGroup';
 import validateLoginInput from '../../../../server/controllers/validateLoginInput';
 import { connect } from 'react-redux';
-import { login } from '../actions/loginAction';
+import { login } from '../actions/authActions';
 
 class LoginForm extends React.Component {
   constructor(props) {
@@ -34,7 +34,7 @@ class LoginForm extends React.Component {
       this.setState({ errors: {}, isLoading: true });
       this.props.login(this.state).then(
         (res) => this.context.router.push('/problem'),
-        (err) => this.setState({ errors: err.data.errors, isLoading: false })
+        ({ response }) => this.setState({ errors: response.data, isLoading: false })
       );
     }
   }
@@ -51,7 +51,7 @@ class LoginForm extends React.Component {
         <h1>Login</h1>
 
         { errors.form && <div className="alert alert-danger">{errors.form}</div> }
-        
+
         <TextFieldGroup
           field="identifier"
           label="Username"
