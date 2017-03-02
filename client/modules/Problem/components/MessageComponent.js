@@ -1,12 +1,14 @@
 import React from 'react';
-import {fetchTeamMessages} from '../../Contests/ContestActions.js';
-import { ChatFeed, Message } from 'react-chat-ui'
+import {fetchTeamMessages, sendJudgeMessage} from '../../Contests/ContestActions.js';
+import ChatFeed from './chat-ui/lib/ChatFeed/index.js';
+import Message from './chat-ui/lib/Message/index.js';
 
 export default class MessageComponent extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { messageObjs: [] };
+        this.state = { messageObjs: [], value: '' };
+        this.handleChange = this.handleChange.bind(this);
     }
 
     componentDidMount() {
@@ -18,7 +20,6 @@ export default class MessageComponent extends React.Component {
                     return new Message(type, message.message);
                 })
                 this.setState({ messageObjs });
-                console.log(messages);
             });
         }, 30000);
     }
@@ -27,22 +28,19 @@ export default class MessageComponent extends React.Component {
         clearInterval(this.state.chatIntervId);
     }
 
-    // bubbleStyles={
-    //     {
-    //         text: {
-    //             fontSize: 30
-    //         },
-    //         chatbubble: {
-    //             borderRadius: 70,
-    //             padding: 40
-    //         }
-    //     }
-    // }
-    sendMessage(ele) {
-        console.log("Message called", ele.keyCode, this);
-        // if(keyDown.keyCode == 13) {
-        //     alert(ele.value);
-        // }
+    sendMessage(eve) {
+        if(eve.keyCode == 13) {
+            sendJudgeMessage(this.state.value);
+            this.state.messageObjs.push(new Message(0, this.state.value));
+            this.setState({
+                value: '',
+                messageObjs: this.state.messageObjs
+            });
+        }
+    }
+
+    handleChange(event) {
+        this.setState({value: event.target.value});
     }
 
     render() {
@@ -53,14 +51,21 @@ export default class MessageComponent extends React.Component {
                     isTyping={this.state.is_typing}
                     hasInputField={false}
                     bubblesCentered={false}
-                />;
+                />
                 <input
-                    placeholder="Type a message..."
-                    class="message-input"
+                    placeholder="Have a question for the judges..."
+                    className="message-input"
                     onKeyDown={this.sendMessage.bind(this)}
+                    type="text" value={this.state.value}
+                    onChange={this.handleChange}
                 />
             </div>
         );
 
     }
 }
+
+MessageComponent.propTypes = {
+    contest_id: React.PropTypes.string.isRequired,
+    team_id: React.PropTypes.string.isRequired,
+};
