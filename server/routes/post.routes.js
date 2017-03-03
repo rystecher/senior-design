@@ -8,7 +8,7 @@ router.route('/posts').get(PostController.getPosts);
 // Get one post by cuid
 router.route('/posts/:cuid').get(PostController.getPost);
 
-// Add a new Post
+// Add a new Home
 router.route('/posts').post(PostController.addPost);
 
 // Delete a post by cuid
