@@ -1,8 +1,6 @@
 import React from 'react';
-import handleSubmit from '../components/SubmitProblem';
 import NavBar from '../components/ProblemView/NavBar.js';
-
-
+import TextEditor from '../components/TextEditor';
 /*
   json obj to hold the problem information
  */
@@ -71,20 +69,19 @@ var competition = [
 ];
 
 
-
-
 /*
   A component to create the components for this page
  */
 export default class ProblemPage extends React.Component {
+
     render() {
         return (
             <div>
               <h1> Hello </h1>
                 <NavBar competition={competition[0]} />
-                 This is the problem page!
                 <br/>
-                <button onClick={handleSubmit}>RUN</button>
+                <TextEditor />
+
             </div>
         );
     }
