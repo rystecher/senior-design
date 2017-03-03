@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Message = exports.ChatInput = exports.ChatFeed = exports.ChatBubble = undefined;
+exports.Message = exports.ChatFeed = exports.ChatBubble = undefined;
 
 var _index = require('./ChatBubble/index');
 
@@ -13,10 +13,6 @@ var _index3 = require('./ChatFeed/index');
 
 var _index4 = _interopRequireDefault(_index3);
 
-var _index5 = require('./ChatInput/index');
-
-var _index6 = _interopRequireDefault(_index5);
-
 var _index7 = require('./Message/index');
 
 var _index8 = _interopRequireDefault(_index7);
@@ -25,5 +21,4 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.ChatBubble = _index2.default;
 exports.ChatFeed = _index4.default;
-exports.ChatInput = _index6.default;
 exports.Message = _index8.default;

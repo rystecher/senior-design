@@ -1,12 +1,7 @@
 import React from 'react';
 import NavBar from '../components/ProblemView/NavBar.js';
-<<<<<<< HEAD
 import MessageComponent from '../components/MessageComponent.js';
-
-
-=======
 import TextEditor from '../components/TextEditor';
->>>>>>> master
 /*
   json obj to hold the problem information
  */
@@ -83,11 +78,11 @@ export default class ProblemPage extends React.Component {
     render() {
         return (
             <div>
-              <h1> Hello </h1>
                 <NavBar competition={competition[0]} />
-                <br/>
-                <button onClick={handleSubmit}>RUN</button>
-                <MessageComponent/>
+                <MessageComponent
+                    team_id='58a2140af3c57bd14d9f0300'
+                    contest_id='cikqgkv4q01ck7453ualdn3hn'
+                />
                 <TextEditor />
             </div>
         );

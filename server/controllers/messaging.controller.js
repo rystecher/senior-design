@@ -24,7 +24,7 @@ export function getTeamMessages(req, res) {
     if (!req.params.contest_id || !req.params.team_id) {
         res.status(403).end();
     } else {
-        Contest.findOne({cuid: contest_id}, (err, contest) => {
+        Contest.findOne({cuid: req.params.contest_id}, (err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else {
@@ -34,7 +34,7 @@ export function getTeamMessages(req, res) {
                 } else {
                     if (req.body.judgeRequest) {
                         team.messagedJudge = false;
-                        team.save();
+                        contest.save();
                     }
                     res.json({ messages: team.messages});
                 }
@@ -94,7 +94,7 @@ export function sendTeamMessage(message, contest_id, team_id) {
             if (message.from == 'Team') {
                 team.messagedJudge = true;
             }
-            team.save((err) => err == null);
+            contest.save();
         }
     });
 }

@@ -1,13 +1,11 @@
 // Copyright 2016 Brandon Mowat
 // Written, developed, and designed by Brandon Mowat for the purpose of helping
 // other developers make chat interfaces.
-'use strict';
 
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 
 import ChatBubble from '../ChatBubble/index.js'
-import ChatInput from '../ChatInput/index.js'
 import Message from '../Message/index.js'
 
 export default class ChatFeed extends Component {
@@ -20,7 +18,7 @@ export default class ChatFeed extends Component {
   }
 
   componentDidUpdate() {
-    console.log('ChatFeed update');
+      this._scrollToBottom();
   }
 
   _scrollToBottom() {
@@ -88,33 +86,20 @@ export default class ChatFeed extends Component {
         </div>
       )
     }
-
-    // return nodes
     return message_nodes
-
   }
 
     render() {
-        const window = window || undefined;
-        if (window !== undefined) {
-            window.setTimeout(() => {
-              this._scrollToBottom()
-            },10)
-        }
-
-    var inputField = this.props.hasInputField ? <ChatInput></ChatInput> : null
-
-    return (
-      <div id="chat-panel" style={styles.chatPanel}>
-        <div ref="chat" className="chat-history" style={styles.chatHistory}>
-          <div className="chat-messages" >
-            {this._renderMessages(this.props.messages)}
-          </div>
-        </div>
-        {inputField}
-      </div>
-    )
-  }
+        return (
+            <div id="chat-panel" style={styles.chatPanel}>
+                <div ref="chat" className="chat-history" style={styles.chatHistory}>
+                    <div className="chat-messages" >
+                        {this._renderMessages(this.props.messages)}
+                    </div>
+                </div>
+            </div>
+        );
+    }
 }
 
 const styles = {
