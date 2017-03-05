@@ -1,6 +1,7 @@
 import React from 'react';
 import NavBar from '../components/ProblemView/NavBar.js';
 import MessageComponent from '../components/MessageComponent.js';
+import ChatSideBar from '../components/ChatSideBar.js';
 import TextEditor from '../components/TextEditor';
 /*
   json obj to hold the problem information
@@ -84,6 +85,9 @@ export default class ProblemPage extends React.Component {
                     contest_id='cikqgkv4q01ck7453ualdn3hn'
                 />
                 <TextEditor />
+                <ChatSideBar
+                    contest_id='cikqgkv4q01ck7453ualdn3hn'
+                />
             </div>
         );
     }

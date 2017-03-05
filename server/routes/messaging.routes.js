@@ -12,7 +12,7 @@ router.route('/messages/:contest_id/team/:team_id').get(MessageController.getTea
 router.route('/messages/:contest_id/team/:team_id/judge').post(MessageController.sendJudgeMessage);
 
 // Gets an array of objects for the judges to see which teams have messaged
-router.route('/messages/:contest_id/team/:team_id/judge').get(MessageController.getJudgeMessages);
+router.route('/messages/:contest_id/judge').get(MessageController.getJudgeMessages);
 
 // Posts a message for all teams in a contest
 router.route('/messages/:contest_id').post(MessageController.broadcastMessage);

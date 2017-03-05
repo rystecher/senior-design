@@ -81,6 +81,12 @@ export function fetchTeamMessages(contest_id, team_id) {
     });
 }
 
+export function fetchJudgeMessages(contest_id) {
+    return callApi(`messages/${contest_id}/judge`).then(res => {
+        return res.teams;
+    });
+}
+
 export function fetchSolvedArrays(contest_id, team_id) {
     callApi(`contests/${contest_id}/teams/${team_id}/solved`).then(res => console.log(res));
 }
@@ -130,6 +136,7 @@ export function fetchNotMyContests(cuids) {
     startContest("cikqgkv4q01ck7453ualdn3hn");
     // submitCode("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "print 6", 5, 1);
     submitCode("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "print 4", 5, 3);
+    fetchJudgeMessages('cikqgkv4q01ck7453ualdn3hn');
     // submitCode("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "print 4", 5, 2);
     // submitCode("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "print 15", 5, 2);
     // submitCode("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "compile something!", 5, 2);
