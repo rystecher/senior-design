@@ -26,7 +26,7 @@ export default class MessageComponent extends React.Component {
     }
 
     componentWillUnMount() {
-        clearInterval(this.state.chatIntervId);
+        clearInterval(this.chatIntervId);
     }
 
     sendMessage(eve) {
