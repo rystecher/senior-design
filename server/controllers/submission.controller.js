@@ -95,15 +95,15 @@ function genSubmissionResponse(submission) {
 
 export function computeScore(contestStart, numAttempts) {
     const millisInMinutes = 1000 * 60;
-    return ((Date.now() - contestStart) / millisInMinutes) + 20 * numAttempts;
+    return Math.round(((Date.now() - contestStart) / millisInMinutes)) + 20 * numAttempts;
 }
 
-export function createFeedbackMessage(correct, compilemessage) {
-    let message = "Awaiting feedback from judges...";
+export function createFeedbackMessage(correct, compileMessage, problemNum) {
+    let message = 'Awaiting feedback from judges...';
     if (correct) {
-        message = "Your solution was correct!";
-    } else if (compilemessage != null) {
-        message = compilemessage;
+        message = `Your solution was correct!`;
+    } else if (compileMessage != '') {
+        message = compileMessage;
     }
-    return { from: 'Automated', message };
+    return { from: 'Automated', message: `Problem ${problemNum}: ` + message };
 }
