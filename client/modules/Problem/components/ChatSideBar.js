@@ -19,7 +19,7 @@ export default class ChatSideBar extends React.Component {
         }, 5000);
     }
 
-    componentWillUnMount() {
+    componentWillUnmount() {
         clearInterval(this.chatIntervId);
     }
 
