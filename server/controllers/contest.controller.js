@@ -29,8 +29,7 @@ export function getContests(req, res) {
  * @param res
  * @returns void
  */
-export function createContest(authenticate, req, res) {
-    res.status(201).json({ user: req.currentUser });
+export function createContest(req, res) {
     if (!req.body.contest.name || !req.body.contest) {
         res.status(403).end();
     } else {
