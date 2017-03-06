@@ -26,7 +26,7 @@ router.route('/contests/:contest_id').post(ContestController.addTeamToContest);
 //********************SCOREBOARD******************************
 
 // Get scores for a contest by cuid
-router.route('/contests/:cuid/scoreboard').get(ContestController.getTeamScores);
+router.route('/contests/:contest_id/scoreboard').get(ContestController.getTeamScores);
 
 // Hides scoreboard for contest
 router.route('/contests/:contest_id/scoreboard/hide').post(ContestController.hideScoreboard);
