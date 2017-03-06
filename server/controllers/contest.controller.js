@@ -140,17 +140,24 @@ export function addProblemAttempt(req, res) {
                 const team = contest.teams.id(req.params.team_id);
                 const problem = team.problem_attempts[number]; // problem object of team
                 if (problem.solved) {
-                    res.status(500).send({err: "You have already solved this problem"});
+                    const feedBack = 'You have already solved this problem';
+                    team.messages.push({ from: 'Automated', message: feedBack});
+                    res.status(500).send({err: feedBack});
+                    contest.save();
                 } else if (problem.attempts.indexOf(code) != -1) {
-                    res.status(500).send({err: "You have already submitted this code"});
+                    const feedBack = 'You have already submitted this code';
+                    team.messages.push({ from: 'Automated', message: feedBack});
+                    res.status(500).send({err: feedBack});
+                    contest.save();
                 } else {
                     hackerrankCall(code, lang, contest.problems[number].testCases.input, (error, response) => {
                         const {stderr, stdout, compilemessage} = JSON.parse(response.body).result;
-                        console.log(JSON.parse(response.body).result);
+                        //console.log(JSON.parse(response.body).result);
                         const hadStdError = stderr != null && !stderr.every((error) => error == false);
                         problem.attempts.push(code);
                         const expectedOutput = contest.problems[number].testCases.output;
-                        if (!hadStdError) { // no error => check output
+                        if (!hadStdError && stdout != null) { // no error => check output
+                            problem.solved = true;
                             if (stdout.length === expectedOutput.length) {
                                 for (let i = 0; i < stdout.length; i++) {
                                     if (stdout[i] != expectedOutput[i]) {
@@ -160,7 +167,7 @@ export function addProblemAttempt(req, res) {
                                 };
                             }
                             if (problem.solved) {
-                                team.score += computeScore(contest.startDate, problem.attempts.length);
+                                team.score += computeScore(contest.start, problem.attempts.length);
                                 team.numSolved++;
                                 if(!contest.problems[number].solved) {
                                     contest.problems[number].solved = true;
@@ -169,9 +176,10 @@ export function addProblemAttempt(req, res) {
                             }
                         }
                         const output = stdout || [compilemessage];
-                        const feedBack = createFeedbackMessage(problem.solved, compilemessage);
+                        const feedBack = createFeedbackMessage(problem.solved, compilemessage, number);
                         team.messages.push(feedBack);
                         createSubmission({
+                            cuid: cuid(),
                             teamName: team.name,
                             teamID: req.params.team_id,
                             contestID: req.params.contest_id,
@@ -350,7 +358,7 @@ export function getTeamScores(req, res) {
     if (!req.params.contest_id) {
         res.status(403).end();
     } else {
-        Contest.findOne({ cuid: req.params.cuid }).select('teams').exec((err, contest) => {
+        Contest.findOne({ cuid: req.params.contest_id }).select('teams').exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else {
@@ -362,7 +370,7 @@ export function getTeamScores(req, res) {
                     teamScores[index] = team.score;
                     teamNumSolved[index] = team.numSolved;
                 })
-                res.json({ teams: {teamNames, teamScores, teamNumSolved} });
+                res.json({ teams: {teamNames, teamScores, teamNumSolved } });
             }
         });
     }

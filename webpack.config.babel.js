@@ -1,6 +1,7 @@
 var cssnext = require('postcss-cssnext');
 var postcssFocus = require('postcss-focus');
 var postcssReporter = require('postcss-reporter');
+const path = require('path');
 
 var cssModulesIdentName = '[name]__[local]__[hash:base64:5]';
 if (process.env.NODE_ENV === 'production') {
@@ -15,7 +16,7 @@ module.exports = {
   resolve: {
     extensions: ['', '.js', '.jsx'],
     modules: [
-      'client',
+      path.resolve('./client'),
       'node_modules',
     ],
   },

@@ -14,6 +14,9 @@ router.route('/contests/join').get(ContestController.getContestsNotInIds);
 // Get one contest by cuid
 router.route('/contests/:contest_id').get(ContestController.getContest);
 
+// Sets the start time for a contest
+router.route('/contests/:contest_id/start').post(ContestController.startContest);
+
 // Creates a new Contest
 router.route('/contests').post(ContestController.createContest);
 
@@ -23,7 +26,7 @@ router.route('/contests/:contest_id').post(ContestController.addTeamToContest);
 //********************SCOREBOARD******************************
 
 // Get scores for a contest by cuid
-router.route('/contests/:cuid/scoreboard').get(ContestController.getTeamScores);
+router.route('/contests/:contest_id/scoreboard').get(ContestController.getTeamScores);
 
 // Hides scoreboard for contest
 router.route('/contests/:contest_id/scoreboard/hide').post(ContestController.hideScoreboard);

@@ -20,6 +20,7 @@ if (process.env.NODE_ENV !== 'production') {
   require('./modules/Home/pages/HomePage');
   require('./modules/Problem/pages/ProblemPage');
   require('./modules/Contests/pages/MyContests/MyContests');
+  require('./modules/Scoreboard/pages/ScoreboardPage');
   require('./modules/Login/pages/RegisterPage');
   require('./modules/Login/pages/LoginPage');
 }

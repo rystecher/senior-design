@@ -17,15 +17,14 @@ const prompts = {
 // The text editor where users can write and edit code
 export default class TextEditor extends React.Component {
 
-  constructor() {
-    super();
-    this.state = {
-      code: prompts.python,
-      readOnly: false,
-      mode: "python",
+    constructor(props) {
+        super(props);
+        this.state = {
+            code: prompts.python,
+            readOnly: false,
+            mode: "python",
+        }
     }
-    this.onRunClick = this.onRunClick.bind(this);
-  }
 
   updateCode = (newCode) => {
     this.setState({code: newCode});
@@ -47,26 +46,26 @@ export default class TextEditor extends React.Component {
     // TODO: pass this.state.code and this.state.mode to submit API
   }
 
-  render() {
-    let options = {
-      lineNumbers: true,
-      readOnly: false,
-      mode: this.state.mode
-    };
+    render() {
+        let options = {
+            lineNumbers: true,
+            readOnly: false,
+            mode: this.state.mode
+        };
 
-    return (
-      <div>
-        <select onChange={this.changeMode} value={this.state.mode}>
-          <option value="python">Python</option>
-          <option value="javascript">JavaScript</option>
-        </select>
+        return (
+            <div>
+                <select onChange={this.changeMode} value={this.state.mode}>
+                    <option value="python">Python</option>
+                    <option value="javascript">JavaScript</option>
+                </select>
 
-        <CodeMirror ref="editor" value={this.state.code} onChange={this.updateCode} options={options} />
+                <CodeMirror ref="editor" value={this.state.code} onChange={this.updateCode} options={options} />
 
-        <button ref="runButton"onClick={this.onTestClick}>Test</button>
-        <button ref="runButton"onClick={this.onSubmitClick}>Submit</button>
-        <span id="results">Test</span>
-      </div>
-    );
-  }
+                <button ref="runButton"onClick={this.onTestClick}>Test</button>
+                <button ref="runButton"onClick={this.onSubmitClick}>Submit</button>
+                <span id="results">Test</span>
+            </div>
+        );
+    }
 }
