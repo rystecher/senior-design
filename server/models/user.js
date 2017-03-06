@@ -106,7 +106,7 @@ UserSchema.statics.getAuthenticated = function(username, password, cb) {
                 var token = jwt.sign(doc, 'somesecretkeyforjsonwebtoken');
 
                 // if there's no lock or failed attempts, just return the user
-                if (!user.loginAttempts && !user.lockUntil) return cb(null, user);
+                if (!user.loginAttempts && !user.lockUntil) return cb(null, token, user);
                 // reset attempts and lock info
                 var updates = {
                     $set: { loginAttempts: 0 },
