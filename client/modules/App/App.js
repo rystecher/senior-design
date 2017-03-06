@@ -54,7 +54,7 @@ export class App extends Component {
 
 App.propTypes = {
   children: PropTypes.object.isRequired,
-  dispatch: PropTypes.func.isRequired,
+  //dispatch: PropTypes.func.isRequired,
 };
 
 export default App;
