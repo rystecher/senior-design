@@ -13,5 +13,6 @@ import auth from './modules/Login/reducers/auth';
 export default combineReducers({
   app,
   contests,
-  flashMessages
+  flashMessages,
+  auth
 });

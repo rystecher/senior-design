@@ -1,4 +1,4 @@
-import callApi, {callApiForFile} from 'util/apiCaller';
+import callApi, {callApiForFile} from '../../util/apiCaller';
 
 // Export Constants
 export const ADD_CONTEST = 'ADD_CONTEST';
