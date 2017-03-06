@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import * as UsersController from '../controllers/users.controller';
+import validateRegisterInput from '../controllers/validateRegisterInput';
 import User from '../models/user';
 import isEmpty from 'lodash/isEmpty';
 
@@ -29,7 +29,7 @@ router.get('/:identifier', (req, res) => {
 
 router.post('/', (req, res) => {
   //console.log(req.body);
-  validateInput(req.body, UsersController.validateInput).then(({ errors, isValid }) => {
+  validateInput(req.body, validateRegisterInput).then(({ errors, isValid }) => {
 
     if (isValid) {
       //res.json({ success: true});

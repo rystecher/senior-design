@@ -6,10 +6,18 @@ import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import App from './App';
 import { configureStore } from './store';
+import setAuthorizationToken from './util/setAuthorizationToken';
+import jwt from 'jsonwebtoken';
+import { setCurrentUser } from './modules/Login/actions/authActions';
 
 // Initialize store
 const store = configureStore(window.__INITIAL_STATE__);
 const mountApp = document.getElementById('root');
+
+if (localStorage.jwtToken) {
+  setAuthorizationToken(localStorage.jwtToken);
+  store.dispatch(setCurrentUser(jwt.decode(localStorage.jwtToken)));
+}
 
 render(
   <AppContainer>
