@@ -358,7 +358,7 @@ export function getTeamScores(req, res) {
     if (!req.params.contest_id) {
         res.status(403).end();
     } else {
-        Contest.findOne({ cuid: req.params.cuid }).select('teams').exec((err, contest) => {
+        Contest.findOne({ cuid: req.params.contest_id }).select('teams').exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else {
@@ -370,7 +370,7 @@ export function getTeamScores(req, res) {
                     teamScores[index] = team.score;
                     teamNumSolved[index] = team.numSolved;
                 })
-                res.json({ teams: {teamNames, teamScores, teamNumSolved} });
+                res.json({ teams: {teamNames, teamScores, teamNumSolved } });
             }
         });
     }
