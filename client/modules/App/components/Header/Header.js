@@ -15,6 +15,7 @@ export function Header(props, context) {
           <li><Link to="/problem" >Problem Page</Link></li>
           <li><Link to="/scoreboard" >ScoreBoard Page</Link></li>
           <li><Link to="/register">Register</Link></li>
+          <li><Link to="/login">Login</Link></li>
         </ul>
       </div>
     </div>
