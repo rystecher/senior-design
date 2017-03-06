@@ -2,6 +2,7 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 import App from './modules/App/App';
+import requireAuth from './util/requireAuth';
 
 // require.ensure polyfill for node
 if (typeof require.ensure !== 'function') {
@@ -50,7 +51,7 @@ export default (
       path="/create-contest"
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
-          cb(null, require('./modules/CreateContest/pages/CreateContestReview').default);
+          cb(null, requireAuth(require('./modules/CreateContest/pages/CreateContestReview').default));
         });
       }}
     />
@@ -58,7 +59,7 @@ export default (
       path="/problem"
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
-          cb(null, require('./modules/Problem/pages/ProblemPage').default);
+          cb(null, requireAuth(require('./modules/Problem/pages/ProblemPage').default));
         });
       }}
     />
@@ -66,7 +67,7 @@ export default (
       path="/scoreboard"
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
-          cb(null, require('./modules/Scoreboard/pages/ScoreboardPage').default);
+          cb(null, requireAuth(require('./modules/Scoreboard/pages/ScoreboardPage').default));
         });
       }}
     />
@@ -74,7 +75,7 @@ export default (
       path="/my"
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
-          cb(null, require('./modules/Contests/pages/MyContests/MyContests').default);
+          cb(null, requireAuth(require('./modules/Contests/pages/MyContests/MyContests').default));
         });
       }}
     />
