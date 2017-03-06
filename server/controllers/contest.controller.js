@@ -5,6 +5,7 @@ import sanitizeHtml from 'sanitize-html';
 import fs from 'fs'; // for reading and writing problem pdfs
 import {hackerrankCall} from './hackerRank.controller';
 import {createSubmission, computeScore, createFeedbackMessage} from './submission.controller';
+import authenticate from '../middlewares/authenticate';
 
 /**
  * Get all contests
@@ -28,7 +29,8 @@ export function getContests(req, res) {
  * @param res
  * @returns void
  */
-export function createContest(req, res) {
+export function createContest(authenticate, req, res) {
+    res.status(201).json({ user: req.currentUser });
     if (!req.body.contest.name || !req.body.contest) {
         res.status(403).end();
     } else {
