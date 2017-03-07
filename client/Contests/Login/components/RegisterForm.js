@@ -1,6 +1,6 @@
 import React from 'react';
 import TextFieldGroup from './TextFieldGroup';
-import * as UsersController from '../../../../server/controllers/users.controller';
+import validateRegisterInput from '../../../../server/controllers/validateRegisterInput';
 
 class RegisterForm extends React.Component {
   constructor(props) {
@@ -25,7 +25,7 @@ class RegisterForm extends React.Component {
   }
 
   isValid(){
-    const { errors, isValid } = UsersController.validateInput (this.state);
+    const { errors, isValid } = validateRegisterInput (this.state);
 
     if (!isValid) {
       this.setState({errors});

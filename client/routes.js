@@ -2,6 +2,7 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 import App from './Contests/App/App';
+import requireAuth from './util/requireAuth';
 
 // require.ensure polyfill for node
 if (typeof require.ensure !== 'function') {
@@ -16,12 +17,13 @@ if (typeof require.ensure !== 'function') {
  */
 if (process.env.NODE_ENV !== 'production') {
   // Require async routes only in development for react-hot-reloader to work.
-  require('./Contests/Create/Pages/CreateContestReview');
-  require('./Contests/Home/Pages/HomePage');
-  require('./Contests/Participate/Pages/Problem/pages/ProblemPage');
+  require('./Contests/Create/pages/CreateContestReview');
+  require('./Contests/Home/pages/HomePage');
+  require('./Contests/Participate/pages/Problem/pages/ProblemPage');
   require('./Contests/Pages/MyContests/MyContests');
-  require('./Contests/Participate/Pages/Scoreboard/pages/ScoreboardPage');
+  require('./Contests/Participate/pages/Scoreboard/pages/ScoreboardPage');
   require('./Contests/Login/pages/RegisterPage');
+  require('./Contests/Login/pages/LoginPage');
 }
 
 // react-router setup with code-splitting
@@ -31,7 +33,7 @@ if (process.env.NODE_ENV !== 'production') {
  path="/posts/:slug-:cuid"
  getComponent={(nextState, cb) => {
  require.ensure([], require => {
- cb(null, require('./modules/Home/Pages/PostDetailPage/PostDetailPage').default);
+ cb(null, require('./modules/Home/pages/PostDetailPage/PostDetailPage').default);
  });
  }}
  />
@@ -41,7 +43,7 @@ export default (
     <IndexRoute
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
-          cb(null, require('./Contests/Home/Pages/HomePage').default);
+          cb(null, require('./Contests/Home/pages/HomePage').default);
         });
       }}
     />
@@ -49,7 +51,7 @@ export default (
       path="/create-contest"
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
-          cb(null, require('./Contests/Create/Pages/CreateContestReview').default);
+          cb(null, require('./Contests/Create/pages/CreateContestReview').default);
         });
       }}
     />
@@ -57,7 +59,7 @@ export default (
       path="/problem"
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
-          cb(null, require('./Contests/Participate/Pages/Problem/pages/ProblemPage').default);
+          cb(null, require('./Contests/Participate/pages/Problem/pages/ProblemPage').default);
         });
       }}
     />
@@ -65,7 +67,7 @@ export default (
       path="/scoreboard"
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
-          cb(null, require('./Contests/Participate/Pages/Scoreboard/pages/ScoreboardPage').default);
+          cb(null, require('./Contests/Participate/pages/Scoreboard/pages/ScoreboardPage').default);
         });
       }}
     />
@@ -85,5 +87,13 @@ export default (
         });
       }}
     />
+    <Route
+        path="/login"
+        getComponent={(nextState, cb) => {
+          require.ensure([], require => {
+            cb(null, require('./Contests/Login/pages/LoginPage').default);
+          });
+        }}
+      />
     </Route>
 );

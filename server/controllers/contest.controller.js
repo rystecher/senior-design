@@ -5,6 +5,7 @@ import sanitizeHtml from 'sanitize-html';
 import fs from 'fs'; // for reading and writing problem pdfs
 import {hackerrankCall} from './hackerRank.controller';
 import {createSubmission, computeScore, createFeedbackMessage} from './submission.controller';
+import authenticate from '../middlewares/authenticate';
 
 /**
  * Get all contests

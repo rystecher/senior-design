@@ -37,6 +37,7 @@ import submissions from './routes/submission.routes';
 import messages from './routes/messaging.routes';
 import hackerRank from './routes/hackerRank.routes';
 import users from './routes/users.routes';
+import auth from './routes/auth.routes';
 import dummyData from './dummyData';
 import dummyContests from './dummyContests';
 import serverConfig from './config';
@@ -66,7 +67,8 @@ app.use('/api', contests);
 app.use('/api', submissions);
 app.use('/api', messages);
 app.use('/api', hackerRank);
-app.use('/api/users', users)
+app.use('/api/users', users);
+app.use('/api/auth', auth);
 
 // Render Initial HTML
 const renderFullPage = (html, initialState) => {
