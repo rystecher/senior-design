@@ -8,7 +8,7 @@ import App from './App';
 import { configureStore } from './store';
 import setAuthorizationToken from './util/setAuthorizationToken';
 import jwtDecode from 'jwt-decode';
-import { setCurrentUser } from './modules/Login/actions/authActions';
+import { setCurrentUser } from './Contests/Login/actions/authActions';
 
 // Initialize store
 const store = configureStore(window.__INITIAL_STATE__);

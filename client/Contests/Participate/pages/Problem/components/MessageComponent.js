@@ -1,5 +1,5 @@
 import React from 'react';
-import {fetchTeamMessages, sendJudgeMessage} from '../../Contests/ContestActions.js';
+import {fetchTeamMessages, sendJudgeMessage} from '../../../../ContestActions.js';
 import {ChatFeed, Message} from './chat-ui/lib/index.js';
 
 export default class MessageComponent extends React.Component {

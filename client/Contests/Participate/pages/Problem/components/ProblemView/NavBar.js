@@ -1,6 +1,6 @@
 import React from 'react';
 import ProblemButton from './ProblemButton.js';
-import {fetchProblem} from '../../../Contests/ContestActions';
+import {fetchProblem} from '../../../../../ContestActions';
 import spdf from "simple-react-pdf";
 
 class NavBar extends React.Component {

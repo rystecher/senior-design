@@ -1,4 +1,4 @@
-import callApi, {callApiForFile} from '../../util/apiCaller';
+import callApi, {callApiForFile} from '../util/apiCaller';
 
 // Export Constants
 export const ADD_CONTEST = 'ADD_CONTEST';
@@ -99,13 +99,6 @@ export function fetchProblem(contest_id, problem_no) {
     return callApiForFile(`contests/${contest_id}/problem/${problem_no}`);
 }
 
-// TODO: Move this into it's own file and write an additional testCode() call
-export function submitCode(contest_id, team_id, code, lang, number) {
-    callApi(`contests/${contest_id}/teams/${team_id}/submit`, 'post', {
-        problem: {code, lang, number}
-    }).then(res => console.log("submit code: ", res));
-}
-
 export function getMyContests(contests) {
   return {
     type: GET_MY_CONTESTS,
@@ -126,6 +119,19 @@ export function getNotMyContests(contests) {
   };
 }
 
+export function testCode(code, lang, number) {
+  callApi(`contests/${contest_id}/teams/${team_id}/submit`, 'post', {
+    problem: {code, lang, number}
+  }).then(res => console.log("submit code: ", res));
+}
+
+export function submitCode(contest_id, team_id, code, lang, number) {
+  callApi(`contests/${contest_id}/teams/${team_id}/submit`, 'post', {
+    problem: {code, lang, number}
+  }).then(res => console.log("submit code: ", res));
+}
+
+
 export function fetchNotMyContests(cuids) {
     // addAccountToTeam("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "7");
     // fetchSolvedArrays("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300");
@@ -135,7 +141,7 @@ export function fetchNotMyContests(cuids) {
     // submitCode("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "print 1", 5, 0);
     startContest("cikqgkv4q01ck7453ualdn3hn");
     // submitCode("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "print 6", 5, 1);
-    submitCode("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "print 4", 5, 3);
+    // submitCode("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "print 4", 5, 3);
     fetchJudgeMessages('cikqgkv4q01ck7453ualdn3hn');
     // submitCode("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "print 4", 5, 2);
     // submitCode("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "print 15", 5, 2);

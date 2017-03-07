@@ -1,6 +1,6 @@
 import React from 'react';
 import BarChart from '../components/BarChart.js';
-import {fetchScoreboardData} from '../../Contests/ContestActions.js';
+import {fetchScoreboardData} from '../../../../ContestActions.js';
 
 export default class ScoreBoardPage extends React.Component {
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import {fetchJudgeMessages} from '../../Contests/ContestActions.js';
+import {fetchJudgeMessages} from '../../../../ContestActions.js';
 
 export default class ChatSideBar extends React.Component {
 

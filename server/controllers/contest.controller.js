@@ -165,7 +165,7 @@ export function addProblemAttempt(req, res) {
                                         problem.solved = false;
                                         break;
                                     }
-                                };
+                                }
                             }
                             if (problem.solved) {
                                 team.score += computeScore(contest.start, problem.attempts.length);

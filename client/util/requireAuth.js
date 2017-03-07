@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { addFlashMessage } from '../modules/Login/actions/flashMessages';
+import { addFlashMessage } from '../Contests/Login/actions/flashMessages';
 
 export default function(ComposedComponent) {
   class Authenticate extends React.Component {
