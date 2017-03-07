@@ -4,9 +4,9 @@
 import { combineReducers } from 'redux';
 
 // Import Reducers
-import app from './modules/App/AppReducer';
-import contests from './modules/Contests/ContestReducer';
-import flashMessages from './modules/Login/reducers/flashMessages';
+import app from './Contests/App/AppReducer';
+import contests from './Contests/ContestReducer';
+import flashMessages from './Contests/Login/reducers/flashMessages';
 
 // Combine all reducers into one root reducer
 export default combineReducers({

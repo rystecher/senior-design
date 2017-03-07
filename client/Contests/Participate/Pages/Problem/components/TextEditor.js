@@ -1,6 +1,9 @@
 import React from 'react';
 import CodeMirror from 'react-codemirror';
 import 'codemirror/lib/codemirror.css';
+import {testCode, submitCode} from '../ProblemActions';
+
+
 // This hot-loads all the various syntax highlighting client-side since they depend
 // on the window and navigator objects
 if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
@@ -24,6 +27,8 @@ export default class TextEditor extends React.Component {
             readOnly: false,
             mode: "python",
         }
+        this.onTestClick = this.onTestClick.bind(this);
+        this.onSubmitClick = this.onSubmitClick.bind(this);
     }
 
   updateCode = (newCode) => {
@@ -39,11 +44,15 @@ export default class TextEditor extends React.Component {
   }
 
   onTestClick() {
-    // TODO: pass this.state.code and this.state.mode to HackerRank API
+    let problem_num = 1;
+    testCode(this.state.code, this.state.mode, problem_num);
   }
 
   onSubmitClick() {
-    // TODO: pass this.state.code and this.state.mode to submit API
+    let contest_id = 1;
+    let team_id = 1;
+    let problem_num = 1;
+    submitCode(contest_id, team_id, this.state.code, this.state.mode, problem_num);
   }
 
     render() {
@@ -62,8 +71,8 @@ export default class TextEditor extends React.Component {
 
                 <CodeMirror ref="editor" value={this.state.code} onChange={this.updateCode} options={options} />
 
-                <button ref="runButton"onClick={this.onTestClick}>Test</button>
-                <button ref="runButton"onClick={this.onSubmitClick}>Submit</button>
+                <button ref="runButton" onClick={this.onTestClick}>Test</button>
+                <button ref="runButton" onClick={this.onSubmitClick}>Submit</button>
                 <span id="results">Test</span>
             </div>
         );

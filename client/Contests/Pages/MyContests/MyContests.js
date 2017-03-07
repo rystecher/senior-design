@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 
 // Import Components
-import ContestList from '../../components/ContestList';
+import ContestList from '../../Create/ContestList';
 
 // Import Actions
 import {fetchNotMyContests, deleteContestRequest} from '../../ContestActions';
