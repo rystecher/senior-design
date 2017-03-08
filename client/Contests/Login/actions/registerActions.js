@@ -1,8 +1,10 @@
 import axios from 'axios';
+import callApi from '../../../util/apiCaller';
 
 export function userRegisterRequest(userData) {
   return dispatch => {
-    return axios.post('/api/users', userData);
+    //return axios.post('/api/users', userData);
+    return callApi('users', 'post', userData);
   }
 }
 
