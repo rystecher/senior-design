@@ -30,13 +30,13 @@ export default class ChatFeed extends Component {
   }
 
   /**
-    * Parses and collects messages of one type to be grouped together.
-    *
-    * @param {messages} - a list of Message objects
-    * @param {index} - the index of the end of the message grou
-    * @param {type} - the type of group (user or recipient)
-    * @return {message_nodes} - a JSX wrapped group of messages
-    */
+   * Parses and collects messages of one type to be grouped together.
+   *
+   * @param id
+   * @param messages
+   * @param index
+   * @param id
+   */
   _renderGroup(messages, index, id) {
     const group = [];
 
@@ -59,12 +59,12 @@ export default class ChatFeed extends Component {
   }
 
   /**
-    * Determines what type of message/messages to render.
-    *
-    * @param {messages} - a list of message objects
-    * @return {message_nodes} - a list of message JSX objects to be rendered in
-    *   our UI.
-    */
+   * Determines what type of message/messages to render.
+   *
+   * @return {message_nodes} - a list of message JSX objects to be rendered in
+   *   our UI.
+   * @param messages
+   */
   _renderMessages(messages) {
     const message_nodes = messages.map((curr, index) => {
 

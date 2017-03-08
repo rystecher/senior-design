@@ -8,7 +8,6 @@ const LANG_CODE = {'fsharp': 33, 'javascript': 20, 'whitespace': 41, 'python': 5
  * Evaluate source code using HackerRank's API
  * @param res
  * @param req
- * @param res
  */
 export function submit(req, res) {
   if (!req.body.source || !req.body.lang) {
