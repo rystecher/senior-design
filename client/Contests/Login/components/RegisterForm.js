@@ -41,7 +41,7 @@ class RegisterForm extends React.Component {
       this.props.isUserExists(val).then(res => {
         let errors = this.state.errors;
         let invalid;
-        if (res.data.user.length > 0) {
+        if (res.user.length > 0) {
           errors[field] = field + ' already taken';
           invalid = true;
         } else {
