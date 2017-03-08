@@ -370,7 +370,7 @@ export function getTeamScores(req, res) {
                     teamNames[index] = team.name;
                     teamScores[index] = team.score;
                     teamNumSolved[index] = team.numSolved;
-                })
+                });
                 res.json({ teams: {teamNames, teamScores, teamNumSolved } });
             }
         });

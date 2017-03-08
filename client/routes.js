@@ -51,7 +51,7 @@ export default (
       path="/create-contest"
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
-          cb(null, require('./Contests/Create/pages/CreateContestReview').default);
+          cb(null, requireAuth(require('./Contests/Create/pages/CreateContestReview').default));
         });
       }}
     />
@@ -59,7 +59,7 @@ export default (
       path="/problem"
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
-          cb(null, require('./Contests/Participate/pages/Problem/pages/ProblemPage').default);
+          cb(null, requireAuth(require('./Contests/Participate/pages/Problem/pages/ProblemPage').default));
         });
       }}
     />
@@ -67,7 +67,7 @@ export default (
       path="/scoreboard"
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
-          cb(null, require('./Contests/Participate/pages/Scoreboard/pages/ScoreboardPage').default);
+          cb(null, requireAuth(require('./Contests/Participate/pages/Scoreboard/pages/ScoreboardPage').default));
         });
       }}
     />
@@ -75,7 +75,7 @@ export default (
       path="/my"
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
-          cb(null, require('./Contests/Pages/MyContests/MyContests').default);
+          cb(null, requireAuth(require('./Contests/Pages/MyContests/MyContests').default));
         });
       }}
     />
