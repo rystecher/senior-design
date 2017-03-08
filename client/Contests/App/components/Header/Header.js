@@ -55,7 +55,7 @@ Header.contextTypes = {
 Header.propTypes = {
   auth: React.PropTypes.object.isRequired,
   logout: React.PropTypes.func.isRequired
-}
+};
 
 function mapStateToProps(state) {
   return {

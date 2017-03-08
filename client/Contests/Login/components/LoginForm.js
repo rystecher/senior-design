@@ -77,10 +77,10 @@ class LoginForm extends React.Component {
 
 LoginForm.propTypes = {
   login: React.PropTypes.func.isRequired
-}
+};
 
 LoginForm.contextTypes = {
   router: React.PropTypes.object.isRequired
-}
+};
 
 export default connect(null, { login })(LoginForm);

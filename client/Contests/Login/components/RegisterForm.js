@@ -12,7 +12,7 @@ class RegisterForm extends React.Component {
       errors: {},
       isLoading: false,
       invalid: false
-    }
+    };
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -42,7 +42,7 @@ class RegisterForm extends React.Component {
         let errors = this.state.errors;
         let invalid;
         if (res.data.user.length > 0) {
-        //if (res.user.length > 0) {  
+        //if (res.user.length > 0) {
           errors[field] = field + ' already taken';
           invalid = true;
         } else {
@@ -121,10 +121,10 @@ RegisterForm.propTypes = {
   userRegisterRequest: React.PropTypes.func.isRequired,
   addFlashMessage: React.PropTypes.func.isRequired,
   isUserExists: React.PropTypes.func.isRequired
-}
+};
 
 RegisterForm.contextTypes = {
   router: React.PropTypes.object.isRequired
-}
+};
 
 export default RegisterForm;

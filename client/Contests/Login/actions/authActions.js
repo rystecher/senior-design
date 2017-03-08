@@ -1,6 +1,6 @@
 import axios from 'axios';
 //import callApi from '../../../util/apiCaller';
-import setAuthorizationToken from '../../../util/setAuthorizationToken';
+import setAuthorizationToken from './setAuthorizationToken';
 import jwtDecode from 'jwt-decode';
 import { SET_CURRENT_USER } from './types';
 
