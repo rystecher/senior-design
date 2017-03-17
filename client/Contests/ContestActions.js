@@ -119,10 +119,10 @@ export function getNotMyContests(contests) {
   };
 }
 
-export function testCode(code, lang, number) {
-  callApi(`contests/${contest_id}/teams/${team_id}/submit`, 'post', {
-    problem: {code, lang, number}
-  }).then(res => console.log("submit code: ", res));
+export function testCode(code, lang, testcases) {
+  callApi(`contests/submit/testCode`, 'post', {
+    problem: {code, lang, testcases}
+  }).then(res => console.log("Testing code: ", res));
 }
 
 export function submitCode(contest_id, team_id, code, lang, number) {

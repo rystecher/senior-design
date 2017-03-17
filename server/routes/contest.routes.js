@@ -48,6 +48,9 @@ router.route('/contests/:contest_id/problem/:problem_no').get(ContestController.
 // Uploads a pdf for the specified contest
 router.route('/contests/:contest_id/problem/:filename').post(ContestController.createProblem);
 
+// Test the code submitted
+router.route('/contests/submit/testCode').post(ContestController.testProblemAttempt);
+
 // Run the code submitted
 router.route('/contests/:contest_id/teams/:team_id/submit').post(ContestController.addProblemAttempt);
 

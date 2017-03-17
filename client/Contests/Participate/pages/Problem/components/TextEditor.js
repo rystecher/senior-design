@@ -1,7 +1,7 @@
 import React from 'react';
 import CodeMirror from 'react-codemirror';
 import 'codemirror/lib/codemirror.css';
-import {testCode, submitCode} from '../ProblemActions';
+import {testCode, submitCode} from '../../../../ContestActions';
 
 
 // This hot-loads all the various syntax highlighting client-side since they depend
@@ -44,8 +44,8 @@ export default class TextEditor extends React.Component {
   }
 
   onTestClick() {
-    let problem_num = 1;
-    testCode(this.state.code, this.state.mode, problem_num);
+    // TODO parse input from text field
+    testCode(this.state.code, this.state.mode, ["1"]);
   }
 
   onSubmitClick() {
@@ -70,10 +70,12 @@ export default class TextEditor extends React.Component {
                 </select>
 
                 <CodeMirror ref="editor" value={this.state.code} onChange={this.updateCode} options={options} />
-
-                <button ref="runButton" onClick={this.onTestClick}>Test</button>
-                <button ref="runButton" onClick={this.onSubmitClick}>Submit</button>
-                <span id="results">Test</span>
+                <span>Test against your own custom input</span>
+                <br/>
+                <textarea name="custom_in" id="custom_in" cols="30" rows="10"></textarea>
+                <br/>
+                <button ref="testButton" onClick={this.onTestClick}>Test</button>
+                <button ref="subButton" onClick={this.onSubmitClick}>Submit</button>
             </div>
         );
     }

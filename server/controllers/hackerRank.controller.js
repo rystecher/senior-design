@@ -8,50 +8,18 @@ const LANG_CODE = {'fsharp': 33, 'javascript': 20, 'whitespace': 41, 'python': 5
  * Evaluate source code using HackerRank's API
  * @param source - (String) The source code to be evaluated
  * @param lang - (String) The programming language the user wants to use
+ * @param inputs = (String List) List of inputs to test against
+ * @param callback - (Function) Callback function
  * @returns Response from HackerRank API
  */
-export function submit(req, res) {
-  if (!req.body.source || !req.body.lang) {
-    res.status(403).end();
-  }
-
-  console.log("HackerRank request made");
-
-  var source = "print 1";       // TODO: Replace with text editor's content
-  var lang = LANG_CODE.python;  // TODO: Replace with user dropdown selection
-
-  var data = {
-    'source': source,
-    'lang': lang,
-    'testcases': JSON.stringify(['1']), // TODO: Replace. Test cases will come from database
-    'api_key': API_KEY,
-    'format': 'json'
-  };
-
-  var options = {
-    url: 'http://api.hackerrank.com/checker/submission.json',
-    form: data
-  };
-
-  return request.post(options, (error, response) => {
-    if (error) {
-      res.status(500).send(error);
-    }
-    else {
-      res.json(response);
-    }
-  });
-
-}
-
 export function hackerrankCall(source, lang, inputs, callback) {
     const options =  {
         url: 'http://api.hackerrank.com/checker/submission.json',
         form: {
-            source,
-            lang,
+            source: source,
+            lang: LANG_CODE[lang],
             testcases: JSON.stringify(inputs),
-            api_key: 'hackerrank|1761054-1191|25bcc1c3bcaeafaffc31a072b0a9ff725533893c',
+            api_key: API_KEY,
             format: 'json'
         }
     };

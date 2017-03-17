@@ -123,6 +123,19 @@ export function addAccountToTeam(req, res) {
     }
 }
 
+export function testProblemAttempt(req, res) {
+  if (!req.body.problem) {
+    res.status(403).end();
+  } else {
+    const {code, lang, testcases} = req.body.problem;
+    hackerrankCall(code, lang, testcases, (error, response) => {
+      console.log(response.body);
+      const {stderr, stdout, compilemessage} = JSON.parse(response.body).result;
+      // TODO: parse hackerrank call
+    });
+  }
+}
+
 /**
  * Add a problem to a team
  * @param req
