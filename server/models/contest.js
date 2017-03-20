@@ -22,19 +22,14 @@ const teamSchema = new Schema({
     messagedJudge: { type: 'Boolean', default: false, required: true},
 });
 
-const testCase = new Schema({
-    input: [String],
-    output: [String],
-});
-
 const contestProblem = new Schema({
     name: { type: 'String'},
     fileName: { type: 'String', required: true },
     solved: { type: 'Boolean', default: false, required: true},
     solvedBy: { type: 'String'},
-    sampleCases: testCase,
-    testCases: testCase,
 });
+// fileName used for pdf, input file, and output file
+// pdf/fileName.pdf, input/fileName.txt, and output/fileName.txt
 
 const contestSchema = new Schema({
     adminList: String,

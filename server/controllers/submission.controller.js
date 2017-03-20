@@ -98,12 +98,14 @@ export function computeScore(contestStart, numAttempts) {
     return Math.round(((Date.now() - contestStart) / millisInMinutes)) + 20 * numAttempts;
 }
 
-export function createFeedbackMessage(correct, compileMessage, problemNum) {
+export function createFeedbackMessage(correct, compileMessage, problemNum, hadStdError, stderr) {
     let message = 'Awaiting feedback from judges...';
     if (correct) {
         message = `Your solution was correct!`;
     } else if (compileMessage != '') {
         message = compileMessage;
+    } else if (hadStdError) {
+        message = 'Standard Error ' + stderr.toString();
     }
     return { from: 'Automated', message: `Problem ${problemNum}: ` + message };
 }
