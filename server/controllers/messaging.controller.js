@@ -57,7 +57,7 @@ export function getJudgeMessages(req, res) {
                         messagedJudge: team.messagedJudge,
                         id: team._id
                     };
-                })
+                });
                 res.json({ teams });
             }
         });

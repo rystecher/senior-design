@@ -26,14 +26,14 @@ export default class TextEditor extends React.Component {
             code: prompts.python,
             readOnly: false,
             mode: "python",
-        }
+        };
         this.onTestClick = this.onTestClick.bind(this);
         this.onSubmitClick = this.onSubmitClick.bind(this);
     }
 
   updateCode = (newCode) => {
     this.setState({code: newCode});
-  }
+  };
 
   changeMode = (e) => {
     let mode = e.target.value;
@@ -41,7 +41,7 @@ export default class TextEditor extends React.Component {
       mode: mode,
       code: prompts[mode]
     });
-  }
+  };
 
   onTestClick() {
     let problem_num = 1;

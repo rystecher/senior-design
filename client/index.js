@@ -6,7 +6,7 @@ import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import App from './App';
 import { configureStore } from './store';
-import setAuthorizationToken from './util/setAuthorizationToken';
+import setAuthorizationToken from './Contests/Login/actions/setAuthorizationToken';
 import jwtDecode from 'jwt-decode';
 import { setCurrentUser } from './Contests/Login/actions/authActions';
 

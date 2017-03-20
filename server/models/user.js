@@ -3,17 +3,16 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 const Schema = mongoose.Schema;
 
-var SALT_WORK_FACTOR = 10,
-    // these values can be whatever you want - we're defaulting to a
+const SALT_WORK_FACTOR = 10,    // these values can be whatever you want - we're defaulting to a
     // max of 5 attempts, resulting in a 2 hour lock
-    MAX_LOGIN_ATTEMPTS = 5,
-    LOCK_TIME = 2 * 60 * 60 * 1000;
+  MAX_LOGIN_ATTEMPTS = 5,
+  LOCK_TIME = 2 * 60 * 60 * 1000;
 
-var UserSchema = new Schema({
-    username: { type: String, required: true, index: { unique: true } },
-    password: { type: String, required: true },
-    loginAttempts: { type: Number, required: true, default: 0 },
-    lockUntil: { type: Number }
+const UserSchema = new Schema({
+  username: {type: String, required: true, index: {unique: true}},
+  password: {type: String, required: true},
+  loginAttempts: {type: Number, required: true, default: 0},
+  lockUntil: {type: Number}
 });
 
 UserSchema.virtual('isLocked').get(function() {
@@ -22,7 +21,7 @@ UserSchema.virtual('isLocked').get(function() {
 });
 
 UserSchema.pre('save', function(next) {
-    var user = this;
+    const user = this;
 
     // only hash the password if it has been modified (or is new)
     if (!user.isModified('password')) return next();
@@ -58,7 +57,7 @@ UserSchema.methods.incLoginAttempts = function(cb) {
         }, cb);
     }
     // otherwise we're incrementing
-    var updates = { $inc: { loginAttempts: 1 } };
+    const updates = {$inc: {loginAttempts: 1}};
     // lock the account if we've reached max attempts and it's not locked already
     if (this.loginAttempts + 1 >= MAX_LOGIN_ATTEMPTS && !this.isLocked) {
         updates.$set = { lockUntil: Date.now() + LOCK_TIME };
@@ -67,10 +66,10 @@ UserSchema.methods.incLoginAttempts = function(cb) {
 };
 
 // expose enum on the model, and provide an internal convenience reference
-var reasons = UserSchema.statics.failedLogin = {
-    NOT_FOUND: 0,
-    PASSWORD_INCORRECT: 1,
-    MAX_ATTEMPTS: 2
+const reasons = UserSchema.statics.failedLogin = {
+  NOT_FOUND: 0,
+  PASSWORD_INCORRECT: 1,
+  MAX_ATTEMPTS: 2
 };
 
 UserSchema.statics.getAuthenticated = function(username, password, cb) {
@@ -97,20 +96,20 @@ UserSchema.statics.getAuthenticated = function(username, password, cb) {
 
             // check if the password was a match
             if (isMatch) {
-                var doc = {
-                        username: user.username,
-                        id: user.id,
+                const doc = {
+                  username: user.username,
+                  id: user.id,
                 };
 
                 // return the jwt
-                var token = jwt.sign(doc, 'somesecretkeyforjsonwebtoken');
+                const token = jwt.sign(doc, 'somesecretkeyforjsonwebtoken');
 
                 // if there's no lock or failed attempts, just return the user
                 if (!user.loginAttempts && !user.lockUntil) return cb(null, token, user);
                 // reset attempts and lock info
-                var updates = {
-                    $set: { loginAttempts: 0 },
-                    $unset: { lockUntil: 1 }
+                const updates = {
+                  $set: {loginAttempts: 0},
+                  $unset: {lockUntil: 1}
                 };
                 return user.update(updates, function(err) {
                     if (err) return cb(err);
@@ -127,4 +126,4 @@ UserSchema.statics.getAuthenticated = function(username, password, cb) {
     });
 };
 
-module.exports = mongoose.model('User', UserSchema);
+export default mongoose.model('User', UserSchema);

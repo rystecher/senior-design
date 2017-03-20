@@ -17,7 +17,7 @@ class FlashMessagesList extends React.Component {
 FlashMessagesList.propTypes = {
   messages: React.PropTypes.array.isRequired,
   deleteFlashMessage: React.PropTypes.func.isRequired
-}
+};
 
 function mapStateToProps(state) {
   return {
