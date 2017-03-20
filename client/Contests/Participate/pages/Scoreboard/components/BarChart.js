@@ -10,7 +10,7 @@ const options = {
 /**
  * holds the data passed in from the page and creates a bar chart
  */
-var BarChart = React.createClass({
+export const BarChart = React.createClass({
   getInitialState() {
     return {
       datasets: [ // could add more data sets if you wanted more than addtional bars per team for other info

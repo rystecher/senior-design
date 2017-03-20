@@ -30,11 +30,11 @@ export default function(ComposedComponent) {
   Authenticate.propTypes = {
     isAuthenticated: React.PropTypes.bool.isRequired,
     addFlashMessage: React.PropTypes.func.isRequired
-  }
+  };
 
   Authenticate.contextTypes = {
     router: React.PropTypes.object.isRequired
-  }
+  };
 
   function mapStateToProps(state) {
     return {

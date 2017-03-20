@@ -25,7 +25,7 @@ const teamSchema = new Schema({
 const testCase = new Schema({
     input: [String],
     output: [String],
-})
+});
 
 const contestProblem = new Schema({
     name: { type: 'String'},

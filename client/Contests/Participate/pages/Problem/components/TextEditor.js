@@ -26,14 +26,14 @@ export default class TextEditor extends React.Component {
             code: prompts.python,
             readOnly: false,
             mode: "python",
-        }
+        };
         this.onTestClick = this.onTestClick.bind(this);
         this.onSubmitClick = this.onSubmitClick.bind(this);
     }
 
   updateCode = (newCode) => {
     this.setState({code: newCode});
-  }
+  };
 
   changeMode = (e) => {
     let mode = e.target.value;
@@ -41,16 +41,16 @@ export default class TextEditor extends React.Component {
       mode: mode,
       code: prompts[mode]
     });
-  }
+  };
 
   onTestClick() {
-    // TODO parse input from text field
-    testCode(this.state.code, this.state.mode, ["1"]);
+    let user_test_input = document.getElementById('custom_in').value.split('\n');
+    testCode(this.state.code, this.state.mode, user_test_input);
   }
 
   onSubmitClick() {
-    let contest_id = 1;
-    let team_id = 1;
+    let contest_id = 'cikqgkv4q01ck7453ualdn3hl';
+    let team_id = '58a2140af3c57bd14d9f0300';
     let problem_num = 1;
     submitCode(contest_id, team_id, this.state.code, this.state.mode, problem_num);
   }

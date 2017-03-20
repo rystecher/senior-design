@@ -14,6 +14,5 @@ class PostListPage extends Component {
       </div>
     );
   }
-};
-
+}
 export default PostListPage;

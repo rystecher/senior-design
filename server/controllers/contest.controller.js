@@ -131,7 +131,7 @@ export function testProblemAttempt(req, res) {
     hackerrankCall(code, lang, testcases, (error, response) => {
       console.log(response.body);
       const {stderr, stdout, compilemessage} = JSON.parse(response.body).result;
-      // TODO: parse hackerrank call
+      // TODO: parse HackerRank call and display it in chat
     });
   }
 }
@@ -146,7 +146,7 @@ export function addProblemAttempt(req, res) {
     if (!req.params.contest_id || !req.params.team_id || !req.body.problem) {
         res.status(403).end();
     } else {
-        const {number, code, lang} = req.body.problem;
+        const {code, lang, number} = req.body.problem;
         Contest.findOne({cuid: req.params.contest_id}, (err, contest) => {
             if (err) {
                 res.status(500).send(err);
@@ -383,7 +383,7 @@ export function getTeamScores(req, res) {
                     teamNames[index] = team.name;
                     teamScores[index] = team.score;
                     teamNumSolved[index] = team.numSolved;
-                })
+                });
                 res.json({ teams: {teamNames, teamScores, teamNumSolved } });
             }
         });

@@ -5,17 +5,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Message = exports.ChatFeed = exports.ChatBubble = undefined;
 
-var _index = require('./ChatBubble/index');
+const _index = require('./ChatBubble/index');
 
-var _index2 = _interopRequireDefault(_index);
+const _index2 = _interopRequireDefault(_index);
 
-var _index3 = require('./ChatFeed/index');
+const _index3 = require('./ChatFeed/index');
 
-var _index4 = _interopRequireDefault(_index3);
+const _index4 = _interopRequireDefault(_index3);
 
-var _index7 = require('./Message/index');
+const _index7 = require('./Message/index');
 
-var _index8 = _interopRequireDefault(_index7);
+const _index8 = _interopRequireDefault(_index7);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

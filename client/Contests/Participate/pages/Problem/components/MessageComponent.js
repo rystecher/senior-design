@@ -18,7 +18,7 @@ export default class MessageComponent extends React.Component {
                     const messageObjs = messages.map((message) => {
                         const type = message.from === 'Team' ? 0 : 1;
                         return new Message(type, message.message);
-                    })
+                    });
                     this.setState({ messageObjs });
                 }
             });

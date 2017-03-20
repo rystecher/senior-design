@@ -11,7 +11,7 @@ import Message from '../Message/index.js'
 export default class ChatFeed extends Component {
 
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       messages: [],
     }
@@ -30,27 +30,27 @@ export default class ChatFeed extends Component {
   }
 
   /**
-    * Parses and collects messages of one type to be grouped together.
-    *
-    * @param {messages} - a list of Message objects
-    * @param {index} - the index of the end of the message grou
-    * @param {type} - the type of group (user or recipient)
-    * @return {message_nodes} - a JSX wrapped group of messages
-    */
+   * Parses and collects messages of one type to be grouped together.
+   *
+   * @param id
+   * @param messages
+   * @param index
+   * @param id
+   */
   _renderGroup(messages, index, id) {
-    var group = []
+    const group = [];
 
-    for (var i = index; messages[i]?(messages[i].id == id):false; i--) {
+    for (let i = index; messages[i]?(messages[i].id == id):false; i--) {
       group.push(messages[i])
     }
 
-    var message_nodes = group.reverse().map((curr, index) => {
+    const message_nodes = group.reverse().map((curr, index) => {
       return <ChatBubble
-                key={Math.random().toString(36)}
-                message={new Message(curr.id, curr.message)}
-                bubblesCentered={this.props.bubblesCentered?true:false}
-                bubbleStyles={this.props.bubbleStyles}/>
-    })
+        key={Math.random().toString(36)}
+        message={new Message(curr.id, curr.message)}
+        bubblesCentered={this.props.bubblesCentered}
+        bubbleStyles={this.props.bubbleStyles}/>
+    });
     return (
       <div key={Math.random().toString(36)} style={styles.chatbubbleWrapper}>
         {message_nodes}
@@ -59,19 +59,19 @@ export default class ChatFeed extends Component {
   }
 
   /**
-    * Determines what type of message/messages to render.
-    *
-    * @param {messages} - a list of message objects
-    * @return {message_nodes} - a list of message JSX objects to be rendered in
-    *   our UI.
-    */
+   * Determines what type of message/messages to render.
+   *
+   * @return {message_nodes} - a list of message JSX objects to be rendered in
+   *   our UI.
+   * @param messages
+   */
   _renderMessages(messages) {
-    var message_nodes = messages.map((curr, index) => {
+    const message_nodes = messages.map((curr, index) => {
 
       // Find diff in message type or no more messages
       if (
-        (messages[index+1]?false:true) ||
-        (messages[index+1].id != curr.id)
+        (!messages[index + 1]) ||
+        (messages[index + 1].id != curr.id)
       ) {
         return this._renderGroup(messages, index, curr.id);
       }
@@ -126,7 +126,7 @@ const styles = {
     width: 36,
     zIndex: 100,
   }
-}
+};
 
 ChatFeed.propTypes =  {
   isTyping: React.PropTypes.bool,
@@ -134,4 +134,4 @@ ChatFeed.propTypes =  {
   bubblesCentered: React.PropTypes.bool,
   bubbleStyles: React.PropTypes.object,
   messages: React.PropTypes.array.isRequired
-}
+};
