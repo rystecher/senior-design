@@ -38,7 +38,6 @@ import messages from './routes/messaging.routes';
 import hackerRank from './routes/hackerRank.routes';
 import users from './routes/users.routes';
 import auth from './routes/auth.routes';
-import dummyData from './dummyData';
 import dummyContests from './dummyContests';
 import serverConfig from './config';
 
@@ -53,7 +52,6 @@ mongoose.connect(serverConfig.mongoURL, (error) => {
   }
 
   // feed some dummy data in DB.
-  dummyData();
   dummyContests();
 });
 

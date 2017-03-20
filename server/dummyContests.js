@@ -24,42 +24,22 @@ const dummyProblems = [{
     fileName: 'the-magic-hat',
     solved: true,
     solvedBy: "Cat in the hat",
-    testCases: {
-        input: [''],
-        output: ["1\n"],
-    },
 }, {
     name: "The Grape Escape",
     fileName: 'the-grape-escape',
-    testCases: {
-        input: [''],
-        output: ["2\n"],
-    },
 }, {
     name: "Three wise mice",
     fileName: 'three-wice-mice',
     solved: true,
     solvedBy: "Despereaux",
-    testCases: {
-        input: [''],
-        output: ["3\n"],
-    },
 }, {
     name: "The men who stare at boats",
     fileName: 'the-men-who-stare-at-boats',
-    testCases: {
-        input: [''],
-        output: ["4\n"],
-    },
 }, {
     name: "Iron pan",
     fileName: 'iron-pan',
     solved: true,
     solvedBy: "Tony Stark",
-    testCases: {
-        input: [''],
-        output: ["5\n"],
-    },
 }];
 
 export default function () {

@@ -25,6 +25,12 @@ export function addContestRequest(contest) {
   };
 }
 
+export function createContest(contest) {
+    return callApi('contests', 'post', { contest });
+}
+
+
+
 export function addTeamToContestRequest(contest_id, team) {
     return callApi(`contests/${contest_id}`, 'post', {
         team: {
@@ -65,6 +71,10 @@ export function fetchScoreboardData(cuid) {
     return callApi(`contests/${cuid}/scoreboard`);
 }
 
+export function getNumberOfProblems(contest_id) {
+    return callApi(`contests/${contest_id}/number_of_problems`);
+}
+
 export function startContest(contest_id) {
     return callApi(`contests/${contest_id}/start`, 'post', { start: true });
 }
@@ -97,6 +107,16 @@ export function fetchSubmissions(contest_id) {
 
 export function fetchProblem(contest_id, problem_no) {
     return callApiForFile(`contests/${contest_id}/problem/${problem_no}`);
+}
+
+export function setProblemMetaData(contest_id, problem_no, metadata) {
+    return callApi(`contests/${contest_id}/problem/${problem_no}/metadata`, 'post', {
+        metadata
+    });
+}
+
+export function getProblemMetaData(contest_id, problem_no) {
+    return callApi(`contests/${contest_id}/problem/${problem_no}/metadata`);
 }
 
 export function getMyContests(contests) {
