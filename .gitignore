@@ -8,4 +8,6 @@ public/*
 dist
 coverage/
 .nyc_output/
-pdfs/
+pdfs/*
+input/*
+output/*
