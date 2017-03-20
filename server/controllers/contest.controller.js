@@ -129,9 +129,14 @@ export function testProblemAttempt(req, res) {
   } else {
     const {code, lang, testcases} = req.body.problem;
     hackerrankCall(code, lang, testcases, (error, response) => {
-      console.log(response.body);
-      const {stderr, stdout, compilemessage} = JSON.parse(response.body).result;
+      const {stderr, stdout, compilemessage, message, time} = JSON.parse(response.body).result;
       // TODO: parse HackerRank call and display it in chat
+
+      if (message == 'Terminated due to timeout' && time == 10) {
+        console.log(message + ' after 10 seconds');
+      } else {
+        console.log(stderr, stdout, compilemessage, message, time);
+      }
     });
   }
 }
@@ -148,6 +153,7 @@ export function addProblemAttempt(req, res) {
     } else {
         const {code, lang, number} = req.body.problem;
         Contest.findOne({cuid: req.params.contest_id}, (err, contest) => {
+          console.log(contest);
             if (err) {
                 res.status(500).send(err);
             } else {

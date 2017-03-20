@@ -49,7 +49,7 @@ export default class TextEditor extends React.Component {
   }
 
   onSubmitClick() {
-    let contest_id = 'cikqgkv4q01ck7453ualdn3hl';
+    let contest_id = 'cikqgkv4q01ck7453ualdn3hn';
     let team_id = '58a2140af3c57bd14d9f0300';
     let problem_num = 1;
     submitCode(contest_id, team_id, this.state.code, this.state.mode, problem_num);
