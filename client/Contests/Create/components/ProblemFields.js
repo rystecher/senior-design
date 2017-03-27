@@ -1,6 +1,7 @@
 import React from 'react';
 import Dropzone from 'react-dropzone';
 import { getProblemMetaData } from '../../ContestActions';
+import './problem_fields.css';
 
 export default class ProblemFields extends React.Component {
 
@@ -9,13 +10,14 @@ export default class ProblemFields extends React.Component {
         this.contest_id = props.contest_id;
         this.problem_no = props.problem_no;
         this.onSave = this.onSave.bind(this);
+        this.onDrop = this.onDrop.bind(this);
         this.getTextFromFile = this.getTextFromFile.bind(this);
         this.updateField = this.updateField.bind(this);
         this.updateInput = this.updateInput.bind(this);
         this.updateOutput = this.updateOutput.bind(this);
         this.state = {
-            input: 'Click here to upload an input text file',
-            output: 'Click here to upload an output text file',
+            input: '',
+            output: '',
             problemName: '',
         };
     }
@@ -53,9 +55,19 @@ export default class ProblemFields extends React.Component {
         reader.readAsText(file);
     }
 
+    onDrop(files) {
+        this.props.onDropFile(files);
+        this.file = files[0];
+        this.setState({ fileName: this.file.name });
+    }
+
     onSave() {
         const { input, output, problemName } = this.state;
-        this.props.save(input, output, problemName, this.file);
+        if (input.length === 0 || output.length === 0 || problemName.length === 0 || !this.file) {
+
+        } else {
+            this.props.save(input, output, problemName);
+        }
     }
 
     updateField(event) {
@@ -75,8 +87,14 @@ export default class ProblemFields extends React.Component {
         if (!this.state.loadedMeta &&  this.problem_no) {
             return null;
         }
+        const dragAndDropText = this.state.fileName ?
+            `Uploaded File: ${this.state.fileName}` : 'Click here to upload a new problem PDF.';
+        const output = this.state.output.length < 500 ? this.state.output.substring(0, 500) :
+            this.state.output.substring(0, 500) + '...';
+        const input = this.state.input.length < 500 ? this.state.input.substring(0, 500) :
+            this.state.input.substring(0, 500) + '...';
         return (
-            <div>
+            <div id="problem-fields">
                 <input
                     placeholder='Problem Name'
                     name="problemName"
@@ -84,11 +102,31 @@ export default class ProblemFields extends React.Component {
                     type="text" value={this.state.problemName}
                     onChange={this.updateField}
                 />
-                <Dropzone onDrop={this.updateInput} multiple={false}>
-                    <div>{this.state.input.substring(0, 2000)}</div>
+                <Dropzone
+                    className='dropzone'
+                    onDrop={this.updateInput}
+                    multiple={false}
+                    accept='.txt'
+                >
+                    Click here to upload a new input file
                 </Dropzone>
-                <Dropzone onDrop={this.updateOutput} multiple={false}>
-                    <div>{this.state.output.substring(0, 2000)}</div>
+                <div className='file-text'>{input}</div>
+                <Dropzone
+                    className='dropzone'
+                    onDrop={this.updateOutput}
+                    multiple={false}
+                    accept='.txt'
+                >
+                    Click here to upload a new output file
+                </Dropzone>
+                <div className='file-text'>{output}</div>
+                <Dropzone
+                    className='pdf dropzone'
+                    onDrop={this.onDrop}
+                    multiple={false}
+                    accept='application/pdf'
+                >
+                    {dragAndDropText}
                 </Dropzone>
                 <button onClick={this.onSave}>Save</button>
             </div>

@@ -16,29 +16,20 @@ if (typeof require.ensure !== 'function') {
   https://github.com/gaearon/react-hot-loader/issues/288 is fixed.
  */
 if (process.env.NODE_ENV !== 'production') {
-  // Require async routes only in development for react-hot-reloader to work.
-  require('./Contests/Create/pages/CreateContestReview');
-  require('./Contests/Create/pages/ProblemPage');
-  require('./Contests/Home/pages/HomePage');
-  require('./Contests/Participate/pages/Problem/pages/ProblemPage');
-  require('./Contests/Pages/MyContests/MyContests');
-  require('./Contests/Participate/pages/Scoreboard/pages/ScoreboardPage');
-  require('./Contests/Login/pages/RegisterPage');
-  require('./Contests/Login/pages/LoginPage');
+    // Require async routes only in development for react-hot-reloader to work.
+    require('./Contests/Create/pages/CreateContestReview');
+    require('./Contests/Create/pages/ProblemPage');
+    require('./Contests/Home/pages/HomePage');
+    require('./Contests/ContestHome/pages/HomePage');
+    require('./Contests/Participate/pages/Problem/pages/ProblemPage');
+    require('./Contests/Pages/MyContests/MyContests');
+    require('./Contests/Participate/pages/Scoreboard/pages/ScoreboardPage');
+    require('./Contests/Login/pages/RegisterPage');
+    require('./Contests/Login/pages/LoginPage');
 }
 
 // react-router setup with code-splitting
 // More info: http://blog.mxstbr.com/2016/01/react-apps-with-pages/
-/*
- <Route
- path="/posts/:slug-:cuid"
- getComponent={(nextState, cb) => {
- require.ensure([], require => {
- cb(null, require('./modules/Home/pages/PostDetailPage/PostDetailPage').default);
- });
- }}
- />
- */
 export default (
   <Route path="/" component={App}>
     <IndexRoute
@@ -53,6 +44,14 @@ export default (
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
           cb(null, requireAuth(require('./Contests/Create/pages/CreateContestReview').default));
+        });
+      }}
+    />
+    <Route
+      path="/contest/:contest_id/home"
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, requireAuth(require('./Contests/ContestHome/pages/HomePage').default));
         });
       }}
     />

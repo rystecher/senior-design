@@ -14,6 +14,9 @@ router.route('/contests/join').get(ContestController.getContestsNotInIds);
 // Get one contest by cuid
 router.route('/contests/:contest_id').get(ContestController.getContest);
 
+// Get contest info for contest home page
+router.route('/contests/:contest_id/info').get(ContestController.getContestInfo);
+
 // Sets the start time for a contest
 router.route('/contests/:contest_id/start').post(ContestController.startContest);
 

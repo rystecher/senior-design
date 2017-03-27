@@ -4,6 +4,7 @@ import { getNumberOfProblems } from '../../ContestActions';
 import ProblemNavigator from '../components/ProblemNavigator';
 import ProblemEditor from '../components/ProblemEditor';
 import ProblemAdder from '../components/ProblemAdder';
+import './problem_page.css';
 
 class ProblemPage extends React.Component {
 

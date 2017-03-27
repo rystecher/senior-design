@@ -11,7 +11,7 @@ export default class ProblemEditor extends React.Component {
         super(props);
         this.contest_id = props.params.contest_id;
         this.problem_no = props.params.problem_no;
-        this.onDrop = this.onDrop.bind(this);
+        this.onDropFile = this.onDropFile.bind(this);
         this.onSave = this.onSave.bind(this);
         this.updateField = this.updateField.bind(this);
         this.state = {};
@@ -25,6 +25,7 @@ export default class ProblemEditor extends React.Component {
         const { contest_id, problem_no } = nextProps.params;
         if (this.problem_no !== problem_no) {
             //this.setState({})
+            this.file = null;
             this.fetchProblemWrapper(contest_id, problem_no);
         }
     }
@@ -49,9 +50,8 @@ export default class ProblemEditor extends React.Component {
         });
     }
 
-    onDrop(files) {
+    onDropFile(files) {
         this.file = files[0];
-        this.setState({ fileName: this.file.name });
     }
 
     onSave(input, output, problemName) {
@@ -78,19 +78,19 @@ export default class ProblemEditor extends React.Component {
         if (!this.state.loadedPdf) {
             return null;
         }
-        const dragAndDropText = this.state.fileName ?
-            `Uploaded File: ${this.state.fileName}` : 'Drag and drop pdf here or click to select files to upload.';
         const pdf = this.state.pdfUrl ?
             (<spdf.SimplePDF file={this.state.pdfUrl}/>) : null;
         return (
-            <div>
+            <div id='edit'>
                 <div>
                     {pdf}
-                    <Dropzone onDrop={this.onDrop} multiple={false}>
-                        <div>{dragAndDropText}</div>
-                    </Dropzone>
                 </div>
-                <ProblemFields contest_id={this.contest_id} problem_no={this.problem_no} save={this.onSave}/>
+                <ProblemFields
+                    contest_id={this.contest_id}
+                    problem_no={this.problem_no}
+                    save={this.onSave}
+                    onDropFile={this.onDropFile}
+                />
             </div>
         );
     }

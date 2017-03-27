@@ -468,6 +468,27 @@ export function getContest(req, res) {
 }
 
 /**
+ * Get the info for the contest home page
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getContestInfo(req, res) {
+    if (!req.params.contest_id) {
+        res.status(403).end();
+    } else {
+        Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                const { about, admin, name, rules } = contest;
+                res.json({ about, admin, name, rules });
+            }
+        });
+    }
+}
+
+/**
  * Get the number of problems in a specified contest
  * @param req
  * @param res
@@ -500,8 +521,37 @@ export function startContest(req, res) {
         Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
-            } else {
+            } else if (!contest.start) {
                 contest.start = Date.now();
+                contest.save((err) => {
+                    if (err) {
+                        res.status(500).send(err);
+                    } else {
+                        res.json({ success: true });
+                    }
+                });
+            } else {
+                res.status(400).send({ err: 'Contest already started' });
+            }
+        });
+    }
+}
+
+/**
+ * Stops the contest, no problem attempts can be added after this request
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function closeContest(req, res) {
+    if (!req.params.contest_id) {
+        res.status(403).end();
+    } else {
+        Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                contest.closed = true;
                 contest.save((err) => {
                     if (err) {
                         res.status(500).send(err);

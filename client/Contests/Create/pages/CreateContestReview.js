@@ -3,26 +3,21 @@ import ContestForm from '../components/ContestForm';
 import * as Utility from '../Forms';
 import { createContest } from '../../ContestActions';
 import { withRouter } from 'react-router';
+import './create_contest.css';
 
-class CreateContestReview extends React.Component {
+class CreateContest extends React.Component {
 
     constructor(props) {
         super(props);
-        this.saveAnswer = this.saveAnswer.bind(this);
         this.submit = this.submit.bind(this);
-        this.answers = new Array(Utility.forms.length);
-    }
-
-    saveAnswer(value, idx) {
-        this.answers[idx] = value;
+        this.updateField = this.updateField.bind(this);
+        this.state = {name: '', about: '', rules: ''};
     }
 
     submit() {
+        const { name, about, rules } = this.state;
         createContest({
-            name: this.answers[0],
-            description: this.answers[1],
-            rules: this.answers[2],
-            teams: []
+            name, about, rules, teams: []
         }).then((res) => {
             if (res.contest.cuid) {
                 this.props.router.push(`/contest/${res.contest.cuid}/problems/add`);
@@ -30,25 +25,47 @@ class CreateContestReview extends React.Component {
         });
     }
 
+    updateField(event) {
+        const { name, value } = event.target;
+        this.setState({ [name]: value });
+    }
+
     render() {
         return (
-            <div className="review-create-contest">
-                {Utility.forms.map((form, index) => {
-                    return (<ContestForm key={index}
-                        position={index}
-                        saveAnswer={this.saveAnswer}
-                        {...form}
-                    />);
-                })}
-                <button
-                    className="btn btn-lg submit"
-                    onClick={this.submit}
-                >
-                    Create Contest
-                </button>
+            <div>
+                <div id='header-banner'>
+                    <input
+                        placeholder='Contest Name'
+                        name='name'
+                        type='text' value={this.state.name}
+                        onChange={this.updateField}
+                    />
+                </div>
+                <div className='contest-home'>
+                    <h2>About</h2>
+                    <textarea name='about'
+                        value={this.state.about}
+                        onChange={this.updateField}
+                    >
+                    </textarea>
+                    <h2>Rules</h2>
+                    <textarea name='rules'
+                        value={this.state.rules}
+                        onChange={this.updateField}
+                    >
+                    </textarea>
+                    <div>
+                        <button
+                            id='submit'
+                            onClick={this.submit}
+                        >
+                            Create Contest
+                        </button>
+                    </div>
+                </div>
             </div>
         );
     }
 }
 
-export default withRouter(CreateContestReview);
+export default withRouter(CreateContest);
