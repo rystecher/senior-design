@@ -1,9 +1,8 @@
 import React from 'react';
-import ContestForm from '../components/ContestForm';
-import * as Utility from '../Forms';
 import { createContest } from '../../ContestActions';
 import { withRouter } from 'react-router';
 import './create_contest.css';
+import { connect } from 'react-redux';
 
 class CreateContest extends React.Component {
 
@@ -15,9 +14,10 @@ class CreateContest extends React.Component {
     }
 
     submit() {
+        const {user} = this.props.auth;
         const { name, about, rules } = this.state;
         createContest({
-            name, about, rules, teams: []
+            name, about, rules, teams: [], admin: user.username
         }).then((res) => {
             if (res.contest.cuid) {
                 this.props.router.push(`/contest/${res.contest.cuid}/problems/add`);
@@ -68,4 +68,14 @@ class CreateContest extends React.Component {
     }
 }
 
-export default withRouter(CreateContest);
+CreateContest.propTypes = {
+  auth: React.PropTypes.object.isRequired
+};
+
+function mapStateToProps(state) {
+  return {
+    auth: state.auth
+  };
+}
+
+export default connect(mapStateToProps)(withRouter(CreateContest));
