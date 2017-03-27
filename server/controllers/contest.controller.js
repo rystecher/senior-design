@@ -7,7 +7,7 @@ import shortid from 'shortid'; // generates short filenames
 import {hackerrankCall} from './hackerRank.controller';
 import {createSubmission, computeScore, createFeedbackMessage} from './submission.controller';
 import authenticate from '../middlewares/authenticate';
-import User from '../models/user';
+import {addContestToCreatedContestsID} from '../controllers/users.controller.js';
 
 /**
  * Get all contests
@@ -39,7 +39,7 @@ export function createContest(req, res) {
         newContest.name = sanitizeHtml(newContest.name);
         newContest.slug = slug(newContest.name.toLowerCase(), { lowercase: true });
         newContest.cuid = cuid();
-        User.find(req.body.user_id).addContestToCreatedContestsID(newContest.cuid);
+        addContestToCreatedContestsID(req.body.contest.admin, newContest.cuid);
         newContest.save((err, saved) => {
             if (err) {
                 res.status(500).send(err);

@@ -8,14 +8,9 @@ const SALT_WORK_FACTOR = 10,    // these values can be whatever you want - we're
   MAX_LOGIN_ATTEMPTS = 5,
   LOCK_TIME = 2 * 60 * 60 * 1000;
 
-var idSchema = new Schema({
-  type: String,
-  unique: true
-});
-
 var contestTeamPairSchema = new Schema({
-  contests: idSchema,
-  teams: idSchema
+  contests: {type: String, unique: true},
+  teams: {type: String, unique: true}
 });
 
 const UserSchema = new Schema({
@@ -23,7 +18,7 @@ const UserSchema = new Schema({
   password: {type: String, required: true},
   loginAttempts: {type: Number, required: true, default: 0},
   lockUntil: {type: Number},
-  createdContestsID: { type: [idSchema] },
+  createdContestsID: [String],
   participatedContestsID: { type: [contestTeamPairSchema] }
 });
 
