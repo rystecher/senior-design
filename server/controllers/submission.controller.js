@@ -1,4 +1,4 @@
-import Submission from '../models/Submission';
+import Submission from '../models/submission';
 import {sendTeamMessage} from '../controllers/messaging.controller';
 
 /**

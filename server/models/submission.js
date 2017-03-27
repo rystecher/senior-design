@@ -14,7 +14,7 @@ const submissionSchema = new Schema({
     expectedOutput: [String],
     actualOutput: [String],
 });
-
+/*
 var sub
 if (mongoose.models.Submission) {
   console.log('if');
@@ -25,4 +25,6 @@ if (mongoose.models.Submission) {
 }
 
 export default sub;
-//export default mongoose.model('Submission', submissionSchema);
+*/
+
+export default mongoose.model('Submission', submissionSchema);
