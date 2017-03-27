@@ -8,11 +8,23 @@ const SALT_WORK_FACTOR = 10,    // these values can be whatever you want - we're
   MAX_LOGIN_ATTEMPTS = 5,
   LOCK_TIME = 2 * 60 * 60 * 1000;
 
+var idSchema = new Schema({
+  type: String,
+  unique: true
+});
+
+var contestTeamPairSchema = new Schema({
+  contests: idSchema,
+  teams: idSchema
+});
+
 const UserSchema = new Schema({
   username: {type: String, required: true, index: {unique: true}},
   password: {type: String, required: true},
   loginAttempts: {type: Number, required: true, default: 0},
-  lockUntil: {type: Number}
+  lockUntil: {type: Number},
+  createdContestsID: { type: [idSchema] },
+  participatedContestsID: { type: [contestTeamPairSchema] }
 });
 
 UserSchema.virtual('isLocked').get(function() {
