@@ -39,6 +39,7 @@ import hackerRank from './routes/hackerRank.routes';
 import users from './routes/users.routes';
 import auth from './routes/auth.routes';
 import dummyContests from './dummyContests';
+import dummySubmissions from './dummySubmissions';
 import serverConfig from './config';
 
 // Set native promises as mongoose promise
@@ -53,6 +54,7 @@ mongoose.connect(serverConfig.mongoURL, (error) => {
 
   // feed some dummy data in DB.
   dummyContests();
+  dummySubmissions();
 });
 
 // Apply body Parser and server public assets and routes
