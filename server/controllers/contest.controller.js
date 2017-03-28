@@ -7,7 +7,7 @@ import shortid from 'shortid'; // generates short filenames
 import {hackerrankCall} from './hackerRank.controller';
 import {createSubmission, computeScore, createFeedbackMessage} from './submission.controller';
 import authenticate from '../middlewares/authenticate';
-import {addContestToCreatedContestsID} from '../controllers/users.controller.js';
+import * as User from '../controllers/users.controller.js';
 
 /**
  * Get all contests
@@ -39,7 +39,7 @@ export function createContest(req, res) {
         newContest.name = sanitizeHtml(newContest.name);
         newContest.slug = slug(newContest.name.toLowerCase(), { lowercase: true });
         newContest.cuid = cuid();
-        addContestToCreatedContestsID(req.body.contest.admin, newContest.cuid);
+        User.createContest(req.body.contest.admin, newContest.cuid);
         newContest.save((err, saved) => {
             if (err) {
                 res.status(500).send(err);
@@ -57,38 +57,39 @@ export function createContest(req, res) {
  * @param res
  * @returns void
  */
-export function addTeamToContest(req, res) {
-    if (!req.body.team.name || !req.params.contest_id || !req.body.team.memberList) {
+export function joinContest(req, res) {
+    if (!req.body.username || !req.params.contest_id) {
         res.status(403).end();
+    } else {
+        const newTeam = new Team();
+        const username = req.body.username;
+        newTeam.name = sanitizeHtml(username);
+        newTeam.slug = slug(newTeam.name.toLowerCase(), { lowercase: true });
+        let teamNameConflict = false;
+        Contest.findOne({cuid: req.params.contest_id}).exec((err, contest) => {
+            if (err) {
+                res.status(500).send(err);
+            } else if (contest.teams.findIndex(team => team.name === newTeam.name) !== -1) {
+                res.json({ err: 'TEAM_NAME_CONFLICT'});
+            } else {
+                const teamProblems = Array(contest.problems.length).fill({
+                  solved: false, attempFileNames: []
+                });
+                newTeam.problem_attempts = teamProblems;
+                contest.teams.push(newTeam);
+                contest.save((err, saved) => {
+                    if (err) {
+                        res.status(500).send(err);
+                    } else {
+                        const team = saved.teams.pop();
+                        User.joinContest(username, contest.cuid, team._id);
+                        res.json({ success: true });
+                    }
+                    //console.log(saved);
+                });
+            }
+        });
     }
-
-    const newTeam = new Team(req.body.team);
-
-    // Let's sanitize inputs
-    newTeam.name = sanitizeHtml(newTeam.name);
-    newTeam.slug = slug(newTeam.name.toLowerCase(), { lowercase: true });
-    let teamNameConflict = false;
-    Contest.findOne({cuid: req.params.contest_id}).select('teams').exec((err, contest) => {
-        if (err) {
-            res.status(500).send(err);
-        }
-        if (contest.teams.findIndex(team => team.name === newTeam.name) !== -1) {
-            res.json({ err: 'TEAM_NAME_CONFLICT'});
-        } else {
-            const teamProblems = Array(contest.problems.length).fill({
-              solved: false, attempFileNames: []
-            });
-            newTeam.problem_attempts = teamProblems;
-            contest.teams.push(newTeam);
-            contest.save((err, saved) => {
-                if (err) {
-                    res.status(500).send(err);
-                }
-                //console.log(saved);
-                res.json({ team: saved });
-            });
-        }
-    });
 }
 
 /**
@@ -470,6 +471,27 @@ export function getContest(req, res) {
 }
 
 /**
+ * Get the info for the contest home page
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getContestInfo(req, res) {
+    if (!req.params.contest_id) {
+        res.status(403).end();
+    } else {
+        Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                const { about, admin, name, rules } = contest;
+                res.json({ about, admin, name, rules });
+            }
+        });
+    }
+}
+
+/**
  * Get the number of problems in a specified contest
  * @param req
  * @param res
@@ -502,8 +524,37 @@ export function startContest(req, res) {
         Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
-            } else {
+            } else if (!contest.start) {
                 contest.start = Date.now();
+                contest.save((err) => {
+                    if (err) {
+                        res.status(500).send(err);
+                    } else {
+                        res.json({ success: true });
+                    }
+                });
+            } else {
+                res.status(400).send({ err: 'Contest already started' });
+            }
+        });
+    }
+}
+
+/**
+ * Stops the contest, no problem attempts can be added after this request
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function closeContest(req, res) {
+    if (!req.params.contest_id) {
+        res.status(403).end();
+    } else {
+        Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                contest.closed = true;
                 contest.save((err) => {
                     if (err) {
                         res.status(500).send(err);
