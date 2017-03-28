@@ -14,10 +14,10 @@ class CreateContest extends React.Component {
     }
 
     submit() {
-        const {user} = this.props.auth;
+        const { username } = this.props.auth.user;
         const { name, about, rules } = this.state;
         createContest({
-            name, about, rules, teams: [], admin: user.username
+            name, about, rules, teams: [], admin: username
         }).then((res) => {
             if (res.contest.cuid) {
                 this.props.router.push(`/contest/${res.contest.cuid}/problems/add`);

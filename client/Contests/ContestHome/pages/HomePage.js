@@ -1,11 +1,13 @@
 import React from 'react';
-import { getContestInfo } from '../../ContestActions';
+import { getContestInfo, joinContest } from '../../ContestActions';
+import { connect } from 'react-redux';
 import './home.css';
 
-export default class ContestHome extends React.Component {
+class ContestHome extends React.Component {
 
     constructor(props) {
         super(props);
+        this.join = this.join.bind(this);
         this.state = {};
     }
 
@@ -27,6 +29,11 @@ export default class ContestHome extends React.Component {
         }
     }
 
+    join() {
+        const { auth, params } = this.props;
+        console.log(params.contest_id, auth.user.username);
+        joinContest(params.contest_id, auth.user.username);
+    }
 
 
     render() {
@@ -43,6 +50,11 @@ export default class ContestHome extends React.Component {
                     }
                 </div>
                 <div className='contest-home'>
+                    <button
+                        onClick={this.join}
+                    >
+                        Join Contest
+                    </button>
                     <h2>About</h2>
                     <div>{this.state.about}</div>
                     <h2>Rules</h2>
@@ -52,3 +64,15 @@ export default class ContestHome extends React.Component {
         );
     }
 }
+
+ContestHome.propTypes = {
+  auth: React.PropTypes.object.isRequired
+};
+
+function mapStateToProps(state) {
+  return {
+    auth: state.auth
+  };
+}
+
+export default connect(mapStateToProps)(ContestHome);

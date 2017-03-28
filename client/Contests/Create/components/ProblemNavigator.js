@@ -12,7 +12,7 @@ export default class ProblemNavigator extends React.Component {
         arr.fill(0);
         let className, selected;
         return (
-            <ul className='problem-navigator navigation' role='group'>
+            <ul className='pagination justify-content-center' role='group'>
                 {arr.map((elm, idx) => {
                     const val = idx + 1;
                     selected = val == this.props.problemNumber ? ' selected' : '';
@@ -20,18 +20,19 @@ export default class ProblemNavigator extends React.Component {
                     className = selected;
                     return (
                         <li
-                            className={className}
+                            className={val == this.props.problemNumber ? 'page-item active' : 'page-item'}
                             key={idx}
                             onClick={() => this.props.changeProblemNumber(val)}
                         >
-                            {val}
+                            <a href='#' className='page-link'>{val}</a>
                         </li>
                     );
                 })}
                 {this.props.edit && numberOfProblems > 0 ?
                     <li
+                        className='page-item'
                         onClick={this.props.addProblem}
-                    > + </li> : null}
+                    ><a href='#' className='page-link'>+</a></li> : null}
             </ul>
         );
     }

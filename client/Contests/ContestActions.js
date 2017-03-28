@@ -25,12 +25,9 @@ export function createContest(contest) {
 
 
 
-export function addTeamToContestRequest(contest_id, team) {
-    return callApi(`contests/${contest_id}`, 'post', {
-        team: {
-            name: team.name,
-            memberList: [],
-        },
+export function joinContest(contest_id, username) {
+    return callApi(`contests/${contest_id}/join`, 'post', {
+        username
     }).then(res => console.log(res));
 }
 
