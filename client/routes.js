@@ -17,7 +17,7 @@ if (typeof require.ensure !== 'function') {
  */
 if (process.env.NODE_ENV !== 'production') {
     // Require async routes only in development for react-hot-reloader to work.
-    require('./Contests/Create/pages/CreateContestReview');
+    require('./Contests/Create/pages/CreateContest');
     require('./Contests/Create/pages/ProblemPage');
     require('./Contests/Home/pages/HomePage');
     require('./Contests/ContestHome/pages/HomePage');
@@ -43,7 +43,7 @@ export default (
       path="/create-contest"
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
-          cb(null, requireAuth(require('./Contests/Create/pages/CreateContestReview').default));
+          cb(null, requireAuth(require('./Contests/Create/pages/CreateContest').default));
         });
       }}
     />
