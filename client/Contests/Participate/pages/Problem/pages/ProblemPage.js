@@ -79,22 +79,26 @@ export default class ProblemPage extends React.Component {
     render() {
         return (
             <div>
-                <NavBar competition={competition[0]} />
-
-                <TextEditor
-                  team_id='58a2140af3c57bd14d9f0300'
-                  contest_id='cikqgkv4q01ck7453ualdn3hn'
-                  problem_num={1}
-                />
-
-                <MessageComponent
+              <div className="row">
+                <div className="col-md-6">
+                  <NavBar competition={competition[0]} />
+                </div>
+                <div className="col-md-6">
+                  <TextEditor
                     team_id='58a2140af3c57bd14d9f0300'
                     contest_id='cikqgkv4q01ck7453ualdn3hn'
-                />
+                    problem_num={1}
+                  />
+                </div>
+              </div>
 
-                <ChatSideBar
-                    contest_id='cikqgkv4q01ck7453ualdn3hn'
-                />
+              <MessageComponent
+                  team_id='58a2140af3c57bd14d9f0300'
+                  contest_id='cikqgkv4q01ck7453ualdn3hn'
+              />
+              <ChatSideBar
+                  contest_id='cikqgkv4q01ck7453ualdn3hn'
+              />
             </div>
         );
     }

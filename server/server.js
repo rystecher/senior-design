@@ -3,6 +3,7 @@ import compression from 'compression';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import path from 'path';
+import timeout from 'connect-timeout';
 
 // Webpack Requirements
 import webpack from 'webpack';
@@ -55,6 +56,9 @@ mongoose.connect(serverConfig.mongoURL, (error) => {
   dummyContests();
 });
 
+// Timeout any requests that take longer than 5 minutes
+app.use(timeout('300s'));
+
 // Apply body Parser and server public assets and routes
 app.use(compression());
 app.use(bodyParser.json({ limit: '20mb' }));
@@ -67,6 +71,7 @@ app.use('/api', messages);
 app.use('/api', hackerRank);
 app.use('/api/users', users);
 app.use('/api/auth', auth);
+app.use(haltOnTimedout);
 
 // Render Initial HTML
 const renderFullPage = (html, initialState) => {
@@ -147,6 +152,11 @@ app.use((req, res, next) => {
       .catch((error) => next(error));
   });
 });
+
+// Handle timed-out connections
+function haltOnTimedout (req, res, next) {
+  if (!req.timedout) next()
+}
 
 // start app
 app.listen(serverConfig.port, (error) => {
