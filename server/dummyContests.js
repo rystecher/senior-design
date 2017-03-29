@@ -24,22 +24,6 @@ const dummyProblems = [{
     fileName: 'the-magic-hat',
     solved: true,
     solvedBy: "Cat in the hat",
-}, {
-    name: "The Grape Escape",
-    fileName: 'the-grape-escape',
-}, {
-    name: "Three wise mice",
-    fileName: 'three-wice-mice',
-    solved: true,
-    solvedBy: "Despereaux",
-}, {
-    name: "The men who stare at boats",
-    fileName: 'the-men-who-stare-at-boats',
-}, {
-    name: "Iron pan",
-    fileName: 'iron-pan',
-    solved: true,
-    solvedBy: "Tony Stark",
 }];
 
 export default function () {

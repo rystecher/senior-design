@@ -25,7 +25,8 @@ export default class TextEditor extends React.Component {
         this.state = {
             code: prompts.python,
             readOnly: false,
-            mode: "python",
+            mode: "python", // Syntax
+            lang: "python"
         };
         this.onTestClick = this.onTestClick.bind(this);
         this.onSubmitClick = this.onSubmitClick.bind(this);
@@ -36,23 +37,37 @@ export default class TextEditor extends React.Component {
   };
 
   changeMode = (e) => {
-    let mode = e.target.value;
-    this.setState({
-      mode: mode,
-      code: prompts[mode]
-    });
+    let lang = e.target.value;
+
+    // Handles different languages with the same syntax
+    switch(lang) {
+      // Python syntax applies to Python3
+      case 'python3':
+        this.setState({
+          mode: 'python',
+          code: prompts[lang],
+          lang: lang
+        });
+        break;
+
+      default:
+        this.setState({
+          mode: lang,
+          code: prompts[lang],
+          lang: lang
+        });
+    }
   };
 
   onTestClick() {
-    let user_test_input = document.getElementById('custom_in').value.split('\n');
-    testCode(this.state.code, this.state.mode, user_test_input);
+    const {contest_id, team_id} = this.props;
+    let user_test_input = document.getElementById('custom_in').value;
+    testCode(contest_id, team_id, this.state.code, this.state.lang, [user_test_input]);
   }
 
   onSubmitClick() {
-    let contest_id = 'cikqgkv4q01ck7453ualdn3hn';
-    let team_id = '58a2140af3c57bd14d9f0300';
-    let problem_num = 1;
-    submitCode(contest_id, team_id, this.state.code, this.state.mode, problem_num);
+    const {contest_id, team_id} = this.props;
+    submitCode(contest_id, team_id, this.state.code, this.state.lang, problem_num);
   }
 
     render() {
@@ -64,15 +79,16 @@ export default class TextEditor extends React.Component {
 
         return (
             <div>
-                <select onChange={this.changeMode} value={this.state.mode}>
+                <select onChange={this.changeMode} value={this.state.lang}>
                     <option value="python">Python</option>
+                    <option value="python3">Python 3</option>
                     <option value="javascript">JavaScript</option>
                 </select>
 
                 <CodeMirror ref="editor" value={this.state.code} onChange={this.updateCode} options={options} />
                 <span>Test against your own custom input</span>
                 <br/>
-                <textarea name="custom_in" id="custom_in" cols="30" rows="10"></textarea>
+                <textarea name="custom_in" id="custom_in" cols="30" rows="10" />
                 <br/>
                 <button ref="testButton" onClick={this.onTestClick}>Test</button>
                 <button ref="subButton" onClick={this.onSubmitClick}>Submit</button>
@@ -80,3 +96,9 @@ export default class TextEditor extends React.Component {
         );
     }
 }
+
+TextEditor.propTypes = {
+  contest_id: React.PropTypes.string.isRequired,
+  team_id: React.PropTypes.string.isRequired,
+  problem_num: React.PropTypes.number.isRequired,
+};

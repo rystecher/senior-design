@@ -80,11 +80,18 @@ export default class ProblemPage extends React.Component {
         return (
             <div>
                 <NavBar competition={competition[0]} />
+
+                <TextEditor
+                  team_id='58a2140af3c57bd14d9f0300'
+                  contest_id='cikqgkv4q01ck7453ualdn3hn'
+                  problem_num={1}
+                />
+
                 <MessageComponent
                     team_id='58a2140af3c57bd14d9f0300'
                     contest_id='cikqgkv4q01ck7453ualdn3hn'
                 />
-                <TextEditor />
+
                 <ChatSideBar
                     contest_id='cikqgkv4q01ck7453ualdn3hn'
                 />

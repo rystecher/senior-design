@@ -120,39 +120,58 @@ export function addAccountToTeam(req, res) {
     }
 }
 
+export function readTextFile(fileName) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(fileName, 'utf8', (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+}
+
 /**
- * Test code on HackerRank without without submitting
+ * Test code on HackerRank without submitting
  * @param req
  * @param res
  */
 export function testProblemAttempt(req, res) {
-  if (!req.body.problem) {
+  if (!req.params.contest_id || !req.params.team_id ||!req.body.problem) {
+    console.log("error!");
     res.status(403).end();
   } else {
+
+    console.log(req.params);
+
     const {code, lang, testcases} = req.body.problem;
+    let feedBack = "";
     hackerrankCall(code, lang, testcases, (error, response) => {
       const {stderr, stdout, compilemessage, message, time} = JSON.parse(response.body).result;
       // TODO: parse HackerRank call and display it in chat
-
       if (message == 'Terminated due to timeout' && time == 10) {
-        console.log(message + ' after 10 seconds');
+        feedBack = message + ' after 10 seconds';
       } else {
-        console.log(stderr, stdout, compilemessage, message, time);
+        feedBack = "stderr:" + stderr + "stdout:" + stdout + "compilemessage:" + compilemessage + "message:" + message + "time:" + time;
       }
-    });
-  }
-}
+      console.log(feedBack);
 
-export function readTextFile(fileName) {
-    return new Promise((resolve, reject) => {
-        fs.readFile(fileName, 'utf8', (err, data) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(data);
-            }
-        });
+      // Send feedback
+      Contest.findOne({cuid: req.params.contest_id}, (err, contest) => {
+        console.log(contest);
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          const team = contest.teams.id(req.params.team_id);
+          team.messages.push(feedBack)
+        }
+      });
+
+      res.json({feedBack});
     });
+
+  }
 }
 
 /**

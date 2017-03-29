@@ -58,7 +58,7 @@ router.route('/contests/:contest_id/problem/:problem_no/metadata').get(ContestCo
 router.route('/contests/:contest_id/number_of_problems').get(ContestController.getNumberOfProblems);
 
 // Test the code submitted
-router.route('/contests/submit/testCode').post(ContestController.testProblemAttempt);
+router.route('/contests/:contest_id/teams/:team_id/submit/testCode').post(ContestController.testProblemAttempt);
 
 // Run the code submitted
 router.route('/contests/:contest_id/teams/:team_id/submit').post(ContestController.addProblemAttempt);
