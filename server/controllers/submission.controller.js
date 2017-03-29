@@ -102,7 +102,7 @@ export function createFeedbackMessage(correct, compileMessage, problemNum, hadSt
     let message = 'Awaiting feedback from judges...';
     if (correct) {
         message = `Your solution was correct!`;
-    } else if (compileMessage != '') {
+    } else if (compileMessage !== '') {
         message = compileMessage;
     } else if (hadStdError) {
         message = 'Standard Error ' + stderr.toString();

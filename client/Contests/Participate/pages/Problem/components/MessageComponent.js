@@ -31,7 +31,7 @@ export default class MessageComponent extends React.Component {
 
     sendMessage(eve) {
         const {contest_id, team_id} = this.props;
-        if(eve.keyCode == 13) {
+        if(eve.keyCode === 13) {
             sendJudgeMessage(contest_id, team_id, this.state.value);
             this.state.messageObjs.push(new Message(0, this.state.value));
             this.setState({

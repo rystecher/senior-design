@@ -45,7 +45,7 @@ class ContestHome extends React.Component {
             <div>
                 <div id='header-banner'>
                     <h1>{this.state.name}</h1>
-                    {userRole & userRole !== 'admin' ?
+                    {userRole && userRole !== 'admin' ?
                         `<h3>Created by ${this.admin}</h3>` : null
                     }
                 </div>

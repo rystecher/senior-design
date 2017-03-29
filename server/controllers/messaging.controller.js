@@ -29,7 +29,7 @@ export function getTeamMessages(req, res) {
                 res.status(500).send(err);
             } else {
                 const team = contest.teams.id(req.params.team_id);
-                if (team == null) {
+                if (team === null) {
                     res.status(500).send(err);
                 } else {
                     if (req.body.judgeRequest) {
@@ -92,7 +92,7 @@ export function sendTeamMessage(message, contest_id, team_id) {
         if (!err) {
             const team = contest.teams.id(team_id);
             team.messages.push(message);
-            if (message.from == 'Team') {
+            if (message.from === 'Team') {
                 team.messagedJudge = true;
             }
             contest.save();

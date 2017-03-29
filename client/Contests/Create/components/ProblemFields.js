@@ -48,7 +48,7 @@ export default class ProblemFields extends React.Component {
     }
 
     getTextFromFile(file, name) {
-        var reader = new FileReader();
+        const reader = new FileReader();
         reader.onload = function(event) {
             this.setState({ [name]: event.target.result });
         }.bind(this);

@@ -9,8 +9,7 @@ export function addContestToCreatedContestsID(username, cuid) {
             user.save();
         }
     });
-};
-
+}
 export function joinContest(username, cuid, teamid) {
     User.findOne({ username }, (err, user) => {
         if (err) {

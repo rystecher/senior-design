@@ -61,7 +61,7 @@ export default class ProblemEditor extends React.Component {
             output,
         }).then((res) => console.log(res));
         if (this.file) {
-            var req = request.post(`/api/contests/${this.contest_id}/problem/${this.problem_no}/edit`);
+            const req = request.post(`/api/contests/${this.contest_id}/problem/${this.problem_no}/edit`);
             req.set('Content-Type', 'application/pdf');
             req.set('Content-Disposition', `attachment; filename=new.pdf`);
             req.attach('file', this.file);

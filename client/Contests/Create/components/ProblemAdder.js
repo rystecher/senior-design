@@ -22,7 +22,7 @@ export default class ProblemAddPage extends React.Component {
         if (!this.file) {
             this.setState({ errMessage: "A PDF file is required" });
         } else {
-            var req = request.post(`/api/contests/${this.contest_id}/problem/create`);
+            const req = request.post(`/api/contests/${this.contest_id}/problem/create`);
             req.set('Content-Type', 'application/pdf');
             req.set('Content-Disposition', `attachment; filename=new.pdf`);
             req.attach('file', this.file);

@@ -15,12 +15,12 @@ export default class ProblemNavigator extends React.Component {
             <ul className='pagination justify-content-center' role='group'>
                 {arr.map((elm, idx) => {
                     const val = idx + 1;
-                    selected = val == this.props.problemNumber ? ' selected' : '';
+                    selected = val === this.props.problemNumber ? ' selected' : '';
                     className = 'btn btn-default' + selected;
                     className = selected;
                     return (
                         <li
-                            className={val == this.props.problemNumber ? 'page-item active' : 'page-item'}
+                            className={val === this.props.problemNumber ? 'page-item active' : 'page-item'}
                             key={idx}
                             onClick={() => this.props.changeProblemNumber(val)}
                         >
