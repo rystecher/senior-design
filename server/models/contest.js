@@ -32,15 +32,17 @@ const contestProblem = new Schema({
 // pdf/fileName.pdf, input/fileName.txt, and output/fileName.txt
 
 const contestSchema = new Schema({
-    adminList: String,
+    about: String,
+    admin: String,
+    closed: { type: 'Boolean', default: false, required: true},
     cuid: { type: 'String', required: true },
     judges: [String],
     name: { type: 'String', required: true },
-    password: { type: 'String'},
     problems: [contestProblem],
+    rules: String,
     scoreboardVisible: { type: 'Boolean', default: true, required: true},
     slug: { type: 'String', required: true },
-    start: { type: 'Number'},
+    start: Number,
     teams: [teamSchema],
 });
 

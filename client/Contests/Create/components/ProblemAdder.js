@@ -9,14 +9,13 @@ export default class ProblemAddPage extends React.Component {
     constructor(props) {
         super(props);
         this.contest_id = props.params.contest_id;
-        this.onDrop = this.onDrop.bind(this);
+        this.onDropFile = this.onDropFile.bind(this);
         this.onSave = this.onSave.bind(this);
         this.state = {};
     }
 
-    onDrop(files) {
+    onDropFile(files) {
         this.file = files[0];
-        this.setState({ fileName: this.file.name });
     }
 
     onSave(input, output, problemName) {
@@ -41,17 +40,14 @@ export default class ProblemAddPage extends React.Component {
     }
 
     render() {
-        const dragAndDropText = this.state.fileName ?
-            `Uploaded File: ${this.state.fileName}` : 'Drag and drop pdf here or click to select files to upload.';
-
         return (
-            <div>
-                <div>
-                    <Dropzone onDrop={this.onDrop} multiple={false}>
-                        <div>{dragAndDropText}</div>
-                    </Dropzone>
-                </div>
-                <ProblemFields contest_id={this.contest_id} problem_no={this.problem_no} save={this.onSave}/>
+            <div id='add'>
+                <ProblemFields
+                    contest_id={this.contest_id}
+                    problem_no={this.problem_no}
+                    save={this.onSave}
+                    onDropFile={this.onDropFile}
+                />
             </div>
         );
     }

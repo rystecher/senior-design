@@ -1,4 +1,5 @@
 import React from 'react';
+import './problem_navigator.css';
 
 export default class ProblemNavigator extends React.Component {
 
@@ -9,22 +10,30 @@ export default class ProblemNavigator extends React.Component {
         }
         const arr = new Array(numberOfProblems);
         arr.fill(0);
+        let className, selected;
         return (
-            <div className='problem-navigation'>
+            <ul className='pagination justify-content-center' role='group'>
                 {arr.map((elm, idx) => {
                     const val = idx + 1;
+                    selected = val == this.props.problemNumber ? ' selected' : '';
+                    className = 'btn btn-default' + selected;
+                    className = selected;
                     return (
-                        <div
-                            className={val == this.props.problemNumber ? 'selected' : ''}
+                        <li
+                            className={val == this.props.problemNumber ? 'page-item active' : 'page-item'}
                             key={idx}
                             onClick={() => this.props.changeProblemNumber(val)}
                         >
-                            {val}
-                        </div>
+                            <a href='#' className='page-link'>{val}</a>
+                        </li>
                     );
                 })}
-                {this.props.edit ? <div onClick={this.props.addProblem}> + </div> : null}
-            </div>
+                {this.props.edit && numberOfProblems > 0 ?
+                    <li
+                        className='page-item'
+                        onClick={this.props.addProblem}
+                    ><a href='#' className='page-link'>+</a></li> : null}
+            </ul>
         );
     }
 

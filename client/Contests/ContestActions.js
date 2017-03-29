@@ -16,13 +16,7 @@ export function addContest(contest) {
 }
 
 export function addContestRequest(contest) {
-  return (dispatch) => {
-    return callApi('contests', 'post', {
-      contest: {
-        name: contest.name,
-      },
-  }).then(res => dispatch(addContest(res.contest)));
-  };
+    return callApi('contests', 'post', contest);
 }
 
 export function createContest(contest) {
@@ -31,12 +25,9 @@ export function createContest(contest) {
 
 
 
-export function addTeamToContestRequest(contest_id, team) {
-    return callApi(`contests/${contest_id}`, 'post', {
-        team: {
-            name: team.name,
-            memberList: [],
-        },
+export function joinContest(contest_id, username) {
+    return callApi(`contests/${contest_id}/join`, 'post', {
+        username
     }).then(res => console.log(res));
 }
 
@@ -65,6 +56,10 @@ export function fetchContest(cuid) {
     return (dispatch) => {
         return callApi(`contests/${cuid}`).then(res => console.log(res));
     };
+}
+
+export function getContestInfo(cuid) {
+    return callApi(`contests/${cuid}/info`);
 }
 
 export function fetchScoreboardData(cuid) {
@@ -153,24 +148,7 @@ export function submitCode(contest_id, team_id, code, lang, number) {
 
 
 export function fetchNotMyContests(cuids) {
-    // addAccountToTeam("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "7");
-    // fetchSolvedArrays("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300");
-    // fetchProblem("cikqgkv4q01ck7453ualdn3hn", "1");
-    // fetchProblem("cikqgkv4q01ck7453ualdn3hn", "7");
-    // fetchScoreboardData("cikqgkv4q01ck7453ualdn3hn");
-    // submitCode("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "print 1", 5, 0);
-    startContest("cikqgkv4q01ck7453ualdn3hn");
-    // submitCode("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "print 6", 5, 1);
-    // submitCode("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "print 4", 5, 3);
-    fetchJudgeMessages('cikqgkv4q01ck7453ualdn3hn');
-    // submitCode("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "print 4", 5, 2);
-    // submitCode("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "print 15", 5, 2);
-    // submitCode("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "compile something!", 5, 2);
-    // submitCode("cikqgkv4q01ck7453ualdn3hn", "58a2140af3c57bd14d9f0300", "Another err!", 5, 2);
-    fetchSubmissions("cikqgkv4q01ck7453ualdn3hn");
-  return (dispatch) => {
-    return callApi(`contests/join`, "get", cuids).then(res => dispatch(getNotMyContests(res.contests)));
-  };
+    return callApi(`contests/join`, "get", cuids);
 }
 
 export function deleteContest(cuid) {
