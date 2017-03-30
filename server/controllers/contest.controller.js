@@ -5,7 +5,7 @@ import sanitizeHtml from 'sanitize-html';
 import fs from 'fs'; // for reading and writing files
 import shortid from 'shortid'; // generates short filenames
 import {hackerrankCall} from './hackerRank.controller';
-import {createSubmission, computeScore, createFeedbackMessage} from './submission.controller';
+import {createSubmission, computeScore, createTestFeedbackMessage, createFeedbackMessage} from './submission.controller';
 import authenticate from '../middlewares/authenticate';
 import * as User from '../controllers/users.controller.js';
 
@@ -72,7 +72,7 @@ export function joinContest(req, res) {
             } else if (contest.teams.findIndex(team => team.name === newTeam.name) !== -1) {
                 res.json({ err: 'TEAM_NAME_CONFLICT'});
             } else {
-                const teamProblems = new Array(contest.problems.length).fill({
+                const teamProblems = Array(contest.problems.length).fill({
                   solved: false, attempFileNames: []
                 });
                 newTeam.problem_attempts = teamProblems;
@@ -85,7 +85,6 @@ export function joinContest(req, res) {
                         User.joinContest(username, contest.cuid, team._id);
                         res.json({ success: true });
                     }
-                    //console.log(saved);
                 });
             }
         });
@@ -108,7 +107,7 @@ export function addAccountToTeam(req, res) {
                 res.status(500).send(err);
             }
             const team = contest.teams.id(req.params.team_id);
-            if (team.memberList.indexOf(req.body.account_id) === -1) {
+            if (team.memberList.indexOf(req.body.account_id) == -1) {
                 team.memberList.push(req.body.account_id);
                 contest.save((err, saved) => {
                     if (err) {
@@ -123,39 +122,54 @@ export function addAccountToTeam(req, res) {
     }
 }
 
+export function readTextFile(fileName) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(fileName, 'utf8', (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+}
+
 /**
- * Test code on HackerRank without without submitting
+ * Test code on HackerRank without submitting
  * @param req
  * @param res
  */
 export function testProblemAttempt(req, res) {
-  if (!req.body.problem) {
+  if (!req.params.contest_id || !req.params.team_id || !req.body.problem) {
     res.status(403).end();
   } else {
+
+    // Send query to HackerRank
     const {code, lang, testcases} = req.body.problem;
     hackerrankCall(code, lang, testcases, (error, response) => {
-      const {stderr, stdout, compilemessage, message, time} = JSON.parse(response.body).result;
-      // TODO: parse HackerRank call and display it in chat
-
-      if (message === 'Terminated due to timeout' && time === 10) {
-        console.log(message + ' after 10 seconds');
-      } else {
-        console.log(stderr, stdout, compilemessage, message, time);
-      }
-    });
-  }
-}
-
-export function readTextFile(fileName) {
-    return new Promise((resolve, reject) => {
-        fs.readFile(fileName, 'utf8', (err, data) => {
+      const {stderr, stdout, compileMessage, message, time} = JSON.parse(response.body).result;
+      const hadStdError = stderr != null && !stderr.every((error) => error == false);
+      // Parse result
+      let feedBack = createTestFeedbackMessage(message, compileMessage, stdout, time, hadStdError, stderr);
+      // Send feedback
+      Contest.findOne({cuid: req.params.contest_id}, (err, contest) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          const team = contest.teams.id(req.params.team_id);
+          team.messages.push(feedBack);
+          contest.save((err, saved) => {
             if (err) {
-                reject(err);
+              res.status(500).send(err);
             } else {
-                resolve(data);
+              res.json(feedBack);
             }
-        });
+          });
+        }
+      });
     });
+
+  }
 }
 
 /**
@@ -170,7 +184,6 @@ export function addProblemAttempt(req, res) {
     } else {
         const {code, lang, number} = req.body.problem;
         Contest.findOne({cuid: req.params.contest_id}, (err, contest) => {
-          console.log(contest);
             if (err) {
                 res.status(500).send(err);
             } else {
@@ -181,24 +194,24 @@ export function addProblemAttempt(req, res) {
                     team.messages.push({ from: 'Automated', message: feedBack});
                     res.status(500).send({err: feedBack});
                     contest.save();
-                } else if (problem.attempts.indexOf(code) !== -1) {
+                } else if (problem.attempts.indexOf(code) != -1) {
                     const feedBack = 'You have already submitted this code';
                     team.messages.push({ from: 'Automated', message: feedBack});
                     res.status(500).send({err: feedBack});
                     contest.save();
                 } else {
-                    const fileName = contest.problems[problem_no].fileName + '.txt';
+                    const fileName = contest.problems[number].fileName + '.txt';
                     readTextFile('input/' + fileName).then((input) => {
                         hackerrankCall(code, lang, input, (error, response) => {
                             const {stderr, stdout, compilemessage} = JSON.parse(response.body).result;
-                            const hadStdError = stderr !== null && !stderr.every((error) => error === false);
+                            const hadStdError = stderr != null && !stderr.every((error) => error == false);
                             problem.attempts.push(code);
                             readTextFile('output/' + fileName).then((expectedOutput) => {
-                                if (!hadStdError && stdout !== null) { // no error => check output
+                                if (!hadStdError && stdout != null) { // no error => check output
                                     problem.solved = true;
                                     if (stdout.length === expectedOutput.length) {
                                         for (let i = 0; i < stdout.length; i++) {
-                                            if (stdout[i] !== expectedOutput[i]) {
+                                            if (stdout[i] != expectedOutput[i]) {
                                                 problem.solved = false;
                                                 break;
                                             }
@@ -457,9 +470,17 @@ export function getProblemMetaData(req, res) {
  * @returns void
  */
 export function getContest(req, res) {
-    Contest.findOne({ cuid: req }).exec((err, contest) => {
-      res.json({ contest });
-  });
+    if (!req.params.contest_id) {
+        res.status(403).end();
+    } else {
+        Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                res.json({ contest });
+            }
+        });
+    }
 }
 
 /**
@@ -579,9 +600,9 @@ export function getTeamScores(req, res) {
             if (err) {
                 res.status(500).send(err);
             } else {
-                const teamNames = new Array(contest.teams.length);
-                const teamScores = new Array(contest.teams.length);
-                const teamNumSolved = new Array(contest.teams.length);
+                const teamNames = Array(contest.teams.length);
+                const teamScores = Array(contest.teams.length);
+                const teamNumSolved = Array(contest.teams.length);
                 contest.teams.forEach((team, index) => {
                     teamNames[index] = team.name;
                     teamScores[index] = team.score;
