@@ -146,8 +146,8 @@ export function getNotMyContests(contests) {
   };
 }
 
-export function testCode(code, lang, testcases) {
-  callApi(`contests/submit/testCode`, 'post', {
+export function testCode(contest_id, team_id, code, lang, testcases) {
+  callApi(`contests/${contest_id}/teams/${team_id}/submit/testCode`, 'post', {
     problem: {code, lang, testcases}
   }).then(res => console.log("Testing code: ", res));
 }

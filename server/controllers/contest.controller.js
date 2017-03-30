@@ -5,7 +5,7 @@ import sanitizeHtml from 'sanitize-html';
 import fs from 'fs'; // for reading and writing files
 import shortid from 'shortid'; // generates short filenames
 import {hackerrankCall} from './hackerRank.controller';
-import {createSubmission, computeScore, createFeedbackMessage} from './submission.controller';
+import {createSubmission, computeScore, createTestFeedbackMessage, createFeedbackMessage} from './submission.controller';
 import authenticate from '../middlewares/authenticate';
 import * as User from '../controllers/users.controller.js';
 
@@ -85,7 +85,6 @@ export function joinContest(req, res) {
                         User.joinContest(username, contest.cuid, team._id);
                         res.json({ success: true });
                     }
-                    //console.log(saved);
                 });
             }
         });
@@ -123,39 +122,54 @@ export function addAccountToTeam(req, res) {
     }
 }
 
+export function readTextFile(fileName) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(fileName, 'utf8', (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+}
+
 /**
- * Test code on HackerRank without without submitting
+ * Test code on HackerRank without submitting
  * @param req
  * @param res
  */
 export function testProblemAttempt(req, res) {
-  if (!req.body.problem) {
+  if (!req.params.contest_id || !req.params.team_id || !req.body.problem) {
     res.status(403).end();
   } else {
+
+    // Send query to HackerRank
     const {code, lang, testcases} = req.body.problem;
     hackerrankCall(code, lang, testcases, (error, response) => {
-      const {stderr, stdout, compilemessage, message, time} = JSON.parse(response.body).result;
-      // TODO: parse HackerRank call and display it in chat
-
-      if (message == 'Terminated due to timeout' && time == 10) {
-        console.log(message + ' after 10 seconds');
-      } else {
-        console.log(stderr, stdout, compilemessage, message, time);
-      }
-    });
-  }
-}
-
-export function readTextFile(fileName) {
-    return new Promise((resolve, reject) => {
-        fs.readFile(fileName, 'utf8', (err, data) => {
+      const {stderr, stdout, compileMessage, message, time} = JSON.parse(response.body).result;
+      const hadStdError = stderr != null && !stderr.every((error) => error == false);
+      // Parse result
+      let feedBack = createTestFeedbackMessage(message, compileMessage, stdout, time, hadStdError, stderr);
+      // Send feedback
+      Contest.findOne({cuid: req.params.contest_id}, (err, contest) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          const team = contest.teams.id(req.params.team_id);
+          team.messages.push(feedBack);
+          contest.save((err, saved) => {
             if (err) {
-                reject(err);
+              res.status(500).send(err);
             } else {
-                resolve(data);
+              res.json(feedBack);
             }
-        });
+          });
+        }
+      });
     });
+
+  }
 }
 
 /**
@@ -170,7 +184,6 @@ export function addProblemAttempt(req, res) {
     } else {
         const {code, lang, number} = req.body.problem;
         Contest.findOne({cuid: req.params.contest_id}, (err, contest) => {
-          console.log(contest);
             if (err) {
                 res.status(500).send(err);
             } else {
@@ -187,7 +200,7 @@ export function addProblemAttempt(req, res) {
                     res.status(500).send({err: feedBack});
                     contest.save();
                 } else {
-                    const fileName = contest.problems[problem_no].fileName + '.txt';
+                    const fileName = contest.problems[number].fileName + '.txt';
                     readTextFile('input/' + fileName).then((input) => {
                         hackerrankCall(code, lang, input, (error, response) => {
                             const {stderr, stdout, compilemessage} = JSON.parse(response.body).result;

@@ -109,3 +109,18 @@ export function createFeedbackMessage(correct, compileMessage, problemNum, hadSt
     }
     return { from: 'Automated', message: `Problem ${problemNum}: ` + message };
 }
+
+export function createTestFeedbackMessage(message, compileMessage, stdout, time, hadStdError, stderr) {
+  let feedBack = 'Awaiting feedback from our server...';
+  // Ran out of time
+  if (message == 'Terminated due to timeout' && time == 10) {
+    feedBack = message;
+  } else if (compileMessage != undefined) {
+    feedBack = compileMessage;
+  } else if (hadStdError) {
+    feedBack = 'Standard Error: ' + stderr.toString();
+  } else {
+    feedBack = stdout;
+  }
+  return { from: 'Automated', message: 'Test result: ' + feedBack + `Ran in ${time} seconds` };
+}
