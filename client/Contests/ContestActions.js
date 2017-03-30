@@ -74,14 +74,26 @@ export function startContest(contest_id) {
     return callApi(`contests/${contest_id}/start`, 'post', { start: true });
 }
 
-export function sendJudgeMessage(contest_id, team_id, message) {
-    return callApi(`messages/${contest_id}/team/${team_id}/judge`, 'post', {
+export function sendMessageToJudge(contest_id, team_id, message) {
+    return callApi(`messages/${contest_id}/team/${team_id}/tojudge`, 'post', {
         message
     });
 }
 
-export function fetchTeamMessages(contest_id, team_id) {
+export function sendMessageToTeam(contest_id, team_id, message) {
+    return callApi(`messages/${contest_id}/team/${team_id}`, 'post', {
+        message
+    });
+}
+
+export function getTeamMessages(contest_id, team_id) {
     return callApi(`messages/${contest_id}/team/${team_id}`).then(res => {
+        return res.messages;
+    });
+}
+
+export function getTeamMessagesForJudge(contest_id, team_id) {
+    return callApi(`messages/${contest_id}/team/${team_id}/forjudge`).then(res => {
         return res.messages;
     });
 }

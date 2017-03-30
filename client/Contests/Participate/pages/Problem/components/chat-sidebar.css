@@ -1,0 +1,19 @@
+.chat-sidebar {
+    position: fixed;
+    right: 0;
+    top: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    width: 200px;
+    height: 100vh;
+    background: gray;
+}
+
+.list-group-item.read {
+    opacity: 0.8;
+}
+
+.chat-sidebar > .list-group-item:first-child,
+.chat-sidebar > .list-group-item:last-child {
+     border-radius: 0;
+}

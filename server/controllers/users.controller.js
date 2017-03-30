@@ -1,6 +1,6 @@
 import User from '../models/user';
 
-export function addContestToCreatedContestsID(username, cuid) {
+export function createContest(username, cuid) {
     User.findOne({ username }, (err, user) => {
         if (err) {
             return cb(err);

@@ -32,10 +32,27 @@ export function getTeamMessages(req, res) {
                 if (team == null) {
                     res.status(500).send(err);
                 } else {
-                    if (req.body.judgeRequest) {
-                        team.messagedJudge = false;
-                        contest.save();
-                    }
+                    res.json({ messages: team.messages});
+                }
+            }
+        });
+    }
+}
+
+export function getTeamMessagesForJudge() {
+    if (!req.params.contest_id || !req.params.team_id) {
+        res.status(403).end();
+    } else {
+        Contest.findOne({cuid: req.params.contest_id}, (err, contest) => {
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                const team = contest.teams.id(req.params.team_id);
+                if (team == null) {
+                    res.status(500).send(err);
+                } else {
+                    team.messagedJudge = false;
+                    contest.save();
                     res.json({ messages: team.messages});
                 }
             }

@@ -300,7 +300,7 @@ export function getProblemFile(req, res) {
         res.status(403).end();
     }
     const problem_no = req.params.problem_no - 1;
-    Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+    Contest.findOne({ cuid: req.params.contest_id }).select('problems').exec((err, contest) => {
         if (err) {
             res.status(500).send(err);
         }
@@ -332,7 +332,7 @@ export function createProblem(req, res) {
     if (!req.params.contest_id) {
         res.status(403).end();
     } else {
-        Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+        Contest.findOne({ cuid: req.params.contest_id }).select('problems').exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else {
@@ -361,7 +361,7 @@ export function changeProblemPdf(req, res) {
         res.status(403).end();
     } else {
         const problem_no = req.params.problem_no;
-        Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+        Contest.findOne({ cuid: req.params.contest_id }).select('problems').exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else {
@@ -393,7 +393,7 @@ export function setProblemMetaData(req, res) {
         res.status(403).end();
     } else {
         const problem_no = req.params.problem_no - 1;
-        Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+        Contest.findOne({ cuid: req.params.contest_id }).select('problems').exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else {
@@ -439,7 +439,7 @@ export function getProblemMetaData(req, res) {
         res.status(403).end();
     } else {
         const problem_no = req.params.problem_no - 1;
-        Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+        Contest.findOne({ cuid: req.params.contest_id }).select('problems').exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
             }
@@ -493,7 +493,7 @@ export function getContestInfo(req, res) {
     if (!req.params.contest_id) {
         res.status(403).end();
     } else {
-        Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+        Contest.findOne({ cuid: req.params.contest_id }).select('about admin name rules').exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else {

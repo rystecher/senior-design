@@ -50,7 +50,6 @@ export default class MessageComponent extends React.Component {
             <div>
                 <ChatFeed
                     messages={this.state.messageObjs}
-                    isTyping={this.state.is_typing}
                     bubblesCentered={false}
                 />
                 <input
