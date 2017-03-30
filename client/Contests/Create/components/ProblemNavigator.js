@@ -4,27 +4,24 @@ import './problem_navigator.css';
 export default class ProblemNavigator extends React.Component {
 
     render() {
-        const { numberOfProblems } = this.props;
+        const { numberOfProblems, problemNumber } = this.props;
+        const problemNum = problemNumber ? parseInt(problemNumber, 10) : null;
         if (numberOfProblems === -1) {
             return null;
         }
         const arr = new Array(numberOfProblems);
         arr.fill(0);
-        let className, selected;
         return (
             <ul className='pagination justify-content-center' role='group'>
                 {arr.map((elm, idx) => {
                     const val = idx + 1;
-                    selected = val == this.props.problemNumber ? ' selected' : '';
-                    className = 'btn btn-default' + selected;
-                    className = selected;
                     return (
                         <li
-                            className={val == this.props.problemNumber ? 'page-item active' : 'page-item'}
+                            className={val === problemNum ? 'page-item active' : 'page-item'}
                             key={idx}
                             onClick={() => this.props.changeProblemNumber(val)}
                         >
-                            <a href='#' className='page-link'>{val}</a>
+                            <a className='page-link'>{val}</a>
                         </li>
                     );
                 })}
@@ -32,9 +29,16 @@ export default class ProblemNavigator extends React.Component {
                     <li
                         className='page-item'
                         onClick={this.props.addProblem}
-                    ><a href='#' className='page-link'>+</a></li> : null}
+                    ><a className='page-link'>+</a></li> : null}
             </ul>
         );
     }
-
 }
+
+ProblemNavigator.propTypes = {
+    addProblem: React.PropTypes.func,
+    changeProblemNumber: React.PropTypes.func.isRequired,
+    edit: React.PropTypes.bool,
+    numberOfProblems: React.PropTypes.number.isRequired,
+    problemNumber: React.PropTypes.string,
+};

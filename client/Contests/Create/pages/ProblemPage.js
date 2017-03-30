@@ -28,7 +28,7 @@ class ProblemPage extends React.Component {
 
     changeProblemNumber(problemNumber) {
         this.props.router.push(`/contest/${this.contest_id}/problems/${problemNumber}/edit`);
-        this.setState({ add: false, problemNumber: problemNumber });
+        this.setState({ add: false, problemNumber });
     }
 
     addProblem() {
@@ -50,7 +50,7 @@ class ProblemPage extends React.Component {
         return (
             <div>
                 <ProblemNavigator
-                    edit={true}
+                    edit
                     problemNumber={problemNumber}
                     contest_id={this.contest_id}
                     addProblem={this.addProblem}
@@ -62,5 +62,15 @@ class ProblemPage extends React.Component {
         );
     }
 }
+
+ProblemPage.propTypes = {
+    params: React.PropTypes.shape({
+        contest_id: React.PropTypes.string.isRequired,
+        problem_no: React.PropTypes.string,
+    }).isRequired,
+    router: React.PropTypes.shape({
+        push: React.PropTypes.func.isRequired,
+    }).isRequired,
+};
 
 export default withRouter(ProblemPage);
