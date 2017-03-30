@@ -1,6 +1,8 @@
 import User from '../models/user';
+import * as Contest from '../controllers/contest.controller.js';
 
-export function addContestToCreatedContestsID(username, cuid) {
+
+export function createContest(username, cuid) {
     User.findOne({ username }, (err, user) => {
         if (err) {
             return cb(err);
@@ -10,6 +12,7 @@ export function addContestToCreatedContestsID(username, cuid) {
         }
     });
 }
+
 export function joinContest(username, cuid, teamid) {
     User.findOne({ username }, (err, user) => {
         if (err) {
@@ -23,3 +26,41 @@ export function joinContest(username, cuid, teamid) {
         }
     });
 }
+
+export function getCreatedContests(req, res) {
+  console.log(req.body);
+  User.findOne({username: req.body.username}, (err, user) => {
+      if (err) {
+        return cb(err);
+      } else {
+        var contests = new Array();
+        var contests_ids = user.createdContestsID;
+        for (var i = 0; i < user.createdContestsID.length; i++) {
+          console.log(contests_ids[i]);
+          Contest.getContest(contests_ids[i]);
+        }
+        console.log(contests);
+        res.json({ contests: contests })
+      }
+  });
+}
+
+export function getJoinedContests(req, res) {
+  User.findOne({username: req.params.username}, (err, user) => {
+      if (err) {
+        return cb(err);
+      } else {
+        res.json({ participatedContestsID: user.participatedContestsID })
+      }
+  });
+}
+
+
+/** TODO:
+export function getUserRole(username, cuid) {
+  User.findOne({ username: username }, function(err, user) {
+    if (err) return cb(err);
+    user.createdContestsID.findOne({cuid: cuid }, function(err, admin) {
+    });
+  });
+}**/

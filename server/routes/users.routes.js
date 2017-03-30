@@ -2,6 +2,7 @@ import { Router } from 'express';
 import validateRegisterInput from '../controllers/validateRegisterInput';
 import User from '../models/user';
 import isEmpty from 'lodash/isEmpty';
+import * as UsersController from '../controllers/users.controller';
 
 const router = new Router();
 
@@ -21,7 +22,7 @@ function validateInput(data, otherValidations) {
 }
 
 router.get('/:identifier', (req, res) => {
-  User.find({ username: req.params.identifier }, {_id: 0,username: 1})
+  User.find({ username: req.params.identifier }, {_id: 0, username: 1})
   .then(user => {
     res.json({ user });
   });
@@ -43,5 +44,7 @@ router.post('/', (req, res) => {
     }
   });
 });
+
+router.route('/created').post(UsersController.getCreatedContests);
 
 export default router;

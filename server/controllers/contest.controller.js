@@ -457,17 +457,9 @@ export function getProblemMetaData(req, res) {
  * @returns void
  */
 export function getContest(req, res) {
-    if (!req.params.contest_id) {
-        res.status(403).end();
-    } else {
-        Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
-            if (err) {
-                res.status(500).send(err);
-            } else {
-                res.json({ contest });
-            }
-        });
-    }
+    Contest.findOne({ cuid: req }).exec((err, contest) => {
+      res.json({ contest });
+  });
 }
 
 /**
