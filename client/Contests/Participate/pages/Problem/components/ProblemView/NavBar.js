@@ -16,13 +16,13 @@ class NavBar extends React.Component {
     }
 
     componentDidMount() {
-        fetchProblem("cikqgkv4q01ck7453ualdn3hn", "1").then(response => {
-            response.blob().then(blob => {
-                const pdf = new File([blob], "problem.pdf");
-                const pdfUrl = URL.createObjectURL(pdf);
-                this.setState({pdfUrl});
-            });
-        });
+        // fetchProblem("cikqgkv4q01ck7453ualdn3hn", "1").then(response => {
+        //     response.blob().then(blob => {
+        //         const pdf = new File([blob], "problem.pdf");
+        //         const pdfUrl = URL.createObjectURL(pdf);
+        //         this.setState({pdfUrl});
+        //     });
+        // });
     }
 
     handleClick(prompt, sample_input, sample_output) {
