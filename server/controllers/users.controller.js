@@ -32,7 +32,7 @@ export function getCreatedContests(req, res) {
       if (err) {
         res.status(403).end();
       } else {
-        var contests = new Array();
+        var contests = [];
         var contests_ids = user.createdContestsID;
         for (var i = 0; i < user.createdContestsID.length; i++) {
           console.log(contests_ids[i]);

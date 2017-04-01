@@ -107,7 +107,7 @@ export function addAccountToTeam(req, res) {
                 res.status(500).send(err);
             }
             const team = contest.teams.id(req.params.team_id);
-            if (team.memberList.indexOf(req.body.account_id) == -1) {
+            if (team.memberList.indexOf(req.body.account_id) === -1) {
                 team.memberList.push(req.body.account_id);
                 contest.save((err, saved) => {
                     if (err) {
@@ -147,7 +147,7 @@ export function testProblemAttempt(req, res) {
         const { code, lang, testcases } = req.body.problem;
         hackerrankCall(code, lang, testcases, (error, response) => {
             const { stderr, stdout, compileMessage, message, time } = JSON.parse(response.body).result;
-            const hadStdError = stderr != null && !stderr.every((error) => error == false);
+            const hadStdError = stderr !== null && !stderr.every((error) => error === false);
       // Parse result
             const feedBack = createTestFeedbackMessage(message, compileMessage, stdout, time, hadStdError, stderr);
       // Send feedback
@@ -210,14 +210,14 @@ export function addProblemAttempt(req, res) {
                     readTextFile('input/' + fileName).then((input) => {
                         hackerrankCall(code, lang, input, (error, response) => {
                             const { stderr, stdout, compilemessage } = JSON.parse(response.body).result;
-                            const hadStdError = stderr != null && !stderr.every((error) => error == false);
+                            const hadStdError = stderr !== null && !stderr.every((error) => error === false);
                             problem.attempts.push(code);
                             readTextFile('output/' + fileName).then((expectedOutput) => {
-                                if (!hadStdError && stdout != null) { // no error => check output
+                                if (!hadStdError && stdout !== null) { // no error => check output
                                     problem.solved = true;
                                     if (stdout.length === expectedOutput.length) {
                                         for (let i = 0; i < stdout.length; i++) {
-                                            if (stdout[i] != expectedOutput[i]) {
+                                            if (stdout[i] !== expectedOutput[i]) {
                                                 problem.solved = false;
                                                 break;
                                             }
