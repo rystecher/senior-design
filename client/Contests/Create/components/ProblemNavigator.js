@@ -4,21 +4,20 @@ import './problem_navigator.css';
 export default class ProblemNavigator extends React.Component {
 
     render() {
-        const { numberOfProblems, problemNumber } = this.props;
-        const problemNum = problemNumber ? parseInt(problemNumber, 10) : null;
+        const { numberOfProblems, problemNum } = this.props;
+        const problemNumParsed = problemNum ? parseInt(problemNum, 10) : null;
         if (numberOfProblems === -1) {
             return null;
         }
         const arr = new Array(numberOfProblems);
         arr.fill(0);
-        console.log(numberOfProblems);
         return (
             <ul className='pagination justify-content-center' role='group'>
                 {arr.map((elm, idx) => {
                     const val = idx + 1;
                     return (
                         <li
-                            className={val === problemNum ? 'page-item active' : 'page-item'}
+                            className={val === problemNumParsed ? 'page-item active' : 'page-item'}
                             key={idx}
                             onClick={() => this.props.changeProblemNumber(val)}
                         >
@@ -41,5 +40,5 @@ ProblemNavigator.propTypes = {
     changeProblemNumber: React.PropTypes.func.isRequired,
     edit: React.PropTypes.bool,
     numberOfProblems: React.PropTypes.number.isRequired,
-    problemNumber: React.PropTypes.string,
+    problemNum: React.PropTypes.string,
 };

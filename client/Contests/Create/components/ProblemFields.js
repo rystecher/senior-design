@@ -63,7 +63,7 @@ export default class ProblemFields extends React.Component {
 
     onSave() {
         const { input, output, problemName } = this.state;
-        if (input.length === 0 || output.length === 0 || problemName.length === 0 || !this.file) {
+        if (input.length === 0 || output.length === 0 || problemName.length === 0) {
 
         } else {
             this.props.save(input, output, problemName);
@@ -94,7 +94,7 @@ export default class ProblemFields extends React.Component {
         const input = this.state.input.length < 500 ? this.state.input.substring(0, 500) :
             this.state.input.substring(0, 500) + '...';
         return (
-            <div id='problem-fields'>
+            <div className='problem-fields'>
                 <input
                     placeholder='Problem Name'
                     name='problemName'
@@ -128,7 +128,7 @@ export default class ProblemFields extends React.Component {
                 >
                     {dragAndDropText}
                 </Dropzone>
-                <button onClick={this.onSave}>Save</button>
+                <button className='btn save' onClick={this.onSave}>Save</button>
             </div>
         );
     }

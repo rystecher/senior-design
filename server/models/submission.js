@@ -8,11 +8,10 @@ const submissionSchema = new Schema({
     contestID: { type: 'String', required: true },
     problemName: { type: 'String', required: true },
     problemNumber: { type: 'Number', required: true },
-    correct: { type: 'Boolean', required: true},
-    hadStdError: { type: 'Boolean', required: true},
+    correct: { type: 'Boolean', required: true },
+    hadStdError: { type: 'Boolean', required: true },
     feedback: String,
-    expectedOutput: [String],
-    actualOutput: [String],
+    fileName: String,
 });
 
 export default mongoose.model('Submission', submissionSchema);
