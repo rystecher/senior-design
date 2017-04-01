@@ -43,11 +43,12 @@ const styles = {
     marginRight: 'auto',
     marginBottom: 1,
     marginLeft: 'auto',
-    maxWidth: 425,
-    paddingTop: 8,
-    paddingBottom: 8,
+    maxWidth: 325,
+    paddingTop: 4,
+    paddingBottom: 4,
     paddingLeft: 14,
     paddingRight: 14,
+    height: 24,
     width: '-webkit-fit-content'
   },
   chatbubbleOrientationNormal: {
@@ -61,7 +62,7 @@ const styles = {
   },
   p: {
     color: '#FFFFFF',
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: '300',
     margin: 0
   }

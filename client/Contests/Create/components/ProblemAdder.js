@@ -8,7 +8,7 @@ export default class ProblemAddPage extends React.Component {
 
     constructor(props) {
         super(props);
-        this.contest_id = props.params.contest_id;
+        this.contestId = props.params.contestId;
         this.onDropFile = this.onDropFile.bind(this);
         this.onSave = this.onSave.bind(this);
         this.state = {};
@@ -20,17 +20,17 @@ export default class ProblemAddPage extends React.Component {
 
     onSave(input, output, problemName) {
         if (!this.file) {
-            this.setState({ errMessage: "A PDF file is required" });
+            this.setState({ errMessage: 'A PDF file is required' });
         } else {
-            const req = request.post(`/api/contests/${this.contest_id}/problem/create`);
+            const req = request.post(`/api/contests/${this.contestId}/problem/create`);
             req.set('Content-Type', 'application/pdf');
-            req.set('Content-Disposition', `attachment; filename=new.pdf`);
+            req.set('Content-Disposition', 'attachment; filename=new.pdf');
             req.attach('file', this.file);
             req.end((err, res) => {
                 if (err) {
                 } else {
-                    setProblemMetaData(this.contest_id, res.body.problemNo, {
-                        name:   problemName,
+                    setProblemMetaData(this.contestId, res.body.problemNo, {
+                        name: problemName,
                         input,
                         output,
                     }).then(() => this.props.addedProblem());
@@ -43,8 +43,8 @@ export default class ProblemAddPage extends React.Component {
         return (
             <div id='add'>
                 <ProblemFields
-                    contest_id={this.contest_id}
-                    problem_no={this.problem_no}
+                    contestId={this.contestId}
+                    problemNum={this.problemNum}
                     save={this.onSave}
                     onDropFile={this.onDropFile}
                 />
