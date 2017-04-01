@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import validateRegisterInput from '../controllers/validateRegisterInput';
+import * as UserController from '../controllers/users.controller';
 import User from '../models/user';
 import isEmpty from 'lodash/isEmpty';
 
@@ -43,5 +44,8 @@ router.post('/', (req, res) => {
     }
   });
 });
+
+// Get the role of a user in a contest
+router.route('/:username/contest/:contestId/role').get(UserController.getUserRole);
 
 export default router;

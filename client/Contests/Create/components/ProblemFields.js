@@ -7,8 +7,8 @@ export default class ProblemFields extends React.Component {
 
     constructor(props) {
         super(props);
-        this.contest_id = props.contest_id;
-        this.problem_no = props.problem_no;
+        this.contestId = props.contestId;
+        this.problemNum = props.problemNum;
         this.onSave = this.onSave.bind(this);
         this.onDrop = this.onDrop.bind(this);
         this.getTextFromFile = this.getTextFromFile.bind(this);
@@ -23,25 +23,25 @@ export default class ProblemFields extends React.Component {
     }
 
     componentDidMount() {
-        this.getProblemMetaDataWrapper(this.contest_id, this.problem_no);
+        this.getProblemMetaDataWrapper(this.contestId, this.problemNum);
     }
 
     componentWillReceiveProps(nextProps) {
-        this.getProblemMetaDataWrapper(nextProps.contest_id, nextProps.problem_no);
+        this.getProblemMetaDataWrapper(nextProps.contestId, nextProps.problemNum);
     }
 
-    getProblemMetaDataWrapper(contest_id, problem_no) {
-        this.contest_id = contest_id;
-        this.problem_no = problem_no;
-        if (this.problem_no) {
-            getProblemMetaData(this.contest_id, this.problem_no).then((res) => {
+    getProblemMetaDataWrapper(contestId, problemNum) {
+        this.contestId = contestId;
+        this.problemNum = problemNum;
+        if (this.problemNum) {
+            getProblemMetaData(this.contestId, this.problemNum).then((res) => {
                 if (res.problemName) {
                     this.setState({
                         problemName: res.problemName,
-                        input:  res.input,
+                        input: res.input,
                         output: res.output,
                         loadedMeta: true,
-                    })
+                    });
                 }
             });
         }
@@ -49,7 +49,7 @@ export default class ProblemFields extends React.Component {
 
     getTextFromFile(file, name) {
         var reader = new FileReader();
-        reader.onload = function(event) {
+        reader.onload = function (event) {
             this.setState({ [name]: event.target.result });
         }.bind(this);
         reader.readAsText(file);
@@ -84,7 +84,7 @@ export default class ProblemFields extends React.Component {
     }
 
     render() {
-        if (!this.state.loadedMeta &&  this.problem_no) {
+        if (!this.state.loadedMeta && this.problemNum) {
             return null;
         }
         const dragAndDropText = this.state.fileName ?
@@ -94,12 +94,12 @@ export default class ProblemFields extends React.Component {
         const input = this.state.input.length < 500 ? this.state.input.substring(0, 500) :
             this.state.input.substring(0, 500) + '...';
         return (
-            <div id="problem-fields">
+            <div id='problem-fields'>
                 <input
                     placeholder='Problem Name'
-                    name="problemName"
-                    className="message-input"
-                    type="text" value={this.state.problemName}
+                    name='problemName'
+                    className='message-input'
+                    type='text' value={this.state.problemName}
                     onChange={this.updateField}
                 />
                 <Dropzone

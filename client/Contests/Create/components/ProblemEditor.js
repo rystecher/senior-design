@@ -8,8 +8,8 @@ export default class ProblemEditor extends React.Component {
 
     constructor(props) {
         super(props);
-        this.contestId = props.params.contest_id;
-        this.problemNum = props.params.problem_no;
+        this.contestId = props.params.contestId;
+        this.problemNum = props.params.problemNum;
         this.onDropFile = this.onDropFile.bind(this);
         this.onSave = this.onSave.bind(this);
         this.updateField = this.updateField.bind(this);
@@ -21,11 +21,11 @@ export default class ProblemEditor extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        const { contest_id, problem_no } = nextProps.params;
-        if (this.problemNum !== problem_no) {
+        const { contestId, problemNum } = nextProps.params;
+        if (this.problemNum !== problemNum) {
             //this.setState({})
             this.file = null;
-            this.fetchProblemWrapper(contest_id, problem_no);
+            this.fetchProblemWrapper(contestId, problemNum);
         }
     }
 
@@ -87,8 +87,8 @@ export default class ProblemEditor extends React.Component {
                     {pdf}
                 </div>
                 <ProblemFields
-                    contest_id={this.contestId}
-                    problem_no={this.problemNum}
+                    contestId={this.contestId}
+                    problemNum={this.problemNum}
                     save={this.onSave}
                     onDropFile={this.onDropFile}
                 />
@@ -99,7 +99,7 @@ export default class ProblemEditor extends React.Component {
 
 ProblemEditor.propTypes = {
     params: React.PropTypes.shape({
-        contest_id: React.PropTypes.string.isRequired,
-        problem_no: React.PropTypes.string.isRequired,
+        contestId: React.PropTypes.string.isRequired,
+        problemNum: React.PropTypes.string.isRequired,
     }).isRequired,
 };

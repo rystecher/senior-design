@@ -1,60 +1,98 @@
 import React from 'react';
-import { getContestInfo, joinContest } from '../../ContestActions';
-import { connect } from 'react-redux';
+import { getContestInfo, joinContest, openContest, closeContest } from '../../ContestActions';
 import './home.css';
 
-class ContestHome extends React.Component {
+export default class ContestHome extends React.Component {
 
     constructor(props) {
         super(props);
+        this.closeContest = this.closeContest.bind(this);
         this.join = this.join.bind(this);
+        this.openContest = this.openContest.bind(this);
         this.state = {};
     }
 
     componentDidMount() {
-        getContestInfo(this.props.params.contest_id).then(res => {
+        getContestInfo(this.props.params.contestId).then(res => {
             if (res.name) {
-                const { name, about, rules } = res;
-                this.setState({ name, about, rules });
+                const { about, admin, name, rules, open, closed } = res;
+                this.setState({ about, admin, closed, name, rules, open });
             }
         });
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.params.contest_id !== this.props.params.contest_id) {
-            getContestInfo(this.props.params.contest_id).then(res => {
-                let { name, about, rules } = res;
-                this.setState({ name, about, rules });
+        if (nextProps.params.contestId !== this.props.params.contestId) {
+            getContestInfo(nextProps.params.contestId).then(res => {
+                if (res.name) {
+                    const { about, admin, name, rules, open, closed } = res;
+                    this.setState({ about, admin, closed, name, rules, open });
+                }
             });
         }
     }
 
-    join() {
-        const { auth, params } = this.props;
-        console.log(params.contest_id, auth.user.username);
-        joinContest(params.contest_id, auth.user.username);
+    closeContest() {
+        if (!this.state.closed && this.state.open) {
+            closeContest(this.props.params.contestId);
+            this.setState({ closed: true });
+        }
     }
 
+    join() {
+        if (!this.joined) {
+            this.joined = true;
+            const { joinedContest, params, username } = this.props;
+            joinContest(params.contestId, username).then(() => {
+                joinedContest(params.contestId);
+            });
+        }
+    }
+
+    openContest() {
+        if (!this.state.open) {
+            openContest(this.props.params.contestId);
+            this.setState({ open: true });
+        }
+    }
 
     render() {
-        const { userRole, admin } = this.state;
         if (!this.state.name) {
             return null;
         }
+        const openClass = this.state.open ? 'active' : '';
+        const closedClass = this.state.closed ? 'active' : '';
         return (
             <div>
                 <div id='header-banner'>
                     <h1>{this.state.name}</h1>
-                    {userRole & userRole !== 'admin' ?
-                        `<h3>Created by ${this.admin}</h3>` : null
+                    {this.props.userRole !== 'admin' ?
+                        <h4>Created by {this.state.admin}</h4> : null
                     }
                 </div>
                 <div className='contest-home'>
-                    <button
-                        onClick={this.join}
-                    >
-                        Join Contest
-                    </button>
+                    {this.props.userRole === 'admin' ?
+                        <div className='btn-group' role='group' aria-label='...'>
+                            <button
+                                type='button'
+                                className={`btn btn-secondary open ${openClass}`}
+                                onClick={this.openContest}
+                            >Open</button>
+                            <button
+                                type='button'
+                                className={`btn btn-secondary closed ${closedClass}`}
+                                onClick={this.closeContest}
+                            >Close</button>
+                        </div> : null
+                    }
+                    {this.props.userRole === 'none' ?
+                        <button
+                            className='btn btn-secondary join'
+                            onClick={this.join}
+                        >
+                            Join Contest
+                        </button> : null
+                    }
                     <h2>About</h2>
                     <div>{this.state.about}</div>
                     <h2>Rules</h2>
@@ -66,13 +104,10 @@ class ContestHome extends React.Component {
 }
 
 ContestHome.propTypes = {
-  auth: React.PropTypes.object.isRequired
+    joinedContest: React.PropTypes.func.isRequired,
+    params: React.PropTypes.shape({
+        contestId: React.PropTypes.string.isRequired,
+    }).isRequired,
+    username: React.PropTypes.string.isRequired,
+    userRole: React.PropTypes.oneOf(['admin', 'none', 'participant']).isRequired,
 };
-
-function mapStateToProps(state) {
-  return {
-    auth: state.auth
-  };
-}
-
-export default connect(mapStateToProps)(ContestHome);

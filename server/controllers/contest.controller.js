@@ -182,28 +182,34 @@ export function addProblemAttempt(req, res) {
     if (!req.params.contest_id || !req.params.team_id || !req.body.problem) {
         res.status(403).end();
     } else {
-        const {code, lang, number} = req.body.problem;
-        Contest.findOne({cuid: req.params.contest_id}, (err, contest) => {
+        const { code, lang, number } = req.body.problem;
+        Contest.findOne({ cuid: req.params.contest_id }, (err, contest) => {
             if (err) {
                 res.status(500).send(err);
+            } else if (!contest || typeof contest.start !== 'number') {
+                res.status(400).send(err);
+            } else if (contest.closed) {
+                const team = contest.teams.id(req.params.team_id);
+                const feedBack = 'The contest is over! No more submissions!';
+                team.messages.push({ from: 'Automated', message: feedBack });
             } else {
                 const team = contest.teams.id(req.params.team_id);
                 const problem = team.problem_attempts[number]; // problem object of team
                 if (problem.solved) {
                     const feedBack = 'You have already solved this problem';
-                    team.messages.push({ from: 'Automated', message: feedBack});
-                    res.status(500).send({err: feedBack});
+                    team.messages.push({ from: 'Automated', message: feedBack });
+                    res.status(500).send({ err: feedBack });
                     contest.save();
-                } else if (problem.attempts.indexOf(code) != -1) {
+                } else if (problem.attempts.indexOf(code) !== -1) {
                     const feedBack = 'You have already submitted this code';
-                    team.messages.push({ from: 'Automated', message: feedBack});
-                    res.status(500).send({err: feedBack});
+                    team.messages.push({ from: 'Automated', message: feedBack });
+                    res.status(500).send({ err: feedBack });
                     contest.save();
                 } else {
                     const fileName = contest.problems[number].fileName + '.txt';
                     readTextFile('input/' + fileName).then((input) => {
                         hackerrankCall(code, lang, input, (error, response) => {
-                            const {stderr, stdout, compilemessage} = JSON.parse(response.body).result;
+                            const { stderr, stdout, compilemessage } = JSON.parse(response.body).result;
                             const hadStdError = stderr != null && !stderr.every((error) => error == false);
                             problem.attempts.push(code);
                             readTextFile('output/' + fileName).then((expectedOutput) => {
@@ -220,7 +226,7 @@ export function addProblemAttempt(req, res) {
                                     if (problem.solved) {
                                         team.score += computeScore(contest.start, problem.attempts.length);
                                         team.numSolved++;
-                                        if(!contest.problems[number].solved) {
+                                        if (!contest.problems[number].solved) {
                                             contest.problems[number].solved = true;
                                             contest.problems[number].solvedBy = req.params.team_id;
                                         }
@@ -335,6 +341,8 @@ export function createProblem(req, res) {
         Contest.findOne({ cuid: req.params.contest_id }).select('problems').exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
+            } else if (!contest || typeof contest.start === 'number') {
+                res.status(400).send(err);
             } else {
                 const fileName = shortid.generate();
                 contest.problems.push({ name: fileName, fileName });
@@ -493,12 +501,15 @@ export function getContestInfo(req, res) {
     if (!req.params.contest_id) {
         res.status(403).end();
     } else {
-        Contest.findOne({ cuid: req.params.contest_id }).select('about admin name rules').exec((err, contest) => {
+        Contest.findOne({ cuid: req.params.contest_id })
+        .select('about admin closed name rules start')
+        .exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else {
-                const { about, admin, name, rules } = contest;
-                res.json({ about, admin, name, rules });
+                const open = typeof contest.start === 'number';
+                const { about, admin, closed, name, rules } = contest;
+                res.json({ about, admin, closed, name, open, rules });
             }
         });
     }
@@ -530,7 +541,7 @@ export function getNumberOfProblems(req, res) {
  * @param res
  * @returns void
  */
-export function startContest(req, res) {
+export function openContest(req, res) {
     if (!req.params.contest_id) {
         res.status(403).end();
     } else {
@@ -608,7 +619,10 @@ export function getTeamScores(req, res) {
                     teamScores[index] = team.score;
                     teamNumSolved[index] = team.numSolved;
                 });
-                res.json({ teams: {teamNames, teamScores, teamNumSolved } });
+                res.json({
+                    teams: { teamNames, teamScores, teamNumSolved },
+                    scoreboardVisible: contest.scoreboardVisible,
+                });
             }
         });
     }
