@@ -11,48 +11,48 @@ class ProblemPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            problemNumber: props.params.problem_no,
+            problemNum: props.params.problemNum,
             numberOfProblems: -1,
         };
-        this.contest_id = props.params.contest_id;
+        this.contestId = props.params.contestId;
         this.addProblem = this.addProblem.bind(this);
         this.addedProblem = this.addedProblem.bind(this);
         this.changeProblemNumber = this.changeProblemNumber.bind(this);
     }
 
     componentDidMount() {
-        getNumberOfProblems(this.props.params.contest_id).then(res => {
+        getNumberOfProblems(this.props.params.contestId).then(res => {
             this.setState({ numberOfProblems: res.numberOfProblems });
         });
     }
 
-    changeProblemNumber(problemNumber) {
-        this.props.router.push(`/contest/${this.contest_id}/problems/${problemNumber}/edit`);
-        this.setState({ add: false, problemNumber });
+    changeProblemNumber(problemNum) {
+        this.props.router.push(`/contest/${this.contestId}/problems/${problemNum}/edit`);
+        this.setState({ add: false, problemNum });
     }
 
     addProblem() {
-        this.props.router.push(`/contest/${this.contest_id}/problems/add`);
+        this.props.router.push(`/contest/${this.contestId}/problems/add`);
         this.setState({ add: true });
     }
 
     addedProblem() {
         const numberOfProblems = this.state.numberOfProblems + 1;
         this.state.numberOfProblems = numberOfProblems;
-        this.props.router.push(`/contest/${this.contest_id}/problems/${numberOfProblems}/edit`);
+        this.props.router.push(`/contest/${this.contestId}/problems/${numberOfProblems}/edit`);
     }
 
     render() {
-        const problemNumber = this.props.params.problem_no;
-        const ProblemDisplay = problemNumber > 0 ?
-            <ProblemEditor problemNumber={problemNumber} {...this.props} /> :
+        const problemNum = this.props.params.problemNum;
+        const ProblemDisplay = problemNum > 0 ?
+            <ProblemEditor problemNum={problemNum} {...this.props} /> :
             <ProblemAdder {...this.props} addedProblem={this.addedProblem} />;
         return (
             <div>
                 <ProblemNavigator
                     edit
-                    problemNumber={problemNumber}
-                    contest_id={this.contest_id}
+                    problemNum={problemNum}
+                    contestId={this.contestId}
                     addProblem={this.addProblem}
                     changeProblemNumber={this.changeProblemNumber}
                     numberOfProblems={this.state.numberOfProblems}
@@ -65,8 +65,8 @@ class ProblemPage extends React.Component {
 
 ProblemPage.propTypes = {
     params: React.PropTypes.shape({
-        contest_id: React.PropTypes.string.isRequired,
-        problem_no: React.PropTypes.string,
+        contestId: React.PropTypes.string.isRequired,
+        problemNum: React.PropTypes.string,
     }).isRequired,
     router: React.PropTypes.shape({
         push: React.PropTypes.func.isRequired,

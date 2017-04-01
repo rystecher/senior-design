@@ -11,6 +11,7 @@ export default class ProblemNavigator extends React.Component {
         }
         const arr = new Array(numberOfProblems);
         arr.fill(0);
+        console.log(numberOfProblems);
         return (
             <ul className='pagination justify-content-center' role='group'>
                 {arr.map((elm, idx) => {
@@ -25,7 +26,7 @@ export default class ProblemNavigator extends React.Component {
                         </li>
                     );
                 })}
-                {this.props.edit && numberOfProblems > 0 ?
+                {this.props.edit !== undefined && numberOfProblems > 0 ?
                     <li
                         className='page-item'
                         onClick={this.props.addProblem}
