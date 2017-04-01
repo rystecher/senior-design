@@ -1,6 +1,5 @@
 import User from '../models/user';
-import * as Contest from '../controllers/contest.controller.js';
-
+import * as ContestController from './contest.controller.js'
 
 export function createContest(username, cuid) {
     User.findOne({ username }, (err, user) => {
@@ -28,19 +27,26 @@ export function joinContest(username, cuid, teamid) {
 }
 
 export function getCreatedContests(req, res) {
-  console.log(req.body);
+  //console.log(req.body);
   User.findOne({username: req.body.username}, (err, user) => {
       if (err) {
-        return cb(err);
+        res.status(403).end();
       } else {
         var contests = new Array();
         var contests_ids = user.createdContestsID;
         for (var i = 0; i < user.createdContestsID.length; i++) {
           console.log(contests_ids[i]);
-          Contest.getContest(contests_ids[i]);
+          ContestController.getContest(contests_ids[i], function(err, contest){
+            if (err) {
+              res.status(403).end();
+            } else{
+              //console.log(contest);
+              contests.push(contest);
+            }
+          });
         }
         console.log(contests);
-        res.json({ contests: contests })
+        res.json({contests})
       }
   });
 }

@@ -469,18 +469,15 @@ export function getProblemMetaData(req, res) {
  * @param res
  * @returns void
  */
-export function getContest(req, res) {
-    if (!req.params.contest_id) {
-        res.status(403).end();
-    } else {
-        Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+export function getContest(contest_id, cb) {
+        Contest.findOne({ cuid: contest_id }, (err, contest) => {
             if (err) {
-                res.status(500).send(err);
+                cb(err);
             } else {
-                res.json({ contest });
+                const { admin, name, closed } = contest;
+                cb(null, {name});
             }
         });
-    }
 }
 
 /**

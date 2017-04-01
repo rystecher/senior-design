@@ -12,7 +12,7 @@ class DisplayContests extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props.auth.user.username);
+        //console.log(this.props.auth.user.username);
         const username = this.props.auth.user.username;
         getCreatedContests({ username }).then(res => {
             const { createdContestsID } = res;
@@ -28,7 +28,7 @@ class DisplayContests extends Component {
           title: 'Contest Name', dataIndex: 'contestName', key:'contestName', width: 100,
         }];
         const data = this.state.createdContestsID;
-        console.log(data[0]);
+        //console.log(data[0]);
         return (
             <div>
                 <h1>Contests Created</h1>
