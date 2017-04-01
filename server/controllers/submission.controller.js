@@ -1,5 +1,12 @@
 import Submission from '../models/Submission';
-import {sendTeamMessage} from '../controllers/messaging.controller';
+import Contest from '../models/contest';
+import { sendTeamMessage } from '../controllers/messaging.controller';
+import { readTextFile } from '../controllers/contest.controller';
+
+export function computeScore(contestStart, numAttempts) {
+    const millisInMinutes = 1000 * 60;
+    return Math.round(((Date.now() - contestStart) / millisInMinutes)) + 20 * numAttempts;
+}
 
 /**
  * Get all submissions for a contest
@@ -14,8 +21,38 @@ export function getSubmissions(req, res) {
         Submission.find({ contestID: req.params.contest_id }).exec((err, submissions) => {
             if (err) {
                 res.status(500).send(err);
+            } else if (!submissions) {
+                res.json({ submissions: [] });
             } else {
                 res.json({ submissions });
+            }
+        });
+    }
+}
+
+/**
+ * Get all submissions for a contest
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getSubmission(req, res) {
+    if (!req.params.contest_id) {
+        res.status(403).end();
+    } else {
+        Submission.findOne({ cuid: req.params.submission_id }).exec((err, submission) => {
+            if (err) {
+                res.status(500).send(err);
+            } else if (!submission) {
+                res.status(400).send({ err: 'Submission does not exist' });
+            } else {
+                readTextFile(`output/${submission.fileName}`).then((expectedOutput) => {
+                    submission.expectedOutput = expectedOutput;
+                    readTextFile(`submission/${submission.fileName}`).then((actualOutput) => {
+                        submission.actualOutput = actualOutput;
+                        res.json({ submission });
+                    }).catch(err3 => res.status(500).send(err3));
+                }).catch(err2 => res.status(500).send(err2));
             }
         });
     }
@@ -28,6 +65,17 @@ export function getSubmissions(req, res) {
 export function createSubmission(submission) {
     const newSubmission = new Submission(submission);
     newSubmission.save();
+}
+
+function markSubmissionCorrect(contestId, teamId, problemNum) {
+    Contest.findOne({ cuid: contestId }, (err, contest) => {
+        if (!err && contest) {
+            const team = contest.teams.id(teamId);
+            const problem = team.problem_attempts[problemNum]; // problem object of team
+            team.score += computeScore(contest.start, problem.attempts.length);
+            contest.save();
+        }
+    });
 }
 
 /**
@@ -43,10 +91,17 @@ export function sendFeedback(req, res) {
         Submission.findOne({ cuid: req.params.submission_id }).exec((err, submission) => {
             if (err) {
                 res.status(500).send(err);
+            } else if (!submission) {
+                res.status(400).send({ err: 'Submission does not exist' });
             } else {
                 submission.feedback = req.body.feedback;
+                if (req.body.corect && !submission.correct) {
+                    submission.correct = true;
+                    const { contestID, teamID, problemNumber } = submission;
+                    markSubmissionCorrect(contestID, teamID, problemNumber);
+                }
                 sendTeamMessage(genSubmissionResponse(submission), submission.teamID);
-                submission.save((err, saved) => {
+                submission.save(err => {
                     if (err) {
                         res.status(500).send(err);
                     } else {
@@ -68,17 +123,25 @@ export function deleteSubmission(req, res) {
     Submission.findOne({ cuid: req.params.submission_id }).exec((err, submission) => {
         if (err) {
             res.status(500).send(err);
+        } else if (!submission) {
+            res.status(400).send({ err: 'Submission does not exist' });
         } else {
             Contest.findOne({ cuid: submission.contestID }).exec((err, contest) => {
                 if (err) {
                     res.status(500).send(err);
+                } else if (!contest) {
+                    res.status(400).send({ err: 'Contest does not exist' });
                 } else {
                     const team = contest.teams.id(submission.teamID);
-                    const problem = team.problem_attempts[number].attempts.pop();
-                    contest.save();
-                    submission.remove(() => {
-                        res.status(200).end();
-                    });
+                    if (!team) {
+                        res.status(400).send({ err: 'Team does not exist' });
+                    } else {
+                        team.problem_attempts[submission.problemNumber].attempts.pop();
+                        contest.save();
+                        submission.remove(() => {
+                            res.status(200).end();
+                        });
+                    }
                 }
             });
         }
@@ -90,18 +153,13 @@ function genSubmissionResponse(submission) {
         from: 'Judges',
         message: `Judge: Your submission for problem #${submission.problemNumber},
         ${submission.problemName}, has been marked: ${submission.feedback}`,
-    }
-}
-
-export function computeScore(contestStart, numAttempts) {
-    const millisInMinutes = 1000 * 60;
-    return Math.round(((Date.now() - contestStart) / millisInMinutes)) + 20 * numAttempts;
+    };
 }
 
 export function createFeedbackMessage(correct, compileMessage, problemNum, hadStdError, stderr) {
     let message = 'Awaiting feedback from judges...';
     if (correct) {
-        message = `Your solution was correct!`;
+        message = 'Your solution was correct!';
     } else if (compileMessage != '') {
         message = compileMessage;
     } else if (hadStdError) {
@@ -111,16 +169,16 @@ export function createFeedbackMessage(correct, compileMessage, problemNum, hadSt
 }
 
 export function createTestFeedbackMessage(message, compileMessage, stdout, time, hadStdError, stderr) {
-  let feedBack = 'Awaiting feedback from our server...';
+    let feedBack = 'Awaiting feedback from our server...';
   // Ran out of time
-  if (message == 'Terminated due to timeout' && time == 10) {
-    feedBack = message;
-  } else if (compileMessage != undefined) {
-    feedBack = compileMessage;
-  } else if (hadStdError) {
-    feedBack = 'Standard Error: ' + stderr.toString();
-  } else {
-    feedBack = stdout;
-  }
-  return { from: 'Automated', message: 'Test result: ' + feedBack + `Ran in ${time} seconds` };
+    if (message == 'Terminated due to timeout' && time == 10) {
+        feedBack = message;
+    } else if (compileMessage != undefined) {
+        feedBack = compileMessage;
+    } else if (hadStdError) {
+        feedBack = 'Standard Error: ' + stderr.toString();
+    } else {
+        feedBack = stdout;
+    }
+    return { from: 'Automated', message: 'Test result: ' + feedBack + `Ran in ${time} seconds` };
 }

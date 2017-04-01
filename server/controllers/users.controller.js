@@ -4,7 +4,7 @@ export function createContest(username, cuid) {
     User.findOne({ username }, (err, user) => {
         if (err) {
             return cb(err);
-        } else {
+        } else if (user) {
             user.createdContestsID.push(cuid);
             user.save();
         }
@@ -15,7 +15,7 @@ export function joinContest(username, cuid, teamid) {
     User.findOne({ username }, (err, user) => {
         if (err) {
             return cb(err);
-        } else {
+        } else if (user) {
             user.participatedContestsID.push({
                 contest: cuid,
                 team: teamid,
@@ -32,7 +32,7 @@ export function getUserRole(req, res) {
         User.findOne({ username: req.params.username }, (err, user) => {
             if (err) {
                 res.status(500).send(err);
-            } else if (user === null) {
+            } else if (!user) {
                 res.status(400).send(err);
             } else if (user.createdContestsID.indexOf(req.params.contestId) !== -1) {
                 res.json({ userRole: 'admin' });
