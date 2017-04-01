@@ -15,10 +15,10 @@ export function computeScore(contestStart, numAttempts) {
  * @returns void
  */
 export function getSubmissions(req, res) {
-    if (!req.params.contest_id) {
+    if (!req.params.contestId) {
         res.status(403).end();
     } else {
-        Submission.find({ contestID: req.params.contest_id }).exec((err, submissions) => {
+        Submission.find({ contestID: req.params.contestId }).exec((err, submissions) => {
             if (err) {
                 res.status(500).send(err);
             } else if (!submissions) {
@@ -37,10 +37,10 @@ export function getSubmissions(req, res) {
  * @returns void
  */
 export function getSubmission(req, res) {
-    if (!req.params.contest_id) {
+    if (!req.params.submissionId) {
         res.status(403).end();
     } else {
-        Submission.findOne({ cuid: req.params.submission_id }).exec((err, submission) => {
+        Submission.findOne({ cuid: req.params.submissionId }).exec((err, submission) => {
             if (err) {
                 res.status(500).send(err);
             } else if (!submission) {
@@ -85,10 +85,10 @@ function markSubmissionCorrect(contestId, teamId, problemNum) {
  * @returns void
  */
 export function sendFeedback(req, res) {
-    if (!req.params.submission_id || !req.body.feedback) {
+    if (!req.params.submissionId || !req.body.feedback) {
         res.status(403).end();
     } else {
-        Submission.findOne({ cuid: req.params.submission_id }).exec((err, submission) => {
+        Submission.findOne({ cuid: req.params.submissionId }).exec((err, submission) => {
             if (err) {
                 res.status(500).send(err);
             } else if (!submission) {
@@ -120,7 +120,7 @@ export function sendFeedback(req, res) {
  * @returns void
  */
 export function deleteSubmission(req, res) {
-    Submission.findOne({ cuid: req.params.submission_id }).exec((err, submission) => {
+    Submission.findOne({ cuid: req.params.submissionId }).exec((err, submission) => {
         if (err) {
             res.status(500).send(err);
         } else if (!submission) {
