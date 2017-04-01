@@ -1,4 +1,4 @@
-import Submission from '../models/Submission';
+import Submission from '../models/submission';
 import Contest from '../models/contest';
 import { sendTeamMessage } from '../controllers/messaging.controller';
 import { readTextFile } from '../controllers/contest.controller';
