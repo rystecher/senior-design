@@ -378,7 +378,7 @@ export function changeProblemPdf(req, res) {
     if (!req.params.contest_id || !req.params.problem_no) {
         res.status(403).end();
     } else {
-        const problem_no = req.params.problem_no;
+        const problem_no = req.params.problem_no - 1;
         Contest.findOne({ cuid: req.params.contest_id }).select('problems').exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);

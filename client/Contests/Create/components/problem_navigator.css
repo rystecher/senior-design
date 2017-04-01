@@ -6,3 +6,11 @@
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
 }
+
+a.page-link:not([href]) {
+    color: #0275d8;
+}
+
+.pagination {
+    margin-top: 16px
+}

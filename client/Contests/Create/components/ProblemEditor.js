@@ -23,7 +23,7 @@ export default class ProblemEditor extends React.Component {
     componentWillReceiveProps(nextProps) {
         const { contestId, problemNum } = nextProps.params;
         if (this.problemNum !== problemNum) {
-            //this.setState({})
+            // this.setState({})
             this.file = null;
             this.fetchProblemWrapper(contestId, problemNum);
         }
@@ -47,6 +47,7 @@ export default class ProblemEditor extends React.Component {
             req.set('Content-Disposition', 'attachment; filename=new.pdf');
             req.attach('file', this.file);
             req.end();
+            this.file = null;
         }
     }
 
