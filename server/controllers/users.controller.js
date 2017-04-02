@@ -27,50 +27,62 @@ export function joinContest(username, cuid, teamid) {
 }
 
 export function getCreatedContests(req, res) {
-  User.findOne({username: req.body.username}, (err, user) => {
-      if (err) {
-        res.status(403).end();
-      } else {
-        Contest.find({ cuid: { $in: user.createdContestsID }}, {_id: 0})
-        .select('name admin closed')
-        .exec((err, contests) => {
-            if (err) {
-              res.status(500).send(err);
-            } else {
-              //console.log(contests);
-              res.json({ contests });
-            }
-        });
-      }
-  });
+  if (!req.body.username) {
+      res.status(403).end();
+  } else {
+      User.findOne({username: req.body.username}, (err, user) => {
+          if (err) {
+            res.status(500).send(err);
+          } else if (!user) {
+              res.status(400).send(err);
+          } else {
+            Contest.find({ cuid: { $in: user.createdContestsID }}, {_id: 0})
+            .select('name admin closed')
+            .exec((err, contests) => {
+                if (err) {
+                  res.status(500).send(err);
+                } else {
+                  //console.log(contests);
+                  res.json({ contests });
+                }
+            });
+          }
+      });
+  }
 }
 
 export function getJoinedContests(req, res) {
-  User.findOne({username: req.body.username}, (err, user) => {
-      if (err) {
-        res.status(403).end();
-      } else {
-        //console.log(user.participatedContestsID);
-        const participatedContestsList = [];
-        if (user.participatedContestsID) {
-          for (let i = 0; i < user.participatedContestsID.length; i++) {
-            participatedContestsList.push(user.participatedContestsID[i].contest);
-          }
-        }
-        //console.log(participatedContestsList);
-
-        Contest.find({ cuid: { $in: participatedContestsList }}, {_id: 0})
-        .select('name admin closed')
-        .exec((err, contests) => {
-            if (err) {
-              res.status(500).send(err);
-            } else {
-              //console.log(contests);
-              res.json({ contests });
+  if (!req.body.username) {
+      res.status(403).end();
+  } else {
+      User.findOne({username: req.body.username}, (err, user) => {
+          if (err) {
+            res.status(500).send(err);
+          } else if (!user) {
+            res.status(400).send(err);
+          } else {
+            //console.log(user.participatedContestsID);
+            const participatedContestsList = [];
+            if (user.participatedContestsID) {
+              for (let i = 0; i < user.participatedContestsID.length; i++) {
+                participatedContestsList.push(user.participatedContestsID[i].contest);
+              }
             }
-        });
-      }
-  });
+            //console.log(participatedContestsList);
+
+            Contest.find({ cuid: { $in: participatedContestsList }}, {_id: 0})
+            .select('name admin closed')
+            .exec((err, contests) => {
+                if (err) {
+                  res.status(500).send(err);
+                } else {
+                  //console.log(contests);
+                  res.json({ contests });
+                }
+            });
+          }
+      });
+  }
 }
 
 export function getUserRole(req, res) {
