@@ -47,7 +47,7 @@ class ContestWrapper extends React.Component {
         };
         const childrenWithProps = React.cloneElement(this.props.children, childrenProps);
         return (
-            <div>
+            <div className='contest-container'>
                 <ContestNavigator
                     contestId={this.props.params.contestId}
                     page={page}
@@ -74,7 +74,7 @@ ContestWrapper.propTypes = {
 
 function mapStateToProps(state) {
     return {
-        auth: state.auth
+        auth: state.auth,
     };
 }
 

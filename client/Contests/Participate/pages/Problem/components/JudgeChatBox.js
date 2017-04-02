@@ -46,7 +46,7 @@ export default class JudgeChatBox extends React.Component {
 
     sendMessage(event) {
         const {contest_id, team_id} = this.props;
-        if(event.keyCode == 13) {
+        if(event.keyCode === 13) {
             sendMessageToTeam(contest_id, team_id, this.state.value);
             this.state.messageObjs.push(new Message(0, this.state.value));
             this.setState({
