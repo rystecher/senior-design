@@ -9,7 +9,10 @@ router.route('/messages/:contest_id/team/:team_id').post(MessageController.sendT
 router.route('/messages/:contest_id/team/:team_id').get(MessageController.getTeamMessages);
 
 // Posts a new message to the judges in a contest
-router.route('/messages/:contest_id/team/:team_id/judge').post(MessageController.sendJudgeMessage);
+router.route('/messages/:contest_id/team/:team_id/tojudge').post(MessageController.sendJudgeMessage);
+
+// Gets all messages for a team in a contest
+router.route('/messages/:contest_id/team/:team_id/forjudge').get(MessageController.getTeamMessagesForJudge);
 
 // Gets an array of objects for the judges to see which teams have messaged
 router.route('/messages/:contest_id/judge').get(MessageController.getJudgeMessages);

@@ -3,16 +3,24 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 const Schema = mongoose.Schema;
 
-const SALT_WORK_FACTOR = 10,    // these values can be whatever you want - we're defaulting to a
-    // max of 5 attempts, resulting in a 2 hour lock
-  MAX_LOGIN_ATTEMPTS = 5,
-  LOCK_TIME = 2 * 60 * 60 * 1000;
+const SALT_WORK_FACTOR = 10,
+// these values can be whatever you want - we're defaulting to a
+// max of 5 attempts, resulting in a 2 hour lock
+MAX_LOGIN_ATTEMPTS = 5,
+LOCK_TIME = 2 * 60 * 60 * 1000;
+
+var contestTeamPairSchema = new Schema({
+    contest: {type: String, unique: true},
+    team: {type: String, unique: true}
+});
 
 const UserSchema = new Schema({
-  username: {type: String, required: true, index: {unique: true}},
-  password: {type: String, required: true},
-  loginAttempts: {type: Number, required: true, default: 0},
-  lockUntil: {type: Number}
+    username: {type: String, required: true, index: {unique: true}},
+    password: {type: String, required: true},
+    loginAttempts: {type: Number, required: true, default: 0},
+    lockUntil: Number,
+    createdContestsID: [String],
+    participatedContestsID: [contestTeamPairSchema]
 });
 
 UserSchema.virtual('isLocked').get(function() {

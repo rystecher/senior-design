@@ -1,42 +1,64 @@
 import React from 'react';
-import Dropzone from 'react-dropzone';
 import request from 'superagent';
 import { setProblemMetaData, fetchProblem } from '../../ContestActions';
-import spdf from "simple-react-pdf";
+import spdf from 'simple-react-pdf';
 import ProblemFields from './ProblemFields';
 
 export default class ProblemEditor extends React.Component {
 
     constructor(props) {
         super(props);
-        this.contest_id = props.params.contest_id;
-        this.problem_no = props.params.problem_no;
-        this.onDrop = this.onDrop.bind(this);
+        this.contestId = props.params.contestId;
+        this.problemNum = props.params.problemNum;
+        this.onDropFile = this.onDropFile.bind(this);
         this.onSave = this.onSave.bind(this);
         this.updateField = this.updateField.bind(this);
         this.state = {};
     }
 
     componentDidMount() {
-        this.fetchProblemWrapper(this.contest_id, this.problem_no);
+        this.fetchProblemWrapper(this.contestId, this.problemNum);
     }
 
     componentWillReceiveProps(nextProps) {
-        const { contest_id, problem_no } = nextProps.params;
-        if (this.problem_no !== problem_no) {
-            //this.setState({})
-            this.fetchProblemWrapper(contest_id, problem_no);
+        const { contestId, problemNum } = nextProps.params;
+        if (this.problemNum !== problemNum) {
+            // this.setState({})
+            this.file = null;
+            this.fetchProblemWrapper(contestId, problemNum);
         }
     }
 
-    fetchProblemWrapper(contest_id, problem_no) {
-        this.contest_id = contest_id;
-        this.problem_no = problem_no;
+    onDropFile(files) {
+        this.file = files[0];
+        const pdfUrl = URL.createObjectURL(this.file);
+        this.setState({ pdfUrl });
+    }
+
+    onSave(input, output, problemName) {
+        setProblemMetaData(this.contestId, this.problemNum, {
+            name: problemName,
+            input,
+            output,
+        }).then((res) => console.log(res));
+        if (this.file) {
+            const req = request.post(`/api/contests/${this.contestId}/problem/${this.problemNum}/edit`);
+            req.set('Content-Type', 'application/pdf');
+            req.set('Content-Disposition', 'attachment; filename=new.pdf');
+            req.attach('file', this.file);
+            req.end();
+            this.file = null;
+        }
+    }
+
+    fetchProblemWrapper(contestId, problemNum) {
+        this.contestId = contestId;
+        this.problemNum = problemNum;
         this.setState({ pdfUrl: false, loadedPdf: false });
-        fetchProblem(contest_id, problem_no).then(response => {
+        fetchProblem(contestId, problemNum).then(response => {
             if (typeof response.blob === 'function') {
                 response.blob().then(blob => {
-                    const pdf = new File([blob], `problem${problem_no}.pdf`);
+                    const pdf = new File([blob], `problem${problemNum}.pdf`);
                     const pdfUrl = URL.createObjectURL(pdf);
                     this.setState({
                         pdfUrl,
@@ -49,26 +71,6 @@ export default class ProblemEditor extends React.Component {
         });
     }
 
-    onDrop(files) {
-        this.file = files[0];
-        this.setState({ fileName: this.file.name });
-    }
-
-    onSave(input, output, problemName) {
-        setProblemMetaData(this.contest_id, this.problem_no, {
-            name:   problemName,
-            input,
-            output,
-        }).then((res) => console.log(res));
-        if (this.file) {
-            var req = request.post(`/api/contests/${this.contest_id}/problem/${this.problem_no}/edit`);
-            req.set('Content-Type', 'application/pdf');
-            req.set('Content-Disposition', `attachment; filename=new.pdf`);
-            req.attach('file', this.file);
-            req.end();
-        }
-    }
-
     updateField(event) {
         const { name, value } = event.target;
         this.setState({ [name]: value });
@@ -78,20 +80,27 @@ export default class ProblemEditor extends React.Component {
         if (!this.state.loadedPdf) {
             return null;
         }
-        const dragAndDropText = this.state.fileName ?
-            `Uploaded File: ${this.state.fileName}` : 'Drag and drop pdf here or click to select files to upload.';
         const pdf = this.state.pdfUrl ?
-            (<spdf.SimplePDF file={this.state.pdfUrl}/>) : null;
+            (<spdf.SimplePDF file={this.state.pdfUrl} />) : null;
         return (
-            <div>
+            <div id='edit'>
                 <div>
                     {pdf}
-                    <Dropzone onDrop={this.onDrop} multiple={false}>
-                        <div>{dragAndDropText}</div>
-                    </Dropzone>
                 </div>
-                <ProblemFields contest_id={this.contest_id} problem_no={this.problem_no} save={this.onSave}/>
+                <ProblemFields
+                    contestId={this.contestId}
+                    problemNum={this.problemNum}
+                    save={this.onSave}
+                    onDropFile={this.onDropFile}
+                />
             </div>
         );
     }
 }
+
+ProblemEditor.propTypes = {
+    params: React.PropTypes.shape({
+        contestId: React.PropTypes.string.isRequired,
+        problemNum: React.PropTypes.string.isRequired,
+    }).isRequired,
+};

@@ -1,17 +1,17 @@
 import Contest from '../models/contest';
 
 export function sendTeamMessageApi(req, res) {
-    const {contest_id, team_id} = req.params;
+    const { contest_id, team_id } = req.params;
     if (!contest_id || !team_id || !req.body.message) {
         res.status(403).end();
     } else {
         sendTeamMessage({ from: 'Judges', message: req.body.message }, contest_id, team_id);
-        res.json({success: true});
+        res.json({ success: true });
     }
 }
 
 export function sendJudgeMessage(req, res) {
-    const {contest_id, team_id} = req.params;
+    const { contest_id, team_id } = req.params;
     if (!contest_id || !team_id || !req.body.message) {
         res.status(403).end();
     } else {
@@ -24,19 +24,40 @@ export function getTeamMessages(req, res) {
     if (!req.params.contest_id || !req.params.team_id) {
         res.status(403).end();
     } else {
-        Contest.findOne({cuid: req.params.contest_id}, (err, contest) => {
+        Contest.findOne({ cuid: req.params.contest_id }, (err, contest) => {
             if (err) {
                 res.status(500).send(err);
+            } else if (!contest) {
+                res.status(400).send({ err: 'Contest does not exist' });
             } else {
                 const team = contest.teams.id(req.params.team_id);
-                if (team == null) {
+                if (!team) {
                     res.status(500).send(err);
                 } else {
-                    if (req.body.judgeRequest) {
-                        team.messagedJudge = false;
-                        contest.save();
-                    }
-                    res.json({ messages: team.messages});
+                    res.json({ messages: team.messages });
+                }
+            }
+        });
+    }
+}
+
+export function getTeamMessagesForJudge(req, res) {
+    if (!req.params.contest_id || !req.params.team_id) {
+        res.status(403).end();
+    } else {
+        Contest.findOne({ cuid: req.params.contest_id }, (err, contest) => {
+            if (err) {
+                res.status(500).send(err);
+            } else if (!contest) {
+                res.status(400).send({ err: 'Contest does not exist' });
+            } else {
+                const team = contest.teams.id(req.params.team_id);
+                if (!team) {
+                    res.status(500).send(err);
+                } else {
+                    team.messagedJudge = false;
+                    contest.save();
+                    res.json({ messages: team.messages });
                 }
             }
         });
@@ -47,15 +68,17 @@ export function getJudgeMessages(req, res) {
     if (!req.params.contest_id) {
         res.status(403).end();
     } else {
-        Contest.findOne({cuid: req.params.contest_id}, (err, contest) => {
+        Contest.findOne({ cuid: req.params.contest_id }, (err, contest) => {
             if (err) {
                 res.status(500).send(err);
+            } else if (!contest) {
+                res.status(400).send({ err: 'Contest does not exist' });
             } else {
-                const teams = contest.teams.map((team, index) => {
+                const teams = contest.teams.map(team => {
                     return {
                         name: team.name,
                         messagedJudge: team.messagedJudge,
-                        id: team._id
+                        id: team._id,
                     };
                 });
                 res.json({ teams });
@@ -71,6 +94,8 @@ export function broadcastMessage(req, res) {
         Contest.findOne({ cuid: req.params.cuid }).select('teams').exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
+            } else if (!contest) {
+                res.status(400).send({ err: 'Contest does not exist' });
             } else {
                 contest.teams.forEach(team => {
                     team.messages.push({ from: 'Judges', message: req.body.message });
@@ -87,15 +112,17 @@ export function broadcastMessage(req, res) {
     }
 }
 
-export function sendTeamMessage(message, contest_id, team_id) {
-    Contest.findOne({cuid: contest_id}, (err, contest) => {
-        if (!err) {
-            const team = contest.teams.id(team_id);
-            team.messages.push(message);
-            if (message.from == 'Team') {
-                team.messagedJudge = true;
+export function sendTeamMessage(message, contestId, teamId) {
+    Contest.findOne({ cuid: contestId }, (err, contest) => {
+        if (!err && contest) {
+            const team = contest.teams.id(teamId);
+            if (team) {
+                team.messages.push(message);
+                if (message.from === 'Team') {
+                    team.messagedJudge = true;
+                }
+                contest.save();
             }
-            contest.save();
         }
     });
 }

@@ -110,7 +110,8 @@ const styles = {
   },
   chatHistory: {
     flex: 1,
-    overflow: 'scroll'
+    overflow: 'scroll',
+    'overflow-x': 'hidden'
   },
   chatbubbleWrapper: {
     marginTop: 10,
