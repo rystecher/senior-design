@@ -1,6 +1,7 @@
 import React from 'react';
-import {getTeamMessagesForJudge, sendMessageToTeam} from '../../../../ContestActions.js';
-import {ChatFeed, Message} from './chat-ui/lib/index.js';
+import { getTeamMessagesForJudge, sendMessageToTeam,
+        getBroadcastMessages, sendBroadcastMessage } from '../../../../ContestActions.js';
+import { ChatFeed, Message } from './chat-ui/lib/index.js';
 import './judge-chat-box.css';
 
 export default class JudgeChatBox extends React.Component {
@@ -13,22 +14,28 @@ export default class JudgeChatBox extends React.Component {
     }
 
     componentDidMount() {
-        const {contest_id, team_id} = this.props;
-        this.getMessages(contest_id, team_id);
+        const { contestId, teamId, broadcast } = this.props;
+        this.getMessages(contestId, teamId, broadcast);
     }
 
     componentWillReceiveProps(nextProps) {
-        const { contest_id, team_id } = this.props;
-        if (nextProps.contest_id !== contest_id || nextProps.team_id !== team_id) {
+        const { contestId, teamId, broadcast } = this.props;
+        if (nextProps.contestId !== contestId ||
+            nextProps.teamId !== teamId ||
+            nextProps.broadcast !== broadcast) {
             this.setState({ messageObjs: [] });
-            this.getMessages(nextProps.contest_id, nextProps.team_id);
+            this.getMessages(nextProps.contestId, nextProps.teamId, nextProps.broadcast);
         }
     }
 
-    getMessages(contest_id, team_id) {
+    componentWillUnmount() {
         clearInterval(this.chatIntervId);
-        this.chatIntervId = setInterval(() => {
-            getTeamMessagesForJudge(contest_id, team_id).then((messages) => {
+    }
+
+    getMessages(contestId, teamId, broadcast) {
+        clearInterval(this.chatIntervId);
+        if (broadcast) {
+            const intervalFunc = () => getBroadcastMessages(contestId).then((messages) => {
                 if (messages) {
                     const messageObjs = messages.map((message) => {
                         const type = message.from === 'Team' ? 1 : 0;
@@ -37,22 +44,39 @@ export default class JudgeChatBox extends React.Component {
                     this.setState({ messageObjs });
                 }
             });
-        }, 15000);
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.chatIntervId);
+            this.chatIntervId = setInterval(intervalFunc(), 10000);
+        } else {
+            const intervalFunc = () => getTeamMessagesForJudge(contestId, teamId).then((messages) => {
+                if (messages) {
+                    const messageObjs = messages.map((message) => {
+                        const type = message.from === 'Team' ? 1 : 0;
+                        return new Message(type, message.message);
+                    });
+                    this.setState({ messageObjs });
+                }
+            });
+            this.chatIntervId = setInterval(intervalFunc(), 10000);
+        }
     }
 
     sendMessage(event) {
-        const {contest_id, team_id} = this.props;
-        if(event.keyCode === 13) {
-            sendMessageToTeam(contest_id, team_id, this.state.value);
-            this.state.messageObjs.push(new Message(0, this.state.value));
-            this.setState({
-                value: '',
-                messageObjs: this.state.messageObjs
-            });
+        const { contestId, teamId, broadcast } = this.props;
+        if (event.keyCode == 13) {
+            if (broadcast) {
+                sendBroadcastMessage(contestId, this.state.value);
+                this.state.messageObjs.push(new Message(0, this.state.value));
+                this.setState({
+                    value: '',
+                    messageObjs: this.state.messageObjs,
+                });
+            } else {
+                sendMessageToTeam(contestId, teamId, this.state.value);
+                this.state.messageObjs.push(new Message(0, this.state.value));
+                this.setState({
+                    value: '',
+                    messageObjs: this.state.messageObjs,
+                });
+            }
         }
     }
 
@@ -80,12 +104,13 @@ export default class JudgeChatBox extends React.Component {
                 />
             </div>
         );
-
     }
 }
 
 JudgeChatBox.propTypes = {
-    contest_id: React.PropTypes.string.isRequired,
-    team_id: React.PropTypes.string.isRequired,
+    broadcast: React.PropTypes.bool,
+    closeChat: React.PropTypes.func.isRequired,
+    contestId: React.PropTypes.string.isRequired,
+    teamId: React.PropTypes.string,
     teamName: React.PropTypes.string.isRequired,
 };

@@ -6,36 +6,36 @@ const Schema = mongoose.Schema;
 const SALT_WORK_FACTOR = 10,
 // these values can be whatever you want - we're defaulting to a
 // max of 5 attempts, resulting in a 2 hour lock
-MAX_LOGIN_ATTEMPTS = 5,
-LOCK_TIME = 2 * 60 * 60 * 1000;
+    MAX_LOGIN_ATTEMPTS = 5,
+    LOCK_TIME = 2 * 60 * 60 * 1000;
 
 const contestTeamPairSchema = new Schema({
-  contest: {type: String},
-  team: {type: String}
+    contest: { type: String },
+    team: { type: String },
 });
 
 const UserSchema = new Schema({
-    username: {type: String, required: true, index: {unique: true}},
-    password: {type: String, required: true},
-    loginAttempts: {type: Number, required: true, default: 0},
+    username: { type: String, required: true, index: { unique: true } },
+    password: { type: String, required: true },
+    loginAttempts: { type: Number, required: true, default: 0 },
     lockUntil: Number,
     createdContestsID: [String],
-    participatedContestsID: [contestTeamPairSchema]
+    participatedContestsID: [contestTeamPairSchema],
 });
 
-UserSchema.virtual('isLocked').get(function() {
+UserSchema.virtual('isLocked').get(function () {
     // check for a future lockUntil timestamp
     return !!(this.lockUntil && this.lockUntil > Date.now());
 });
 
-UserSchema.pre('save', function(next) {
+UserSchema.pre('save', function (next) {
     const user = this;
 
     // only hash the password if it has been modified (or is new)
     if (!user.isModified('password')) return next();
 
     // generate a salt
-    bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
+    bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
         if (err) return next(err);
 
         // hash the password using our new salt
@@ -49,23 +49,23 @@ UserSchema.pre('save', function(next) {
     });
 });
 
-UserSchema.methods.comparePassword = function(candidatePassword, cb) {
-    bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
+UserSchema.methods.comparePassword = function (candidatePassword, cb) {
+    bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
         if (err) return cb(err);
         cb(null, isMatch);
     });
 };
 
-UserSchema.methods.incLoginAttempts = function(cb) {
+UserSchema.methods.incLoginAttempts = function (cb) {
     // if we have a previous lock that has expired, restart at 1
     if (this.lockUntil && this.lockUntil < Date.now()) {
         return this.update({
             $set: { loginAttempts: 1 },
-            $unset: { lockUntil: 1 }
+            $unset: { lockUntil: 1 },
         }, cb);
     }
     // otherwise we're incrementing
-    const updates = {$inc: {loginAttempts: 1}};
+    const updates = { $inc: { loginAttempts: 1 } };
     // lock the account if we've reached max attempts and it's not locked already
     if (this.loginAttempts + 1 >= MAX_LOGIN_ATTEMPTS && !this.isLocked) {
         updates.$set = { lockUntil: Date.now() + LOCK_TIME };
@@ -75,13 +75,13 @@ UserSchema.methods.incLoginAttempts = function(cb) {
 
 // expose enum on the model, and provide an internal convenience reference
 const reasons = UserSchema.statics.failedLogin = {
-  NOT_FOUND: 0,
-  PASSWORD_INCORRECT: 1,
-  MAX_ATTEMPTS: 2
+    NOT_FOUND: 0,
+    PASSWORD_INCORRECT: 1,
+    MAX_ATTEMPTS: 2,
 };
 
-UserSchema.statics.getAuthenticated = function(username, password, cb) {
-    this.findOne({ username: username }, function(err, user) {
+UserSchema.statics.getAuthenticated = function (username, password, cb) {
+    this.findOne({ username }, function (err, user) {
         if (err) return cb(err);
 
         // make sure the user exists
@@ -92,21 +92,21 @@ UserSchema.statics.getAuthenticated = function(username, password, cb) {
         // check if the account is currently locked
         if (user.isLocked) {
             // just increment login attempts if account is already locked
-            return user.incLoginAttempts(function(err) {
+            return user.incLoginAttempts(function (err) {
                 if (err) return cb(err);
                 return cb(null, null, reasons.MAX_ATTEMPTS);
             });
         }
 
         // test for a matching password
-        user.comparePassword(password, function(err, isMatch) {
+        user.comparePassword(password, function (err, isMatch) {
             if (err) return cb(err);
 
             // check if the password was a match
             if (isMatch) {
                 const doc = {
-                  username: user.username,
-                  id: user.id,
+                    username: user.username,
+                    id: user.id,
                 };
 
                 // return the jwt
@@ -116,17 +116,17 @@ UserSchema.statics.getAuthenticated = function(username, password, cb) {
                 if (!user.loginAttempts && !user.lockUntil) return cb(null, token, user);
                 // reset attempts and lock info
                 const updates = {
-                  $set: {loginAttempts: 0},
-                  $unset: {lockUntil: 1}
+                    $set: { loginAttempts: 0 },
+                    $unset: { lockUntil: 1 },
                 };
-                return user.update(updates, function(err) {
+                return user.update(updates, function (err) {
                     if (err) return cb(err);
                     return cb(null, token, user);
                 });
             }
 
             // password is incorrect, so increment login attempts before responding
-            user.incLoginAttempts(function(err) {
+            user.incLoginAttempts(function (err) {
                 if (err) return cb(err);
                 return cb(null, null, reasons.PASSWORD_INCORRECT);
             });
