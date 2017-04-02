@@ -13,8 +13,7 @@ if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
 
 // Initial text editor prompts in different languages
 const prompts = {
-  python: 'def addOne(x):\n    return x + 1\nprint addOne(1)',
-  javascript: 'function addOne(x) {\n    return x + 1\n}\n'
+  python: 'def addOne(x):\n    return x + 1\nprint addOne(1)'
 };
 
 // The text editor where users can write and edit code
@@ -45,7 +44,6 @@ export default class TextEditor extends React.Component {
       case 'python3':
         this.setState({
           mode: 'python',
-          code: prompts[lang],
           lang: lang
         });
         break;
@@ -53,7 +51,6 @@ export default class TextEditor extends React.Component {
       default:
         this.setState({
           mode: lang,
-          code: prompts[lang],
           lang: lang
         });
     }
@@ -66,8 +63,8 @@ export default class TextEditor extends React.Component {
   }
 
   onSubmitClick() {
-    const {contest_id, team_id, problem_num} = this.props;
-    submitCode(contest_id, team_id, this.state.code, this.state.lang, problem_num);
+    const {contest_id, team_id, problemNum} = this.props;
+    submitCode(contest_id, team_id, this.state.code, this.state.lang, problemNum);
   }
 
     render() {
@@ -100,5 +97,5 @@ export default class TextEditor extends React.Component {
 TextEditor.propTypes = {
   contest_id: React.PropTypes.string.isRequired,
   team_id: React.PropTypes.string.isRequired,
-  problem_num: React.PropTypes.number.isRequired,
+  problemNum: React.PropTypes.string.isRequired,
 };

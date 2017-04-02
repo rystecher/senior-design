@@ -117,15 +117,6 @@ export default (
     />
 
   <Route
-    path='/problem'
-    getComponent={(nextState, cb) => {
-      require.ensure([], require => {
-        cb(null, require('./Contests/Participate/pages/Problem/pages/ProblemPage').default);
-      });
-    }}
-  />
-
-  <Route
       path='/register'
       getComponent={(nextState, cb) => {
           require.ensure([], require => {

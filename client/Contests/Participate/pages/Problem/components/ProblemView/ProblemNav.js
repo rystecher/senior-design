@@ -1,13 +1,27 @@
 import React from 'react';
 import request from 'superagent';
+import { getNumberOfProblems } from '../../../../../ContestActions';
 import { setProblemMetaData, fetchProblem } from '../../../../../ContestActions';
 import spdf from 'simple-react-pdf';
 
-export default class NavBar extends React.Component {
+export default class ProblemNav extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      problemNum: props.params.problemNum,
+      numberOfProblems: -1,
+    };
+  }
+
+  componentDidMount() {
+    getNumberOfProblems(this.props.params.contestId).then(res => {
+      this.setState({ numberOfProblems: res.numberOfProblems });
+    });
+  }
 
   changeProblemNumber(problemNum) {
-    this.props.router.push(`/contest/${this.contestId}/problems/${problemNum}/edit`);
-    this.setState({ add: false, problemNum });
+    this.props.router.push(`/contest/${this.contestId}/problems/${problemNum}`);
   }
 
   render() {
@@ -42,7 +56,7 @@ export default class NavBar extends React.Component {
   }
 }
 
-// NavBar.propTypes = {
-//   numberOfProblems: React.PropTypes.number.isRequired,
-//   problemNum: React.PropTypes.string,
-// };
+ProblemNav.propTypes = {
+  numberOfProblems: React.PropTypes.number.isRequired,
+  problemNum: React.PropTypes.string,
+};
