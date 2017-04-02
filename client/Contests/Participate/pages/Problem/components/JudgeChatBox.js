@@ -35,29 +35,27 @@ export default class JudgeChatBox extends React.Component {
     getMessages(contestId, teamId, broadcast) {
         clearInterval(this.chatIntervId);
         if (broadcast) {
-            this.chatIntervId = setInterval(() => {
-                getBroadcastMessages(contestId).then((messages) => {
-                    if (messages) {
-                        const messageObjs = messages.map((message) => {
-                            const type = message.from === 'Team' ? 1 : 0;
-                            return new Message(type, message.message);
-                        });
-                        this.setState({ messageObjs });
-                    }
-                });
-            }, 10000);
+            const intervalFunc = () => getBroadcastMessages(contestId).then((messages) => {
+                if (messages) {
+                    const messageObjs = messages.map((message) => {
+                        const type = message.from === 'Team' ? 1 : 0;
+                        return new Message(type, message.message);
+                    });
+                    this.setState({ messageObjs });
+                }
+            });
+            this.chatIntervId = setInterval(intervalFunc(), 10000);
         } else {
-            this.chatIntervId = setInterval(() => {
-                getTeamMessagesForJudge(contestId, teamId).then((messages) => {
-                    if (messages) {
-                        const messageObjs = messages.map((message) => {
-                            const type = message.from === 'Team' ? 1 : 0;
-                            return new Message(type, message.message);
-                        });
-                        this.setState({ messageObjs });
-                    }
-                });
-            }, 10000);
+            const intervalFunc = () => getTeamMessagesForJudge(contestId, teamId).then((messages) => {
+                if (messages) {
+                    const messageObjs = messages.map((message) => {
+                        const type = message.from === 'Team' ? 1 : 0;
+                        return new Message(type, message.message);
+                    });
+                    this.setState({ messageObjs });
+                }
+            });
+            this.chatIntervId = setInterval(intervalFunc(), 10000);
         }
     }
 

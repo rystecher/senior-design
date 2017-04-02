@@ -14,13 +14,12 @@ export default class ChatSideBar extends React.Component {
 
     componentDidMount() {
         const { contest_id } = this.props;
-        this.chatIntervId = setInterval(() => {
-            fetchJudgeMessages(contest_id).then((teams) => {
-                if (teams) {
-                    this.setState({ teams });
-                }
-            });
-        }, 5000);
+        const intervalFunc = () => fetchJudgeMessages(contest_id).then((teams) => {
+            if (teams) {
+                this.setState({ teams });
+            }
+        });
+        this.chatIntervId = setInterval(intervalFunc(), 5000);
     }
 
     componentWillUnmount() {
