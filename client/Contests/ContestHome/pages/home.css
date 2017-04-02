@@ -15,9 +15,11 @@
     white-space: pre-wrap;
 }
 
-.contest-home .open, .contest-home .closed, .contest-home .join, .problem-fields .save {
-    display: block;
-    margin: 0 auto;
+.contest-home > .btn-wrapper {
+    white-space: normal;
+}
+
+.contest-container .btn, .btn.confirm {
     color: #448AFF;
     background-image: none;
     background-color: transparent;
@@ -31,32 +33,24 @@
 }
 
 .contest-home .open, .contest-home .closed {
-    width: 50%;
+    width: 48%;
+    margin-left: 1%;
+    margin-right: 1%;
 }
 
-.contest-home .open:hover, .contest-home .closed:hover,
-.contest-home .join:hover, .problem-fields .save:hover {
+.contest-container .btn:hover,
+.contest-container .btn.active,
+.btn.confirm:hover {
     color: #fff;
     background-color: #448AFF;
     border-color: #448AFF;
 }
 
-.contest-home .open:focus, .contest-home .open:active,
-.contest-home .open:hover,
-.contest-home .closed:focus, .contest-home .closed:active,
-.contest-home .closed:hover,
-.contest-home .join:focus, .contest-home .join:active,
-.contest-home .join:hover,
-.problem-fields .save:focus, .problem-fields .save:active,
-.problem-fields .save:hover   {
+.contest-container .btn:focus,
+.contest-container .btn:active,
+.contest-container .btn:hover {
     outline: none;
     box-shadow: none;
-}
-
-.contest-home .closed.active, .contest-home .open.active {
-    background-color: #448AFF;
-    opacity: 0.7;
-    color: white;
 }
 
 .contest-home .btn-group {
@@ -83,4 +77,16 @@
     text-align: center;
     color: #E3F2FD;
     font-weight: 100;
+}
+
+button.btn.btn-secondary.disabled:hover,
+button.btn.btn-secondary.disabled {
+    background-color: #fff;
+    border-color: #ccc;
+    color: #ccc;
+    cursor: default;
+}
+
+.btn.confirm {
+    padding: .5rem 1rem;
 }

@@ -1,0 +1,26 @@
+.contest-scoreboard .btn {
+    width: 300px;
+    margin-left: 1px;
+    margin-right: 1px;
+}
+
+.contest-scoreboard .full-width {
+    width: 100%;
+}
+
+.contest-scoreboard .btn-wrapper {
+    margin: 0 auto;
+    width: 604px;
+}
+
+.chart-wrapper {
+    width: 1000px;
+    margin: 48px auto;
+}
+
+.hidden-text {
+    width: 50%;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 40vh;
+}

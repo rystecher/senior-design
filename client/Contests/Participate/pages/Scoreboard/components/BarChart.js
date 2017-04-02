@@ -1,38 +1,55 @@
 const React = require('react');
-const {Bar} = require("react-chartjs");
-// example/source originally taken from: https://ledsun.github.io/react-chartjs-example/bar/
+const { Bar } = require('react-chartjs');
 
-const options = {
-  responsive: true, // makes it fill page
-  showTooltips: false, // disables tool tips
-};
+export default class BarChart extends React.Component {
 
-/**
- * holds the data passed in from the page and creates a bar chart
- */
-export const BarChart = React.createClass({
-  getInitialState() {
-    return {
-      datasets: [ // could add more data sets if you wanted more than addtional bars per team for other info
-        {
-          label: "Score", // "The label for the dataset which appears in the legend and tooltips"
-          fillColor: "rgba(178,225,102,0.5)", // color for the bars
-          data: this.props.scores // values for each bar
+    constructor(props) {
+        super(props);
+        const colors = Array(this.props.scores.length).fill('rgba(178,225,102,0.5)');
+        const teamIdx = this.props.names.findIndex((name) => name === 'Team');
+        if (teamIdx !== -1) {
+            colors[teamIdx] = 'rgba(54, 162, 235, 0.2)';
         }
-      ],
-      labels: this.props.names // labels for the bars (team names)
+        this.state = {
+            datasets: [
+                {
+                    label: 'Problems solved',
+                    fillColor: colors,
+                    data: this.props.numSolved,
+                },
+            ],
+            labels: this.props.names,
+        };
     }
-  },
 
-  /**
-   * creates the bar chart with the data given
-   * @returns {XML}
-   */
-  render() {
-    return <div>
-      <Bar type='bar' data={this.state} options={options} ref={(ref) => this.Bar = ref}/>
-    </div>
-  }
-});
+    render() {
+        const that = this;
+        const options = {
+            responsive: true,
+            showTooltips: true,
+            tooltipTemplate: (v) => {
+                const teamIdx = that.props.names.findIndex((name) => name === v.label);
+                const time = that.props.scores[teamIdx];
+                return `Time score: ${time}`;
+            },
+        };
+        return (
+            <div className='chart-wrapper'>
+                <Bar
+                    type='bar'
+                    data={this.state}
+                    options={options}
+                    width='1000px'
+                    height='500px'
+                />
+            </div>
+        );
+    }
+}
 
-export default BarChart;
+BarChart.propTypes = {
+    names: React.PropTypes.array,
+    numSolved: React.PropTypes.array,
+    scores: React.PropTypes.array,
+    username: React.PropTypes.string.isRequired,
+};

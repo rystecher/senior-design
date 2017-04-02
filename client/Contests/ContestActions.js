@@ -60,8 +60,16 @@ export function getContestInfo(cuid) {
     return callApi(`contests/${cuid}/info`);
 }
 
-export function fetchScoreboardData(cuid) {
-    return callApi(`contests/${cuid}/scoreboard`);
+export function getScoreboardData(contestId) {
+    return callApi(`contests/${contestId}/scoreboard`);
+}
+
+export function hideScoreboard(contestId) {
+    return callApi(`contests/${contestId}/scoreboard/hide`, 'post', {});
+}
+
+export function showScoreboard(contestId) {
+    return callApi(`contests/${contestId}/scoreboard/show`, 'post', {});
 }
 
 export function getNumberOfProblems(contestId) {
