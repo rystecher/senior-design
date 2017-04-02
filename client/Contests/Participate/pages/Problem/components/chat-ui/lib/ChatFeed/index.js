@@ -111,7 +111,7 @@ const styles = {
   chatHistory: {
     flex: 1,
     overflow: 'scroll',
-    'overflow-x': 'hidden'
+    'overflowX': 'hidden'
   },
   chatbubbleWrapper: {
     marginTop: 10,
