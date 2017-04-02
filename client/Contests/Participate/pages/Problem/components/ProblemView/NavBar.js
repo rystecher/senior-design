@@ -1,67 +1,48 @@
 import React from 'react';
-import ProblemButton from './ProblemButton.js';
-import {fetchProblem} from '../../../../../ContestActions';
-import spdf from "simple-react-pdf";
+import request from 'superagent';
+import { setProblemMetaData, fetchProblem } from '../../../../../ContestActions';
+import spdf from 'simple-react-pdf';
 
-class NavBar extends React.Component {
+export default class NavBar extends React.Component {
 
-    constructor() {
-        super();
-        this.state = {};
-        // this.state = {
-        //     prompt_text: this.props.competition.problems[0].prompt,
-        //     sample_input: this.props.competition.problems[0].input,
-        //     sample_output: this.props.competition.problems[0].output
-        // };
+  changeProblemNumber(problemNum) {
+    this.props.router.push(`/contest/${this.contestId}/problems/${problemNum}/edit`);
+    this.setState({ add: false, problemNum });
+  }
+
+  render() {
+    const { numberOfProblems, problemNum } = this.props;
+    const problemNumParsed = problemNum ? parseInt(problemNum, 10) : null;
+    if (numberOfProblems === -1) {
+      return null;
     }
-
-    componentDidMount() {
-        // fetchProblem("cikqgkv4q01ck7453ualdn3hn", "1").then(response => {
-        //     response.blob().then(blob => {
-        //         const pdf = new File([blob], "problem.pdf");
-        //         const pdfUrl = URL.createObjectURL(pdf);
-        //         this.setState({pdfUrl});
-        //     });
-        // });
-    }
-
-    handleClick(prompt, sample_input, sample_output) {
-        this.setState({
-            prompt_text: prompt,
-            sample_input: sample_input,
-            sample_output: sample_output
-        });
-    }
-
-    _onPdfCompleted(page, pages) {
-        this.setState({page: page, pages: pages});
-    }
-
-    render() {
-        //const handleClick = this.handleClick;
-        //const problem_list = this.props.competition.problems;
-        //const team = this.props.competition.teams[0];
-        // {Object.keys(problem_list).map((key) => {
-        //     return <ProblemButton key={key}
-        //     title={problem_list[key].title}
-        //     prompt={problem_list[key].prompt}
-        //     sample_input={problem_list[key].input}
-        //     sample_output={problem_list[key].output}
-        //     status={team.status[key]}
-        //     onChange={handleClick} />
-        // })}
-        // <div>{this.state.prompt_text}</div>
-        // <div>{this.state.sample_input}</div>
-        // <div>{this.state.sample_output}</div>
-        const pdf = this.state.pdfUrl ?
-            (<spdf.SimplePDF file={this.state.pdfUrl}/>) : null;
-        return (
-            <div>
-                <input type="file"></input>
-                {pdf}
-            </div>
-        );
-    }
+    const arr = new Array(numberOfProblems);
+    arr.fill(0);
+    return (
+      <ul className='pagination justify-content-center' role='group'>
+        {arr.map((elm, idx) => {
+          const val = idx + 1;
+          return (
+            <li
+              className={val === problemNumParsed ? 'page-item active' : 'page-item'}
+              key={idx}
+              onClick={() => this.props.changeProblemNumber(val)}
+            >
+              <a className='page-link'>{val}</a>
+            </li>
+          );
+        })}
+        {this.props.edit !== undefined && numberOfProblems > 0 ?
+          <li
+            className='page-item'
+            onClick={this.props.addProblem}
+          ><a className='page-link'>+</a></li> : null}
+      </ul>
+    );
+  }
 }
 
-export default NavBar;
+// NavBar.propTypes = {
+//   numberOfProblems: React.PropTypes.number.isRequired,
+//   problemNum: React.PropTypes.string,
+// };
