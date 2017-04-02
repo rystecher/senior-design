@@ -114,8 +114,12 @@ export function fetchSolvedArrays(contestId, teamId) {
     callApi(`contests/${contestId}/teams/${teamId}/solved`).then(res => console.log(res));
 }
 
-export function fetchSubmissions(contestId) {
-    callApi(`submissions/${contestId}`).then(res => console.log(res));
+
+export function fetchSubmissions(contest_id) {
+    return callApi(`submissions/${contest_id}`).then(res => {
+      //console.log(res);
+      return res.submissions;
+    });
 }
 
 export function fetchProblem(contestId, problemNum) {
