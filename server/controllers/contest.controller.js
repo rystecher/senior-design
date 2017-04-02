@@ -210,14 +210,14 @@ export function addProblemAttempt(req, res) {
                     readTextFile('input/' + fileName).then((input) => {
                         hackerrankCall(code, lang, input, (error, response) => {
                             const { stderr, stdout, compilemessage, message } = JSON.parse(response.body).result;
-                            const hadStdError = stderr != null && !stderr.every((error) => error == false);
+                            const hadStdError = stderr !== null && !stderr.every((error) => error === false);
                             problem.attempts.push(code);
                             readTextFile('output/' + fileName).then((expectedOutput) => {
-                                if (!hadStdError && stdout != null) { // no error => check output
+                                if (!hadStdError && stdout !== null) { // no error => check output
                                     problem.solved = true;
                                     if (stdout.length === expectedOutput.length) {
                                         for (let i = 0; i < stdout.length; i++) {
-                                            if (stdout[i] != expectedOutput[i]) {
+                                            if (stdout[i] !== expectedOutput[i]) {
                                                 problem.solved = false;
                                                 break;
                                             }

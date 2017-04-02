@@ -160,9 +160,9 @@ export function createFeedbackMessage(correct, msg, compileMessage, problemNum, 
     let message = 'Awaiting feedback from judges...';
     if (correct) {
         message = 'Your solution was correct!';
-    } else if (msg == 'Terminated due to timeout') {
+    } else if (msg === 'Terminated due to timeout') {
         message = msg + ' after 10 seconds.';
-    } else if (compileMessage != '') {
+    } else if (compileMessage !== '') {
         message = compileMessage;
     } else if (hadStdError) {
         message = 'Standard Error ' + stderr.toString();
@@ -173,9 +173,9 @@ export function createFeedbackMessage(correct, msg, compileMessage, problemNum, 
 export function createTestFeedbackMessage(message, compileMessage, stdout, time, hadStdError, stderr) {
     let feedBack = 'Awaiting feedback from our server...';
   // Ran out of time
-    if (message == 'Terminated due to timeout' && time == 10) {
+    if (message === 'Terminated due to timeout' && time === 10) {
         feedBack = message + ' after 10 seconds.';
-    } else if (compileMessage != undefined) {
+    } else if (compileMessage !== undefined) {
         feedBack = compileMessage;
     } else if (hadStdError) {
         feedBack = 'Standard Error: ' + stderr.toString();

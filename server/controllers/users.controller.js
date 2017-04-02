@@ -53,7 +53,7 @@ export function getJoinedContests(req, res) {
         //console.log(user.participatedContestsID);
         const participatedContestsList = [];
         if (user.participatedContestsID) {
-          for (var i = 0; i < user.participatedContestsID.length; i++) {
+          for (let i = 0; i < user.participatedContestsID.length; i++) {
             participatedContestsList.push(user.participatedContestsID[i].contest);
           }
         }

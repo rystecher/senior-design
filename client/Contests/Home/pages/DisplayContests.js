@@ -48,7 +48,7 @@ class DisplayContests extends Component {
                   contestAdmin: this.state.createdContestsID[i].admin,
                   contestStart: (!this.state.createdContestsID[i].closed).toString()
                 });
-              };
+              }
             }
             if (this.state.joinedContests) {
               for (var i=0; i < this.state.joinedContests.length; i++) {
@@ -57,7 +57,7 @@ class DisplayContests extends Component {
                   contestAdmin: this.state.joinedContests[i].admin,
                   contestStart: (!this.state.joinedContests[i].closed).toString()
                 });
-              };
+              }
             }
         }
         return (
