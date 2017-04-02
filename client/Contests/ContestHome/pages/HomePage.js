@@ -1,4 +1,5 @@
 import React from 'react';
+import ConfirmationDialog from '../components/ConfirmationDialog';
 import { getContestInfo, joinContest, openContest, closeContest } from '../../ContestActions';
 import './home.css';
 
@@ -6,8 +7,11 @@ export default class ContestHome extends React.Component {
 
     constructor(props) {
         super(props);
+        this.closeConfirm = this.closeConfirm.bind(this);
         this.closeContest = this.closeContest.bind(this);
+        this.closeModal = this.closeModal.bind(this);
         this.join = this.join.bind(this);
+        this.openConfirm = this.openConfirm.bind(this);
         this.openContest = this.openContest.bind(this);
         this.state = {};
     }
@@ -32,11 +36,27 @@ export default class ContestHome extends React.Component {
         }
     }
 
-    closeContest() {
+    closeConfirm() {
         if (!this.state.closed && this.state.open) {
-            closeContest(this.props.params.contestId);
-            this.setState({ closed: true });
+            this.setState({
+                showDialog: true,
+                confirm: this.closeContest,
+                confirmText: 'Close',
+                text: `You cannot reopen a contest after it is closed.
+                    Are you sure want to open the contest?`,
+                title: 'Close Contest',
+            });
         }
+    }
+
+    closeContest() {
+        this.closeModal();
+        closeContest(this.props.params.contestId);
+        this.setState({ closed: true });
+    }
+
+    closeModal() {
+        this.setState({ showDialog: false });
     }
 
     join() {
@@ -49,19 +69,40 @@ export default class ContestHome extends React.Component {
         }
     }
 
-    openContest() {
-        if (!this.state.open) {
-            openContest(this.props.params.contestId);
-            this.setState({ open: true });
+    openConfirm() {
+        if (!this.state.open && !this.state.closed) {
+            this.setState({
+                showDialog: true,
+                confirm: this.openContest,
+                confirmText: 'Open',
+                text: `You cannot add problems after opening a contest.
+                    Are you sure want to open the contest?`,
+                title: 'Open Contest',
+            });
         }
+    }
+
+    openContest() {
+        this.closeModal();
+        openContest(this.props.params.contestId).then(res => {
+            if (res.success) {
+                this.setState({ open: true });
+            }
+        });
     }
 
     render() {
         if (!this.state.name) {
             return null;
         }
-        const openClass = this.state.open ? 'active' : '';
-        const closedClass = this.state.closed ? 'active' : '';
+        let openClass = this.state.open ? 'active' : '';
+        let closedClass = '';
+        if (!this.state.open) {
+            closedClass = 'disabled';
+        } else if (this.state.closed) {
+            closedClass = 'active';
+            openClass = 'disabled';
+        }
         return (
             <div>
                 <div id='header-banner'>
@@ -72,20 +113,28 @@ export default class ContestHome extends React.Component {
                 </div>
                 <div className='contest-home'>
                     {this.props.userRole === 'admin' ?
-                        <div className='btn-group' role='group' aria-label='...'>
+                        <div className='btn-wrapper'>
                             <button
                                 type='button'
-                                className={`btn btn-secondary open ${openClass}`}
-                                onClick={this.openContest}
+                                className={`btn open ${openClass}`}
+                                onClick={this.openConfirm}
                             >Open</button>
                             <button
                                 type='button'
-                                className={`btn btn-secondary closed ${closedClass}`}
-                                onClick={this.closeContest}
+                                className={`btn closed ${closedClass}`}
+                                onClick={this.closeConfirm}
                             >Close</button>
                         </div> : null
                     }
-                    {this.props.userRole === 'none' ?
+                    <ConfirmationDialog
+                        showDialog={this.state.showDialog}
+                        confirm={this.state.confirm}
+                        confirmText={this.state.confirmText}
+                        closeModal={this.closeModal}
+                        text={this.state.text}
+                        title={this.state.title}
+                    />
+                    {this.props.userRole === 'none' && !this.state.closed ?
                         <button
                             className='btn btn-secondary join'
                             onClick={this.join}
