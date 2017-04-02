@@ -209,7 +209,7 @@ export function addProblemAttempt(req, res) {
                     const fileName = contest.problems[number].fileName + '.txt';
                     readTextFile('input/' + fileName).then((input) => {
                         hackerrankCall(code, lang, input, (error, response) => {
-                            const { stderr, stdout, compilemessage } = JSON.parse(response.body).result;
+                            const { stderr, stdout, compilemessage, message } = JSON.parse(response.body).result;
                             const hadStdError = stderr != null && !stderr.every((error) => error == false);
                             problem.attempts.push(code);
                             readTextFile('output/' + fileName).then((expectedOutput) => {
@@ -236,7 +236,7 @@ export function addProblemAttempt(req, res) {
                                 const stdError = (Array.isArray(stderr)) && stderr.length !== 0 ? stderr[0] : null;
                                 const output = hadStdError ? stdError : stdOutput || compilemessage;
                                 fs.writeFile('submission/' + fileName, output);
-                                const feedBack = createFeedbackMessage(problem.solved, compilemessage, number, hadStdError, stderr);
+                                const feedBack = createFeedbackMessage(problem.solved, message, compilemessage, number, hadStdError, stderr);
                                 team.messages.push(feedBack);
                                 createSubmission({
                                     cuid: cuid(),
