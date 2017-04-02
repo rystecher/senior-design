@@ -27,6 +27,7 @@ if (process.env.NODE_ENV !== 'production') {
     require('./Contests/Participate/pages/Scoreboard/pages/ScoreboardPage');
     require('./Contests/Login/pages/RegisterPage');
     require('./Contests/Login/pages/LoginPage');
+    require('./Contests/Home/pages/DisplayContests');
 }
 
 // react-router setup with code-splitting

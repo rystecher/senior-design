@@ -1,5 +1,5 @@
 import User from '../models/user';
-import * as ContestController from './contest.controller.js'
+import Contest from '../models/contest';
 
 export function createContest(username, cuid) {
     User.findOne({ username }, (err, user) => {
@@ -27,26 +27,20 @@ export function joinContest(username, cuid, teamid) {
 }
 
 export function getCreatedContests(req, res) {
-  //console.log(req.body);
   User.findOne({username: req.body.username}, (err, user) => {
       if (err) {
         res.status(403).end();
       } else {
-        var contests = [];
-        var contests_ids = user.createdContestsID;
-        for (var i = 0; i < user.createdContestsID.length; i++) {
-          console.log(contests_ids[i]);
-          ContestController.getContest(contests_ids[i], function(err, contest){
+        Contest.find({ cuid: { $in: user.createdContestsID }}, {_id: 0})
+        .select('name admin closed')
+        .exec((err, contests) => {
             if (err) {
-              res.status(403).end();
-            } else{
-              //console.log(contest);
-              contests.push(contest);
+              res.status(500).send(err);
+            } else {
+              //console.log(contests);
+              res.json({ contests });
             }
-          });
-        }
-        console.log(contests);
-        res.json({contests})
+        });
       }
   });
 }
