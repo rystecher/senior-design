@@ -17,6 +17,7 @@ class Header extends React.Component {
   render() {
     const { isAuthenticated } = this.props.auth;
 
+    // TODO: Update these links to include team/contest ID or merge this navigation bar with the one found in Contests/ContestNavigator.js
     const userLinks = (
       <div className="navbar-header">
         <Link to="/" className="navbar-brand">Home</Link>
@@ -29,7 +30,7 @@ class Header extends React.Component {
 
     const guestLinks = (
       <div className="navbar-header">
-        <Link to="/" className="navbar-brand">Home Page</Link>
+        <Link to="/" className="navbar-brand">Home</Link>
         <Link to="/register" className="navbar-brand">Register</Link>
         <Link to="/login" className="navbar-brand">Login</Link>
       </div>

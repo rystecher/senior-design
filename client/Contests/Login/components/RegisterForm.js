@@ -67,7 +67,7 @@ class RegisterForm extends React.Component {
             type: 'success',
             text: 'You signed up successfully. Welcome!'
           });
-          this.context.router.push('/');
+          this.context.router.push('/login');
         },
         ({ response }) => this.setState({ errors: response.data, isLoading: false })
       );

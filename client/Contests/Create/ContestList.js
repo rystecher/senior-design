@@ -4,7 +4,7 @@ import React, { PropTypes } from 'react';
 //import PostListItem from './PostListItem/PostListItem';
 
 function ContestList(props) {
-    if (!props.contests.length || props.contests.length == 0)
+    if (!props.contests.length || props.contests.length === 0)
         return (<div>Nothing</div>);
     return (
         <div className="listView">

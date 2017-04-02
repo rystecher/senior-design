@@ -22,7 +22,7 @@ function validateInput(data, otherValidations) {
 }
 
 router.get('/:identifier', (req, res) => {
-  User.find({ username: req.params.identifier }, {_id: 0,username: 1})
+  User.find({ username: req.params.identifier }, {_id: 0, username: 1})
   .then(user => {
     res.json({ user });
   });
@@ -44,6 +44,10 @@ router.post('/', (req, res) => {
     }
   });
 });
+
+router.route('/created').post(UserController.getCreatedContests);
+
+router.route('/joined').post(UserController.getJoinedContests);
 
 // Get the role of a user in a contest
 router.route('/:username/contest/:contestId/role').get(UserController.getUserRole);

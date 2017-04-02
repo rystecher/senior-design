@@ -35,12 +35,11 @@ export default class ChatFeed extends Component {
    * @param id
    * @param messages
    * @param index
-   * @param id
    */
   _renderGroup(messages, index, id) {
     const group = [];
 
-    for (let i = index; messages[i]?(messages[i].id == id):false; i--) {
+    for (let i = index; messages[i]?(messages[i].id === id):false; i--) {
       group.push(messages[i])
     }
 
@@ -71,7 +70,7 @@ export default class ChatFeed extends Component {
       // Find diff in message type or no more messages
       if (
         (!messages[index + 1]) ||
-        (messages[index + 1].id != curr.id)
+        (messages[index + 1].id !== curr.id)
       ) {
         return this._renderGroup(messages, index, curr.id);
       }
@@ -111,7 +110,7 @@ const styles = {
   chatHistory: {
     flex: 1,
     overflow: 'scroll',
-    'overflow-x': 'hidden'
+    'overflowX': 'hidden'
   },
   chatbubbleWrapper: {
     marginTop: 10,

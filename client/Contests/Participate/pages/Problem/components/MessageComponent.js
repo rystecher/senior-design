@@ -12,17 +12,16 @@ export default class MessageComponent extends React.Component {
 
     componentDidMount() {
         const { contest_id, team_id } = this.props;
-        this.chatIntervId = setInterval(() => {
-            getTeamMessages(contest_id, team_id).then((messages) => {
-                if (messages) {
-                    const messageObjs = messages.map((message) => {
-                        const type = message.from === 'Team' ? 0 : 1;
-                        return new Message(type, message.message);
-                    });
-                    this.setState({ messageObjs });
-                }
-            });
-        }, 10000);
+        const intervalFunc = () => getTeamMessages(contest_id, team_id).then((messages) => {
+            if (messages) {
+                const messageObjs = messages.map((message) => {
+                    const type = message.from === 'Team' ? 0 : 1;
+                    return new Message(type, message.message);
+                });
+                this.setState({ messageObjs });
+            }
+        });
+        this.chatIntervId = setInterval(intervalFunc(), 10000);
     }
 
     componentWillUnmount() {
