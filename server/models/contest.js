@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const teamProblem = new Schema({
     attempts: [String],
-    solved: { type: 'Boolean', default: false, required: true},
+    solved: { type: 'Boolean', default: false, required: true },
 });
 
 const Message = new Schema({
@@ -17,16 +17,16 @@ const teamSchema = new Schema({
     score: { type: 'Number', default: 0, required: true },
     memberList: [String],
     messages: [Message],
-    password: { type: 'String'},
+    password: { type: 'String' },
     problem_attempts: [teamProblem],
-    messagedJudge: { type: 'Boolean', default: false, required: true},
+    messagedJudge: { type: 'Boolean', default: false, required: true },
 });
 
 const contestProblem = new Schema({
-    name: { type: 'String'},
+    name: { type: 'String' },
     fileName: { type: 'String', required: true },
-    solved: { type: 'Boolean', default: false, required: true},
-    solvedBy: { type: 'String'},
+    solved: { type: 'Boolean', default: false, required: true },
+    solvedBy: { type: 'String' },
 });
 // fileName used for pdf, input file, and output file
 // pdf/fileName.pdf, input/fileName.txt, and output/fileName.txt
@@ -34,13 +34,14 @@ const contestProblem = new Schema({
 const contestSchema = new Schema({
     about: String,
     admin: String,
-    closed: { type: 'Boolean', default: false, required: true},
+    broadcastMessages: [Message],
+    closed: { type: 'Boolean', default: false, required: true },
     cuid: { type: 'String', required: true },
     judges: [String],
     name: { type: 'String', required: true },
     problems: [contestProblem],
     rules: String,
-    scoreboardVisible: { type: 'Boolean', default: true, required: true},
+    scoreboardVisible: { type: 'Boolean', default: true, required: true },
     slug: { type: 'String', required: true },
     start: Number,
     teams: [teamSchema],

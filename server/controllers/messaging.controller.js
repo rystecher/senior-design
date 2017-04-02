@@ -1,36 +1,36 @@
 import Contest from '../models/contest';
 
 export function sendTeamMessageApi(req, res) {
-    const { contest_id, team_id } = req.params;
-    if (!contest_id || !team_id || !req.body.message) {
+    const { contestId, teamId } = req.params;
+    if (!contestId || !teamId || !req.body.message) {
         res.status(403).end();
     } else {
-        sendTeamMessage({ from: 'Judges', message: req.body.message }, contest_id, team_id);
+        sendTeamMessage({ from: 'Judges', message: req.body.message }, contestId, teamId);
         res.json({ success: true });
     }
 }
 
 export function sendJudgeMessage(req, res) {
-    const { contest_id, team_id } = req.params;
-    if (!contest_id || !team_id || !req.body.message) {
+    const { contestId, teamId } = req.params;
+    if (!contestId || !teamId || !req.body.message) {
         res.status(403).end();
     } else {
-        sendTeamMessage({ from: 'Team', message: req.body.message }, contest_id, team_id);
+        sendTeamMessage({ from: 'Team', message: req.body.message }, contestId, teamId);
         res.json({ success: true });
     }
 }
 
 export function getTeamMessages(req, res) {
-    if (!req.params.contest_id || !req.params.team_id) {
+    if (!req.params.contestId || !req.params.teamId) {
         res.status(403).end();
     } else {
-        Contest.findOne({ cuid: req.params.contest_id }, (err, contest) => {
+        Contest.findOne({ cuid: req.params.contestId }, (err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else if (!contest) {
                 res.status(400).send({ err: 'Contest does not exist' });
             } else {
-                const team = contest.teams.id(req.params.team_id);
+                const team = contest.teams.id(req.params.teamId);
                 if (!team) {
                     res.status(500).send(err);
                 } else {
@@ -42,16 +42,16 @@ export function getTeamMessages(req, res) {
 }
 
 export function getTeamMessagesForJudge(req, res) {
-    if (!req.params.contest_id || !req.params.team_id) {
+    if (!req.params.contestId || !req.params.teamId) {
         res.status(403).end();
     } else {
-        Contest.findOne({ cuid: req.params.contest_id }, (err, contest) => {
+        Contest.findOne({ cuid: req.params.contestId }, (err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else if (!contest) {
                 res.status(400).send({ err: 'Contest does not exist' });
             } else {
-                const team = contest.teams.id(req.params.team_id);
+                const team = contest.teams.id(req.params.teamId);
                 if (!team) {
                     res.status(500).send(err);
                 } else {
@@ -65,10 +65,10 @@ export function getTeamMessagesForJudge(req, res) {
 }
 
 export function getJudgeMessages(req, res) {
-    if (!req.params.contest_id) {
+    if (!req.params.contestId) {
         res.status(403).end();
     } else {
-        Contest.findOne({ cuid: req.params.contest_id }, (err, contest) => {
+        Contest.findOne({ cuid: req.params.contestId }, (err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else if (!contest) {
@@ -87,11 +87,11 @@ export function getJudgeMessages(req, res) {
     }
 }
 
-export function broadcastMessage(req, res) {
-    if (!req.params.contest_id || !req.body.message) {
+export function sendBroadcastMessage(req, res) {
+    if (!req.params.contestId || !req.body.message) {
         res.status(403).end();
     } else {
-        Contest.findOne({ cuid: req.params.cuid }).select('teams').exec((err, contest) => {
+        Contest.findOne({ cuid: req.params.contestId }).select('teams broadcastMessages').exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else if (!contest) {
@@ -100,6 +100,7 @@ export function broadcastMessage(req, res) {
                 contest.teams.forEach(team => {
                     team.messages.push({ from: 'Judges', message: req.body.message });
                 });
+                contest.broadcastMessages.push({ from: 'Judges', message: req.body.message });
                 contest.save((err) => {
                     if (err) {
                         res.status(500).send(err);
@@ -107,6 +108,22 @@ export function broadcastMessage(req, res) {
                         res.json({ success: true });
                     }
                 });
+            }
+        });
+    }
+}
+
+export function getBroadcastMessages(req, res) {
+    if (!req.params.contestId) {
+        res.status(403).end();
+    } else {
+        Contest.findOne({ cuid: req.params.contestId }).select('broadcastMessages').exec((err, contest) => {
+            if (err) {
+                res.status(500).send(err);
+            } else if (!contest) {
+                res.status(400).send({ err: 'Contest does not exist' });
+            } else {
+                res.json({ messages: contest.broadcastMessages });
             }
         });
     }

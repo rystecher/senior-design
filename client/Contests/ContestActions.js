@@ -96,6 +96,12 @@ export function sendMessageToTeam(contestId, teamId, message) {
     });
 }
 
+export function sendBroadcastMessage(contestId, message) {
+    return callApi(`messages/${contestId}/broadcast`, 'post', {
+        message,
+    });
+}
+
 export function getTeamMessages(contestId, teamId) {
     return callApi(`messages/${contestId}/team/${teamId}`).then(res => {
         return res.messages;
@@ -104,6 +110,12 @@ export function getTeamMessages(contestId, teamId) {
 
 export function getTeamMessagesForJudge(contestId, teamId) {
     return callApi(`messages/${contestId}/team/${teamId}/forjudge`).then(res => {
+        return res.messages;
+    });
+}
+
+export function getBroadcastMessages(contestId) {
+    return callApi(`messages/${contestId}/broadcast`).then(res => {
         return res.messages;
     });
 }
