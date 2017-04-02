@@ -19,7 +19,7 @@ class DisplayContests extends Component {
         const username = this.props.auth.user.username;
         getCreatedContests({ username }).then(res => {
             //console.log(res);
-            this.setState({ createdContestsID: res.contests});
+            this.setState({ createdContests: res.contests});
         });
         getJoinedContests({ username }).then(res => {
             //console.log(res.contests);
@@ -44,22 +44,22 @@ class DisplayContests extends Component {
         }, {
           header: 'Contest id',
           accessor: 'contestId',
-          render: ({value, rowValues}) => {
-                return <button onClick={(e) => this.goToContestHomePage(rowValues.contestId)}>Contest Home</button>
+          render: ({rowValues}) => {
+                return <button onClick={(e) => this.goToContestHomePage(rowValues.contestId)}>Take me to this contest</button>
               }
         }];
         const data = [];
 
-        if (!this.state.createdContestsID && !this.state.joinedContests) {
+        if (!this.state.createdContests && !this.state.joinedContests) {
             return null;
         } else {
-            if (this.state.createdContestsID) {
-              for (var i=0; i < this.state.createdContestsID.length; i++) {
+            if (this.state.createdContests) {
+              for (var i=0; i < this.state.createdContests.length; i++) {
                 data.push({
-                  contestName: this.state.createdContestsID[i].name,
-                  contestAdmin: this.state.createdContestsID[i].admin,
-                  contestStart: (!this.state.createdContestsID[i].closed).toString(),
-                  contestId: this.state.createdContestsID[i].cuid
+                  contestName: this.state.createdContests[i].name,
+                  contestAdmin: this.state.createdContests[i].admin,
+                  contestStart: (!this.state.createdContests[i].closed).toString(),
+                  contestId: this.state.createdContests[i].cuid
                 });
               }
             }

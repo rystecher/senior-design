@@ -72,7 +72,7 @@ export function joinContest(req, res) {
             } else if (contest.teams.findIndex(team => team.name === newTeam.name) !== -1) {
                 res.json({ err: 'TEAM_NAME_CONFLICT' });
             } else {
-                const teamProblems = Array(contest.problems.length).fill({
+                const teamProblems = new Array(contest.problems.length).fill({
                     solved: false, attempFileNames: [],
                 });
                 newTeam.problem_attempts = teamProblems;
@@ -492,15 +492,20 @@ export function getProblemMetaData(req, res) {
  * @param res
  * @returns void
  */
-export function getContest(contest_id, cb) {
-        Contest.findOne({ cuid: contest_id }, (err, contest) => {
+export function getContest(req, res) {
+    if (!req.params.contest_id) {
+        res.status(403).end();
+    } else {
+        Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
             if (err) {
-                cb(err);
+                res.status(500).send(err);
+            } else if (!contest) {
+                res.status(400).send({ err: 'Contest does not exist' });
             } else {
-                const { admin, name, closed } = contest;
-                cb(null, {name});
+                res.json({ contest });
             }
         });
+    }
 }
 
 /**
@@ -633,9 +638,9 @@ export function getTeamScores(req, res) {
             } else if (!contest) {
                 res.status(400).send({ err: 'Contest does not exist' });
             } else {
-                const teamNames = Array(contest.teams.length);
-                const teamScores = Array(contest.teams.length);
-                const teamNumSolved = Array(contest.teams.length);
+                const teamNames = new Array(contest.teams.length);
+                const teamScores = new Array(contest.teams.length);
+                const teamNumSolved = new Array(contest.teams.length);
                 contest.teams.forEach((team, index) => {
                     teamNames[index] = team.name;
                     teamScores[index] = team.score;
