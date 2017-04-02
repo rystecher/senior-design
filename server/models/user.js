@@ -9,9 +9,9 @@ const SALT_WORK_FACTOR = 10,
 MAX_LOGIN_ATTEMPTS = 5,
 LOCK_TIME = 2 * 60 * 60 * 1000;
 
-var contestTeamPairSchema = new Schema({
-    contest: {type: String, unique: true},
-    team: {type: String, unique: true}
+const contestTeamPairSchema = new Schema({
+  contest: {type: String},
+  team: {type: String}
 });
 
 const UserSchema = new Schema({

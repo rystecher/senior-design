@@ -107,7 +107,7 @@ const ChatBubble = function (_Component) {
         const bolded_end = message.slice(bolded_start + 2).search(/__/);
         const bolded = message.slice(bolded_start + 2, bolded_start + bolded_end + 2);
         // Render text
-        if (bolded_start != -1 && bolded_end != -1) {
+        if (bolded_start !== -1 && bolded_end !== -1) {
           return _react2.default.createElement(
             'span',
             null,

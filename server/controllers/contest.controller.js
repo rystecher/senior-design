@@ -107,7 +107,7 @@ export function addAccountToTeam(req, res) {
                 res.status(500).send(err);
             }
             const team = contest.teams.id(req.params.team_id);
-            if (team.memberList.indexOf(req.body.account_id) == -1) {
+            if (team.memberList.indexOf(req.body.account_id) === -1) {
                 team.memberList.push(req.body.account_id);
                 contest.save((err, saved) => {
                     if (err) {
@@ -147,7 +147,7 @@ export function testProblemAttempt(req, res) {
         const { code, lang, testcases } = req.body.problem;
         hackerrankCall(code, lang, testcases, (error, response) => {
             const { stderr, stdout, compileMessage, message, time } = JSON.parse(response.body).result;
-            const hadStdError = stderr != null && !stderr.every((error) => error == false);
+            const hadStdError = stderr !== null && !stderr.every((error) => error === false);
       // Parse result
             const feedBack = createTestFeedbackMessage(message, compileMessage, stdout, time, hadStdError, stderr);
       // Send feedback
@@ -210,14 +210,14 @@ export function addProblemAttempt(req, res) {
                     readTextFile('input/' + fileName).then((input) => {
                         hackerrankCall(code, lang, input, (error, response) => {
                             const { stderr, stdout, compilemessage, message } = JSON.parse(response.body).result;
-                            const hadStdError = stderr != null && !stderr.every((error) => error == false);
+                            const hadStdError = stderr !== null && !stderr.every((error) => error === false);
                             problem.attempts.push(code);
                             readTextFile('output/' + fileName).then((expectedOutput) => {
-                                if (!hadStdError && stdout != null) { // no error => check output
+                                if (!hadStdError && stdout !== null) { // no error => check output
                                     problem.solved = true;
                                     if (stdout.length === expectedOutput.length) {
                                         for (let i = 0; i < stdout.length; i++) {
-                                            if (stdout[i] != expectedOutput[i]) {
+                                            if (stdout[i] !== expectedOutput[i]) {
                                                 problem.solved = false;
                                                 break;
                                             }
@@ -492,20 +492,15 @@ export function getProblemMetaData(req, res) {
  * @param res
  * @returns void
  */
-export function getContest(req, res) {
-    if (!req.params.contest_id) {
-        res.status(403).end();
-    } else {
-        Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+export function getContest(contest_id, cb) {
+        Contest.findOne({ cuid: contest_id }, (err, contest) => {
             if (err) {
-                res.status(500).send(err);
-            } else if (!contest) {
-                res.status(400).send({ err: 'Contest does not exist' });
+                cb(err);
             } else {
-                res.json({ contest });
+                const { admin, name, closed } = contest;
+                cb(null, {name});
             }
         });
-    }
 }
 
 /**
