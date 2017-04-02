@@ -18,31 +18,27 @@ class Header extends React.Component {
     const { isAuthenticated } = this.props.auth;
 
     const userLinks = (
-      <ul className="nav navbar-nav navbar-right">
-        <li><Link to="/create-contest" >Create Contest</Link></li>
-        <li><Link to="/problem" >Problem Page</Link></li>
-        <li><Link to="/scoreboard" >ScoreBoard Page</Link></li>
-        <li><Link to="/judge" >Judge Table</Link></li>
-        <li><a href="#" onClick={this.logout.bind(this)}>Logout</a></li>
-      </ul>
+      <div className="navbar-header">
+        <Link to="/" className="navbar-brand">Home</Link>
+        <Link to="/create-contest" className="navbar-brand">Create Contest</Link>
+        <Link to="/problem" className="navbar-brand">Problems</Link>
+        <Link to="/scoreboard" className="navbar-brand">ScoreBoard</Link>
+        <a href="" onClick={this.logout.bind(this)} className="navbar-brand">Logout</a>
+      </div>
     );
 
     const guestLinks = (
-      <ul className="nav navbar-nav navbar-right">
-        <li><Link to="/register">Register</Link></li>
-        <li><Link to="/login">Login</Link></li>
-      </ul>
+      <div className="navbar-header">
+        <Link to="/" className="navbar-brand">Home Page</Link>
+        <Link to="/register" className="navbar-brand">Register</Link>
+        <Link to="/login" className="navbar-brand">Login</Link>
+      </div>
     );
 
     return (
       <nav className="navbar navbar-default">
         <div className="container-fluid">
-          <div className="navbar-header">
-            <Link to="/" className="navbar-brand">Home Page</Link>
-          </div>
-          <div className="collapse navbar-collapse">
             { isAuthenticated ? userLinks : guestLinks }
-          </div>
         </div>
       </nav>
     );
@@ -51,11 +47,6 @@ class Header extends React.Component {
 
 Header.contextTypes = {
   router: React.PropTypes.object,
-};
-
-Header.propTypes = {
-  auth: React.PropTypes.object.isRequired,
-  logout: React.PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {

@@ -156,10 +156,12 @@ function genSubmissionResponse(submission) {
     };
 }
 
-export function createFeedbackMessage(correct, compileMessage, problemNum, hadStdError, stderr) {
+export function createFeedbackMessage(correct, msg, compileMessage, problemNum, hadStdError, stderr) {
     let message = 'Awaiting feedback from judges...';
     if (correct) {
         message = 'Your solution was correct!';
+    } else if (msg == 'Terminated due to timeout') {
+        message = msg + ' after 10 seconds.';
     } else if (compileMessage != '') {
         message = compileMessage;
     } else if (hadStdError) {
@@ -172,7 +174,7 @@ export function createTestFeedbackMessage(message, compileMessage, stdout, time,
     let feedBack = 'Awaiting feedback from our server...';
   // Ran out of time
     if (message == 'Terminated due to timeout' && time == 10) {
-        feedBack = message;
+        feedBack = message + ' after 10 seconds.';
     } else if (compileMessage != undefined) {
         feedBack = compileMessage;
     } else if (hadStdError) {
