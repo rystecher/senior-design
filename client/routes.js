@@ -25,6 +25,7 @@ if (process.env.NODE_ENV !== 'production') {
   require('./Contests/Participate/pages/Scoreboard/pages/ScoreboardPage');
   require('./Contests/Login/pages/RegisterPage');
   require('./Contests/Login/pages/LoginPage');
+  require('./Contests/Judge/pages/AdminPage');
 }
 
 // react-router setup with code-splitting
@@ -112,5 +113,22 @@ export default (
           });
         }}
       />
+      <Route
+          path="/judge"
+          getComponent={(nextState, cb) => {
+            require.ensure([], require => {
+              cb(null, require('./Contests/Judge/pages/AdminPage').default);
+            });
+          }}
+        />
+      <Route
+        path="/judge/:contest_id/problems/:problem_no/edit"
+        getComponent={(nextState, cb) => {
+          require.ensure([], require => {
+            cb(null, require('./Contests/Create/pages/ProblemPage').default);
+          });
+        }}
+      />
+
     </Route>
 );

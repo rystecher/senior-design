@@ -2,76 +2,64 @@
  * Created by courtneybolivar on 21/02/2017.
  */
 import React from 'react';
+import Submission from './Submission.js';
+import Styles from './Admin.css';
 
 var AdminTable = React.createClass({
 
+
+  onSelect: function() {
+
+  },
   /*
+
+
+   <Submission sub={this.props.submissions[0]} />
+   <Submission sub={this.props.submissions[1]} />
+   <Submission sub={this.props.submissions[2]} />
+
    creates buttons with color labing based on the
    status field passed in
 
+
+   // compile list of submissions
+   let submissionsList;
+   console.log("length = " + this.props.submissions.length);
+   {Object.keys(this.props.submissions).map((key) => {
+   submissionsList +=  this.props.submissions[key];
+   })};
    // Team Name // Problem Name // Override Score # // Time data // Send Feedback // Option to view submission (link to problem page)
    */
   render: function () {
-    return (
-      <table>
-        <tr>
-          <th>Team</th>
-          <th>Problem Number</th>
-          <th>Status</th>
-          <th colSpan="2">Diff</th>
-          <th>Contact</th>
-        </tr>
-        <tr>
-          <td>Team 1</td>
-          <td>Hat Problem</td>
-          <td>Correct</td>
-          <td>Team's output</td>
-          <td>Correct output</td>
-          <td>
-            <select>
-              <option value="0">0: Compiler Error</option>
-              <option value="1">1: Bad Math</option>
-              <option value="2">2: Bad Format</option>
-              <option value="3">3: Correct</option>
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <td>Team 2</td>
-          <td>Hat Problem</td>
-          <td>Incorrect</td>
-          <td>Team's output</td>
-          <td>Correct output</td>
-          <td>Click</td>
-        </tr>
-        <tr>
-          <td>Team 2</td>
-          <td>Shirt Problem</td>
-          <td>Compilor Error</td>
-          <td>Team's output</td>
-          <td>Correct output</td>
-          <td>Click</td>
-        </tr>
-        <tr>
-          <td>Team 3</td>
-          <td>Problem 4</td>
-          <td>Correct</td>
-          <td>Team's output</td>
-          <td>Correct output</td>
-          <td>Click</td>
-        </tr>
-        <tr>
-          <td>Team 4</td>
-          <td>Problem 12</td>
-          <td>Correct</td>
-          <td>Team's output</td>
-          <td>Correct output</td>
-          <td>Click</td>
-        </tr>
-      </table>
 
+    //compile submissions
+    /*
+    currently gives a warning that each submissions needs a key, since teams
+    can have more than one submission per problem, submissions are not unique
+    in that sense...2 rows with same key only show up once
+     */
+    let i = 0;
+    const listItems = this.props.submissions.map((numSubs) =>
+        <Submission sub={numSubs}/>
+    );
+
+    return (
+      <div>
+        <table className={Styles}>
+          <tr>
+            <th>Team</th>
+            <th>Problem Name</th>
+            <th>Correct</th>
+            <th>Feedback/Sugessted</th>
+            <th>Change/Override</th>
+            <th>Send Change Button</th>
+          </tr>
+          {listItems}
+        </table>
+      </div>
     );
   }
+
 });
 
 export default AdminTable;

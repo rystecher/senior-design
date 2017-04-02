@@ -14,17 +14,5 @@ const submissionSchema = new Schema({
     expectedOutput: [String],
     actualOutput: [String],
 });
-/*
-var sub
-if (mongoose.models.Submission) {
-  console.log('if');
-  sub = mongoose.model('Submission');
-} else {
-  console.log('else');
-  sub = mongoose.model('Submission', submissionSchema);
-}
-
-export default sub;
-*/
 
 export default mongoose.model('Submission', submissionSchema);

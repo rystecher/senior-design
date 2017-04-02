@@ -22,6 +22,7 @@ class Header extends React.Component {
         <li><Link to="/create-contest" >Create Contest</Link></li>
         <li><Link to="/problem" >Problem Page</Link></li>
         <li><Link to="/scoreboard" >ScoreBoard Page</Link></li>
+        <li><Link to="/judge" >Judge Table</Link></li>
         <li><a href="#" onClick={this.logout.bind(this)}>Logout</a></li>
       </ul>
     );

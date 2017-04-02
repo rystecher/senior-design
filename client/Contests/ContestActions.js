@@ -102,7 +102,10 @@ export function fetchSolvedArrays(contest_id, team_id) {
 }
 
 export function fetchSubmissions(contest_id) {
-    callApi(`submissions/${contest_id}`).then(res => console.log(res));
+    return callApi(`submissions/${contest_id}`).then(res => {
+      //console.log(res);
+      return res.submissions;
+    });
 }
 
 export function fetchProblem(contest_id, problem_no) {
