@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import ReactTable from 'react-table'
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import {getCreatedContests, getJoinedContests} from '../DisplayActions';
 import 'react-table/react-table.css'
 
@@ -10,6 +11,7 @@ class DisplayContests extends Component {
     constructor(props) {
       super(props);
       this.state = {};
+      this.goToContestHomePage = this.goToContestHomePage.bind(this);
     }
 
     componentDidMount() {
@@ -25,6 +27,10 @@ class DisplayContests extends Component {
         });
     }
 
+    goToContestHomePage(contestId) {
+        this.props.router.push(`/contest/${contestId}/home/`);
+    }
+
     render() {
         const columns = [{
           header: 'Contest name',
@@ -35,6 +41,12 @@ class DisplayContests extends Component {
         }, {
           header: 'Contest started',
           accessor: 'contestStart'
+        }, {
+          header: 'Contest id',
+          accessor: 'contestId',
+          render: ({value, rowValues}) => {
+                return <button onClick={(e) => this.goToContestHomePage(rowValues.contestId)}>Contest Home</button>
+              }
         }];
         const data = [];
 
@@ -46,7 +58,8 @@ class DisplayContests extends Component {
                 data.push({
                   contestName: this.state.createdContestsID[i].name,
                   contestAdmin: this.state.createdContestsID[i].admin,
-                  contestStart: (!this.state.createdContestsID[i].closed).toString()
+                  contestStart: (!this.state.createdContestsID[i].closed).toString(),
+                  contestId: this.state.createdContestsID[i].cuid
                 });
               }
             }
@@ -55,7 +68,8 @@ class DisplayContests extends Component {
                 data.push({
                   contestName: this.state.joinedContests[i].name,
                   contestAdmin: this.state.joinedContests[i].admin,
-                  contestStart: (!this.state.joinedContests[i].closed).toString()
+                  contestStart: (!this.state.joinedContests[i].closed).toString(),
+                  contestId: this.state.joinedContests[i].cuid
                 });
               }
             }
@@ -70,7 +84,10 @@ class DisplayContests extends Component {
 }
 
 DisplayContests.propTypes = {
-  auth: React.PropTypes.object.isRequired
+  auth: React.PropTypes.object.isRequired,
+  router: React.PropTypes.shape({
+        push: React.PropTypes.func.isRequired,
+    }).isRequired
 };
 
 function mapStateToProps(state) {
@@ -80,4 +97,4 @@ function mapStateToProps(state) {
 }
 
 
-export default connect(mapStateToProps)(DisplayContests);
+export default connect(mapStateToProps)(withRouter(DisplayContests));
