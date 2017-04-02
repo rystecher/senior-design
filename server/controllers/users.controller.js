@@ -46,11 +46,29 @@ export function getCreatedContests(req, res) {
 }
 
 export function getJoinedContests(req, res) {
-  User.findOne({username: req.params.username}, (err, user) => {
+  User.findOne({username: req.body.username}, (err, user) => {
       if (err) {
-        return cb(err);
+        res.status(403).end();
       } else {
-        res.json({ participatedContestsID: user.participatedContestsID })
+        //console.log(user.participatedContestsID);
+        const participatedContestsList = [];
+        if (user.participatedContestsID) {
+          for (var i = 0; i < user.participatedContestsID.length; i++) {
+            participatedContestsList.push(user.participatedContestsID[i].contest);
+          }
+        }
+        //console.log(participatedContestsList);
+
+        Contest.find({ cuid: { $in: participatedContestsList }}, {_id: 0})
+        .select('name admin closed')
+        .exec((err, contests) => {
+            if (err) {
+              res.status(500).send(err);
+            } else {
+              //console.log(contests);
+              res.json({ contests });
+            }
+        });
       }
   });
 }

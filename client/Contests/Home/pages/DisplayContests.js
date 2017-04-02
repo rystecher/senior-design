@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import ReactTable from 'react-table'
 import { connect } from 'react-redux';
-import {getCreatedContests} from '../DisplayActions';
+import {getCreatedContests, getJoinedContests} from '../DisplayActions';
 import 'react-table/react-table.css'
 
 
@@ -19,12 +19,13 @@ class DisplayContests extends Component {
             //console.log(res);
             this.setState({ createdContestsID: res.contests});
         });
+        getJoinedContests({ username }).then(res => {
+            //console.log(res.contests);
+            this.setState({ joinedContests: res.contests});
+        });
     }
 
     render() {
-        if (!this.state.createdContestsID) {
-            return null;
-        } else {
         const columns = [{
           header: 'Contest name',
           accessor: 'contestName'
@@ -36,23 +37,35 @@ class DisplayContests extends Component {
           accessor: 'contestStart'
         }];
         const data = [];
-        for (var i=0; i < this.state.createdContestsID.length; i++) {
-          data.push({
-            contestName: this.state.createdContestsID[0].name,
-            contestAdmin: this.state.createdContestsID[0].admin,
-            contestStart: (!this.state.createdContestsID[0].closed).toString()
-          });
-        };
 
-        //console.log(data);
-
+        if (!this.state.createdContestsID && !this.state.joinedContests) {
+            return null;
+        } else {
+            if (this.state.createdContestsID) {
+              for (var i=0; i < this.state.createdContestsID.length; i++) {
+                data.push({
+                  contestName: this.state.createdContestsID[i].name,
+                  contestAdmin: this.state.createdContestsID[i].admin,
+                  contestStart: (!this.state.createdContestsID[i].closed).toString()
+                });
+              };
+            }
+            if (this.state.joinedContests) {
+              for (var i=0; i < this.state.joinedContests.length; i++) {
+                data.push({
+                  contestName: this.state.joinedContests[i].name,
+                  contestAdmin: this.state.joinedContests[i].admin,
+                  contestStart: (!this.state.joinedContests[i].closed).toString()
+                });
+              };
+            }
+        }
         return (
             <div>
                 <h1>My Contests</h1>
                 <ReactTable data={data} columns={columns}/>
             </div>
         );
-    }
   }
 }
 

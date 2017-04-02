@@ -47,6 +47,8 @@ router.post('/', (req, res) => {
 
 router.route('/created').post(UserController.getCreatedContests);
 
+router.route('/joined').post(UserController.getJoinedContests);
+
 // Get the role of a user in a contest
 router.route('/:username/contest/:contestId/role').get(UserController.getUserRole);
 
