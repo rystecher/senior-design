@@ -103,16 +103,15 @@ export function getJoinableContests(req, res) {
               }
             }
             //console.log(participatedContestsList);
-            // { qty: { $nin: [ 5, 15 ] } }
+            const allCreatedAndParticipated = participatedContestsList.concat(user.createdContestsID);
 
-            Contest.find(
-              { cuid: { $nin: [participatedContestsList, user.createdContestsID] }}, {_id: 0})
+            Contest.find({ cuid: { $nin: allCreatedAndParticipated }}, {_id: 0})
             .select('name admin closed cuid')
             .exec((err, contests) => {
                 if (err) {
                     res.status(500).send(err);
                 } else {
-                  // console.log(contests);
+                    console.log(contests);
                     res.json({ contests });
                 }
             });

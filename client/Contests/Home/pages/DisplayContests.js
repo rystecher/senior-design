@@ -12,7 +12,6 @@ class DisplayContests extends Component {
     super(props);
     this.state = {};
     this.goToContestHomePage = this.goToContestHomePage.bind(this);
-    this.username = props.params.username;
   }
 
   componentDidMount() {
@@ -63,7 +62,7 @@ class DisplayContests extends Component {
     }];
     const data = [];
 
-    if (!this.state.createdContests && !this.state.joinedContests) {
+    if (!this.state.createdContests && !this.state.joinedContests && !this.state.joinableContests) {
       return null;
     } else {
         if (this.state.createdContests) {
@@ -113,9 +112,6 @@ DisplayContests.propTypes = {
     auth: React.PropTypes.object.isRequired,
     router: React.PropTypes.shape({
         push: React.PropTypes.func.isRequired,
-    }).isRequired,
-    params: React.PropTypes.shape({
-      username: React.PropTypes.string.isRequired,
     }).isRequired
 };
 
