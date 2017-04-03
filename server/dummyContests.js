@@ -1,29 +1,29 @@
 import Contest from './models/contest';
 
-const team_problems = Array(5).fill({ solved: false });
+const team_problems = new Array(5).fill({ solved: false });
 
 const dummyTeams = [{
-    name:"Team",
-    _id:"58a2140af3c57bd14d9f0300",
-    score:15,
+    name: 'Team',
+    _id: '58a2140af3c57bd14d9f0300',
+    score: 15,
     problem_attempts: team_problems,
 }, {
-    name:"Another team",
-    _id:"58a2140af3c57bd14d9f0301",
-    score:20,
+    name: 'Another team',
+    _id: '58a2140af3c57bd14d9f0301',
+    score: 20,
     problem_attempts: team_problems,
 }, {
-    name:"Losing team",
-    _id:"58a2140af3c57bd14d9f0302",
-    score:12,
+    name: 'Losing team',
+    _id: '58a2140af3c57bd14d9f0302',
+    score: 12,
     problem_attempts: team_problems,
 }];
 
 const dummyProblems = [{
-    name: "The Magic Hat",
+    name: 'The Magic Hat',
     fileName: 'the-magic-hat',
     solved: true,
-    solvedBy: "Cat in the hat",
+    solvedBy: 'Cat in the hat',
 }];
 
 export default function () {
@@ -32,7 +32,7 @@ export default function () {
             return;
         }
 
-        const contest1 = new Contest({ name: 'Bucknell Spring 2015', slug: 'bucknell-spring-2015', cuid: 'cikqgkv4q01ck7453ualdn3hl'});
+        const contest1 = new Contest({ name: 'Bucknell Spring 2015', slug: 'bucknell-spring-2015', cuid: 'cikqgkv4q01ck7453ualdn3hl' });
         const contest2 = new Contest({
             name: 'Bucknell Spring 2019',
             slug: 'bucknell-spring-2019',

@@ -131,7 +131,7 @@ export function fetchJudgeMessages(contestId) {
 }
 
 export function fetchSolvedArrays(contestId, teamId) {
-    callApi(`contests/${contestId}/teams/${teamId}/solved`).then(res => console.log(res));
+    return callApi(`contests/${contestId}/teams/${teamId}/solved`);
 }
 
 export function fetchSubmissions(contestId) {

@@ -42,12 +42,12 @@ export default (
         }}
     />
     <Route
-      path="/contests"
-      getComponent={(nextState, cb) => {
-        require.ensure([], require => {
-          cb(null, requireAuth(require('./Contests/Home/pages/DisplayContests').default));
-        });
-      }}
+        path='/profile'
+        getComponent={(nextState, cb) => {
+            require.ensure([], require => {
+                cb(null, requireAuth(require('./Contests/Home/pages/DisplayContests').default));
+            });
+        }}
     />
     <Route
         path='/create-contest'

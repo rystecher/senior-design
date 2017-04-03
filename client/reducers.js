@@ -11,8 +11,8 @@ import auth from './Contests/Login/reducers/auth';
 
 // Combine all reducers into one root reducer
 export default combineReducers({
-  app,
-  contests,
-  flashMessages,
-  auth
+    app,
+    contests,
+    flashMessages,
+    auth,
 });

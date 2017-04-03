@@ -7,19 +7,19 @@ import { App } from '../App';
 const children = <h1>Test</h1>;
 const dispatch = sinon.spy();
 const props = {
-  children,
-  dispatch,
+    children,
+    dispatch,
 };
 
 test('renders properly', t => {
-  const wrapper = shallow(
+    const wrapper = shallow(
     <App {...props} />
   );
 
   // t.is(wrapper.find('Helmet').length, 1);
   // t.is(wrapper.find('Header').length, 1);
-  t.is(wrapper.find('Footer').length, 1);
-  t.truthy(wrapper.find('Header + div').children(), children);
+    t.is(wrapper.find('Footer').length, 1);
+    t.truthy(wrapper.find('Header + div').children(), children);
 });
 /*
 test('calls componentDidMount', t => {

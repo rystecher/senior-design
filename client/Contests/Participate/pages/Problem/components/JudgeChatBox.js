@@ -44,7 +44,8 @@ export default class JudgeChatBox extends React.Component {
                     this.setState({ messageObjs });
                 }
             });
-            this.chatIntervId = setInterval(intervalFunc(), 10000);
+            intervalFunc();
+            this.chatIntervId = setInterval(intervalFunc, 10000);
         } else {
             const intervalFunc = () => getTeamMessagesForJudge(contestId, teamId).then((messages) => {
                 if (messages) {
@@ -55,13 +56,14 @@ export default class JudgeChatBox extends React.Component {
                     this.setState({ messageObjs });
                 }
             });
-            this.chatIntervId = setInterval(intervalFunc(), 10000);
+            intervalFunc();
+            this.chatIntervId = setInterval(intervalFunc, 10000);
         }
     }
 
     sendMessage(event) {
         const { contestId, teamId, broadcast } = this.props;
-        if (event.keyCode == 13) {
+        if (event.keyCode === 13) {
             if (broadcast) {
                 sendBroadcastMessage(contestId, this.state.value);
                 this.state.messageObjs.push(new Message(0, this.state.value));

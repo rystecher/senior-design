@@ -5,7 +5,7 @@ export default class BarChart extends React.Component {
 
     constructor(props) {
         super(props);
-        const colors = Array(this.props.scores.length).fill('rgba(178,225,102,0.5)');
+        const colors = new Array(this.props.scores.length).fill('rgba(178,225,102,0.5)');
         const teamIdx = this.props.names.findIndex((name) => name === 'Team');
         if (teamIdx !== -1) {
             colors[teamIdx] = 'rgba(54, 162, 235, 0.2)';
