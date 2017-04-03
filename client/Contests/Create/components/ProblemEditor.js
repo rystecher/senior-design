@@ -92,6 +92,8 @@ export default class ProblemEditor extends React.Component {
                     problemNum={this.problemNum}
                     save={this.onSave}
                     onDropFile={this.onDropFile}
+                    deleteProblem={this.props.deleteProblem}
+                    showDelete={this.props.showDelete}
                 />
             </div>
         );

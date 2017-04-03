@@ -9,7 +9,7 @@ const customStyles = {
         bottom: 'auto',
         marginRight: '-50%',
         transform: 'translate(-50%, -50%)',
-        maxWidth: '600px',
+        width: '600px',
     },
 };
 
@@ -28,11 +28,11 @@ export default class ConfirmationDialog extends React.Component {
                     <div className='modal-footer'>
                         <button
                             onClick={this.props.closeModal}
-                            className='btn btn-outline-danger'
+                            className='btn cancel'
                         >Cancel</button>
                         <button
                             onClick={this.props.confirm}
-                            className='btn confirm'
+                            className={this.props.isDelete ? 'btn delete' : 'btn confirm'}
                         >{this.props.confirmText}</button>
                     </div>
                 </Modal>
@@ -45,6 +45,7 @@ ConfirmationDialog.propTypes = {
     closeModal: React.PropTypes.func,
     confirm: React.PropTypes.func,
     confirmText: React.PropTypes.string,
+    isDelete: React.PropTypes.bool,
     showDialog: React.PropTypes.bool,
     text: React.PropTypes.string,
     title: React.PropTypes.string,

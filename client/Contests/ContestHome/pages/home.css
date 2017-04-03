@@ -27,6 +27,13 @@
     padding: 12px 8px;
 }
 
+.btn.cancel {
+    background-image: none;
+    background-color: transparent;
+    color: #9E9E9E;
+    border-color:  #9E9E9E;
+}
+
 .contest-home .join {
     width: 100%;
     margin-bottom: 48px;
@@ -46,9 +53,23 @@
     border-color: #448AFF;
 }
 
+.btn.cancel:hover {
+    color: #fff;
+    background-color: #9E9E9E;
+    border-color: #9E9E9E;
+}
+
+.contest-container .btn:hover:focus {
+    background: #2962FF;
+    border-color: #2962FF;
+}
+
 .contest-container .btn:focus,
 .contest-container .btn:active,
-.contest-container .btn:hover {
+.contest-container .btn:hover,
+.btn.cancel:focus,
+.btn.cancel:active,
+.btn.cancel:hover {
     outline: none;
     box-shadow: none;
 }

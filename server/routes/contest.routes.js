@@ -51,6 +51,9 @@ router.route('/contests/:contest_id/teams/:team_id/solved').get(ContestControlle
 // Gets the pdf for the specified problem
 router.route('/contests/:contest_id/problem/:problem_no').get(ContestController.getProblemFile);
 
+// Deletes the specified problem
+router.route('/contests/:contestId/problem/:problemNum').delete(ContestController.deleteProblem);
+
 // Changes the pdf file for the specified contest for the specified problem
 router.route('/contests/:contest_id/problem/:problem_no/edit').post(ContestController.changeProblemPdf);
 

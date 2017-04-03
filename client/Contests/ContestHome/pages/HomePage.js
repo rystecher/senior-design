@@ -87,8 +87,14 @@ export default class ContestHome extends React.Component {
         openContest(this.props.params.contestId).then(res => {
             if (res.success) {
                 this.setState({ open: true });
+            } else {
+                this.showAlert('Cannot open contest without any problems', 'error');
             }
         });
+    }
+
+    showAlert(text, type) {
+        return null;
     }
 
     render() {

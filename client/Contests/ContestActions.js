@@ -142,6 +142,10 @@ export function fetchProblem(contestId, problemNum) {
     return callApiForFile(`contests/${contestId}/problem/${problemNum}`);
 }
 
+export function deleteProblem(contestId, problemNum) {
+    return callApiForFile(`contests/${contestId}/problem/${problemNum}`, 'delete');
+}
+
 export function setProblemMetaData(contestId, problemNum, metadata) {
     return callApi(`contests/${contestId}/problem/${problemNum}/metadata`, 'post', {
         metadata,
