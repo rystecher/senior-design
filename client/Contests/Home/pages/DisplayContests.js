@@ -66,23 +66,6 @@ class DisplayContests extends Component {
     if (!this.state.createdContests && !this.state.joinedContests) {
       return null;
     } else {
-      if (this.state.createdContestsID) {
-        for (var i = 0; i < this.state.createdContestsID.length; i++) {
-          data.push({
-            contestName: this.state.createdContestsID[i].name,
-            contestAdmin: this.state.createdContestsID[i].admin,
-            contestStart: (!this.state.createdContestsID[i].closed).toString(),
-          });
-        }
-      }
-      if (this.state.joinedContests) {
-        for (var i = 0; i < this.state.joinedContests.length; i++) {
-          data.push({
-            contestName: this.state.joinedContests[i].name,
-            contestAdmin: this.state.joinedContests[i].admin,
-            contestStart: (!this.state.joinedContests[i].closed).toString(),
-          });
-        }
         if (this.state.createdContests) {
           for (var i = 0; i < this.state.createdContests.length; i++) {
             data.push({
@@ -124,7 +107,6 @@ class DisplayContests extends Component {
         </div>
       );
     }
-  }
 }
 
 DisplayContests.propTypes = {
