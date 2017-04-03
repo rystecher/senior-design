@@ -1,13 +1,13 @@
 import React, { PropTypes } from 'react';
 
 // Import Components
-//import PostListItem from './PostListItem/PostListItem';
+// import PostListItem from './PostListItem/PostListItem';
 
 function ContestList(props) {
     if (!props.contests.length || props.contests.length === 0)
         return (<div>Nothing</div>);
     return (
-        <div className="listView">
+        <div className='listView'>
             {
                 props.contests.map(contest => (
                     <div key={contest.cuid}>

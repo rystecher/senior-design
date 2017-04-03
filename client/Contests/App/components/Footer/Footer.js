@@ -7,7 +7,7 @@ import styles from './Footer.css';
 import bg from '../../header-bk.png';
 
 export function Footer() {
-  return (
+    return (
     <div style={{ background: `#FFF url(${bg}) center` }} className={styles.footer}>
       <p>Footer</p>
     </div>
