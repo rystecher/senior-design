@@ -13,7 +13,7 @@ require('./main.css');
 import './bootstrap.min.css';
 
 export default function App(props) {
-  return (
+    return (
     <Provider store={props.store}>
         <Router history={browserHistory}>
           {routes}
@@ -23,5 +23,5 @@ export default function App(props) {
 }
 
 App.propTypes = {
-  store: React.PropTypes.object.isRequired,
+    store: React.PropTypes.object.isRequired,
 };

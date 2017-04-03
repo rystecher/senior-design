@@ -5,8 +5,8 @@ class HomePage extends Component {
         return (
             <div>
                 <h1>Welcome to the home page</h1>
-                <br/>
-                <p>Maybe Some rules <br/>Contest info <br/> A log in option</p>
+                <br />
+                <p>Maybe Some rules <br />Contest info <br /> A log in option</p>
             </div>
         );
     }

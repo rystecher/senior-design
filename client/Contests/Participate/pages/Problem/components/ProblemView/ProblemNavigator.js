@@ -1,5 +1,4 @@
 import React from 'react';
-// import './problem_navigator.css';
 
 export default class ProblemNavigator extends React.Component {
 

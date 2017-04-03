@@ -16,10 +16,10 @@ export class App extends Component {
             <div>
                 <div>
                     <Helmet
-                        title="ACM Programming Contest"
-                        titleTemplate="%s - Blog App"
+                        title='ACM Programming Contest'
+                        titleTemplate='%s - Blog App'
                         meta={[{
-                            charset: 'utf-8'
+                            charset: 'utf-8',
                         }, {
                             'http-equiv': 'X-UA-Compatible',
                             content: 'IE=edge',
@@ -29,7 +29,7 @@ export class App extends Component {
                         },
                         ]}
                     />
-                    <Header/>
+                    <Header />
                     <FlashMessagesList />
                     <div className={styles.container}>
                         {this.props.children}

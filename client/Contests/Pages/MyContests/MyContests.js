@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import ContestList from '../../Create/ContestList';
 
 // Import Actions
-import {fetchNotMyContests, deleteContestRequest} from '../../ContestActions';
+import { fetchNotMyContests, deleteContestRequest } from '../../ContestActions';
 
 // Import Selectors
 import { getNotMyContests } from '../../ContestReducer';
@@ -17,7 +17,7 @@ class MyContestsPage extends Component {
 
     handleDeleteContest = contest => {
         if (confirm('Do you want to delete this contest')) { // eslint-disable-line
-          this.props.dispatch(deleteContestRequest(contest));
+            this.props.dispatch(deleteContestRequest(contest));
         }
     };
 
@@ -38,20 +38,20 @@ MyContestsPage.need = [() => { return fetchNotMyContests(); }];
 
 // Retrieve data from store as props
 function mapStateToProps(state) {
-  return {
-    myContests: getNotMyContests(state),
-  };
+    return {
+        myContests: getNotMyContests(state),
+    };
 }
 
 MyContestsPage.propTypes = {
-  myContests: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string.isRequired,
-  })).isRequired,
-  dispatch: PropTypes.func.isRequired,
+    myContests: PropTypes.arrayOf(PropTypes.shape({
+        name: PropTypes.string.isRequired,
+    })).isRequired,
+    dispatch: PropTypes.func.isRequired,
 };
 
 MyContestsPage.contextTypes = {
-  router: React.PropTypes.object,
+    router: React.PropTypes.object,
 };
 
 export default connect(mapStateToProps)(MyContestsPage);

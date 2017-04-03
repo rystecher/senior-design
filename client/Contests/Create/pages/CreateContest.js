@@ -10,14 +10,14 @@ class CreateContest extends React.Component {
         super(props);
         this.submit = this.submit.bind(this);
         this.updateField = this.updateField.bind(this);
-        this.state = {name: '', about: '', rules: ''};
+        this.state = { name: '', about: '', rules: '' };
     }
 
     submit() {
         const { username } = this.props.auth.user;
         const { name, about, rules } = this.state;
         createContest({
-            name, about, rules, teams: [], admin: username
+            name, about, rules, teams: [], admin: username,
         }).then((res) => {
             if (res.contest.cuid) {
                 this.props.router.push(`/contest/${res.contest.cuid}/problems/add`);
@@ -69,13 +69,13 @@ class CreateContest extends React.Component {
 }
 
 CreateContest.propTypes = {
-  auth: React.PropTypes.object.isRequired
+    auth: React.PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {
-  return {
-    auth: state.auth
-  };
+    return {
+        auth: state.auth,
+    };
 }
 
 export default connect(mapStateToProps)(withRouter(CreateContest));
