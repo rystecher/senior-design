@@ -14,7 +14,7 @@ export default class AdminPage extends React.Component {
   }
 
   componentDidMount(){
-    fetchSubmissions(this.state.contest_id).then(res => {
+    fetchSubmissions("cikqgkv4q01ck7453ualdn3hn").then(res => {
       this.setState({
         submissions: res
       });

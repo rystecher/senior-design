@@ -116,7 +116,7 @@ export function fetchSolvedArrays(contestId, teamId) {
 
 
 export function fetchSubmissions(contest_id) {
-    return callApi(`submissions/${contest_id}`).then(res => {
+    return callApi(`submissions/${contest_id}/all`).then(res => {
       //console.log(res);
       return res.submissions;
     });

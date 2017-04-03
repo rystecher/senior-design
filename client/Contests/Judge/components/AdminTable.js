@@ -39,7 +39,7 @@ var AdminTable = React.createClass({
     in that sense...2 rows with same key only show up once
      */
     let i = 0;
-    const listItems = this.props.submissions.map((numSubs) =>
+    const contestSubmissions = this.props.submissions.map((numSubs) =>
         <Submission sub={numSubs}/>
     );
 
@@ -49,12 +49,10 @@ var AdminTable = React.createClass({
           <tr>
             <th>Team</th>
             <th>Problem Name</th>
-            <th>Correct</th>
-            <th>Feedback/Sugessted</th>
-            <th>Change/Override</th>
-            <th>Send Change Button</th>
+            <th>Correct?</th>
+            <th>Feedback Given</th>
           </tr>
-          {listItems}
+          {contestSubmissions}
         </table>
       </div>
     );

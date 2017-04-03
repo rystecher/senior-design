@@ -29,6 +29,7 @@ if (process.env.NODE_ENV !== 'production') {
     require('./Contests/Login/pages/RegisterPage');
     require('./Contests/Login/pages/LoginPage');
     require('./Contests/Judge/pages/AdminPage');
+    require('./Contests/Judge/pages/SubmissionProblemPage');
 
 }
 
@@ -100,6 +101,24 @@ export default (
                 });
             }}
         />
+
+      <Route
+        path='submissions(/:teamId/:cuid)'
+        getComponent={(nextState, cb) => {
+          require.ensure([], require => {
+            cb(null, requireAuth(require('./Contests/Judge/pages/AdminPage').default));
+          });
+        }}
+      />
+      <Route
+        path='submissions(/:teamId)'
+        getComponent={(nextState, cb) => {
+          require.ensure([], require => {
+            cb(null, requireAuth(require('./Contests/Judge/pages/SubmissionProblemPage').default));
+          });
+        }}
+      />
+
     </Route>
     <Route
         path='/my'
@@ -137,13 +156,5 @@ export default (
 
     />
       />
-      <Route
-          path="/judge"
-          getComponent={(nextState, cb) => {
-            require.ensure([], require => {
-              cb(null, require('./Contests/Judge/pages/AdminPage').default);
-            });
-          }}
-        />
     </Route>
 );
