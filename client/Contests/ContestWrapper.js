@@ -34,6 +34,10 @@ class ContestWrapper extends React.Component {
         });
     }
 
+    getForbiddenComponent() {
+        return null;
+    }
+
     render() {
         const { username } = this.props.auth.user;
         if (!this.state.userRole) {
@@ -42,6 +46,7 @@ class ContestWrapper extends React.Component {
         const page = this.props.location.pathname.split('/')[3];
         const childrenProps = {
             joinedContest: this.getUserRoleWrapper,
+            getForbiddenComponent: this.getForbiddenComponent,
             username,
             userRole: this.state.userRole,
         };

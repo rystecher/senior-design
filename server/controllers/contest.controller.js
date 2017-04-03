@@ -369,6 +369,41 @@ export function createProblem(req, res) {
 }
 
 /**
+ * Deletes a problem for a contest given a problem number
+ * Will not delete if contest started
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function deleteProblem(req, res) {
+    if (!req.params.contestId || !req.params.problemNum) {
+        res.status(403).end();
+    } else {
+        const problemNum = req.params.problemNum - 1;
+        Contest.findOne({ cuid: req.params.contestId }).select('problems').exec((err, contest) => {
+            if (err) {
+                res.status(500).send(err);
+            } else if (!contest) {
+                res.status(400).send({ err: 'Contest does not exist' });
+            } else if (typeof contest.start === 'number') {
+                res.status(400).send({ err: 'Contest already started' });
+            } else if (problemNum < contest.problems.length) {
+                contest.problems.splice(problemNum, 1);
+                contest.save((err2) => {
+                    if (err2) {
+                        res.status(500).send(err2);
+                    } else {
+                        res.json({ success: true });
+                    }
+                });
+            } else {
+                res.status(400).send({ err: 'Invalid problem number' });
+            }
+        });
+    }
+}
+
+/**
  * Changes problem pdf file
  * @param req
  * @param res
@@ -493,14 +528,14 @@ export function getProblemMetaData(req, res) {
  * @returns void
  */
 export function getContest(contest_id, cb) {
-        Contest.findOne({ cuid: contest_id }, (err, contest) => {
-            if (err) {
-                cb(err);
-            } else {
-                const { admin, name, closed } = contest;
-                cb(null, {name});
-            }
-        });
+    Contest.findOne({ cuid: contest_id }, (err, contest) => {
+        if (err) {
+            cb(err);
+        } else {
+            const { admin, name, closed } = contest;
+            cb(null, { name });
+        }
+    });
 }
 
 /**
@@ -539,13 +574,16 @@ export function getNumberOfProblems(req, res) {
     if (!req.params.contest_id) {
         res.status(403).end();
     } else {
-        Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+        Contest.findOne({ cuid: req.params.contest_id }).select('problems start').exec((err, contest) => {
             if (err || !contest) {
                 res.status(500).send(err);
             } else if (!contest) {
                 res.status(400).send({ err: 'Contest does not exist' });
             } else {
-                res.json({ numberOfProblems: contest.problems.length });
+                res.json({
+                    numberOfProblems: contest.problems.length,
+                    started: typeof contest.start === 'number',
+                });
             }
         });
     }
@@ -566,6 +604,8 @@ export function openContest(req, res) {
                 res.status(500).send(err);
             } else if (!contest) {
                 res.status(400).send({ err: 'Contest does not exist' });
+            } else if (contest.problems.length === 0) {
+                res.json({ success: false });
             } else if (!contest.start) {
                 contest.start = Date.now();
                 contest.save((err) => {

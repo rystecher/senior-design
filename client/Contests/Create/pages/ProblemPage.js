@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { getNumberOfProblems } from '../../ContestActions';
+import { getNumberOfProblems, deleteProblem } from '../../ContestActions';
 import ProblemNavigator from '../components/ProblemNavigator';
 import ProblemEditor from '../components/ProblemEditor';
 import ProblemAdder from '../components/ProblemAdder';
@@ -18,11 +18,18 @@ class ProblemPage extends React.Component {
         this.addProblem = this.addProblem.bind(this);
         this.addedProblem = this.addedProblem.bind(this);
         this.changeProblemNumber = this.changeProblemNumber.bind(this);
+        this.deleteProblem = this.deleteProblem.bind(this);
     }
 
     componentDidMount() {
         getNumberOfProblems(this.props.params.contestId).then(res => {
-            this.setState({ numberOfProblems: res.numberOfProblems });
+            this.setState({
+                numberOfProblems: res.numberOfProblems,
+                started: res.started,
+            });
+            if (res.started && !(this.state.problemNum > 0)) {
+                this.props.router.push(`/contest/${this.contestId}/problems/1/edit`);
+            }
         });
     }
 
@@ -42,15 +49,40 @@ class ProblemPage extends React.Component {
         this.props.router.push(`/contest/${this.contestId}/problems/${numberOfProblems}/edit`);
     }
 
+    deleteProblem() {
+        const { contestId, problemNum } = this.props.params;
+        deleteProblem(contestId, problemNum).then((res) => {
+            if (res.status === 200) {
+                const numberOfProblems = this.state.numberOfProblems - 1;
+                this.state.numberOfProblems = numberOfProblems;
+                if (numberOfProblems > 0) {
+                    this.props.router.push(`/contest/${this.contestId}/problems/${numberOfProblems}/edit`);
+                } else {
+                    this.props.router.push(`/contest/${this.contestId}/problems/add`);
+                }
+                this.showAlert('Problem deleted', 'success');
+            }
+        });
+    }
+
+    showAlert(text, type) {
+        return null;
+    }
+
     render() {
         const problemNum = this.props.params.problemNum;
         const ProblemDisplay = problemNum > 0 ?
-            <ProblemEditor problemNum={problemNum} {...this.props} /> :
+            <ProblemEditor
+                problemNum={problemNum}
+                deleteProblem={this.deleteProblem}
+                showDelete={!this.state.started}
+                {...this.props}
+            /> :
             <ProblemAdder {...this.props} addedProblem={this.addedProblem} />;
         return (
             <div>
                 <ProblemNavigator
-                    edit
+                    edit={!this.state.started}
                     problemNum={problemNum}
                     contestId={this.contestId}
                     addProblem={this.addProblem}
