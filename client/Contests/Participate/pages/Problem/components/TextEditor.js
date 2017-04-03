@@ -24,15 +24,21 @@ export default class TextEditor extends React.Component {
         this.state = {
             code: prompts.python,
             readOnly: false,
-            mode: "python", // Syntax
+            mode: "python", // Syntax for text editor
             lang: "python"
         };
         this.onTestClick = this.onTestClick.bind(this);
         this.onSubmitClick = this.onSubmitClick.bind(this);
+        // Check local storage to recover any autosaved code
+        if (localStorage['problem' + this.props.problemNum]) {
+          this.state.code = localStorage['problem' + this.props.problemNum];
+        }
     }
 
   updateCode = (newCode) => {
     this.setState({code: newCode});
+    // autosave code to local storage for each problem
+    localStorage['problem' + this.props.problemNum] = this.state.code;
   };
 
   changeMode = (e) => {
