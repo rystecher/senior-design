@@ -32,7 +32,7 @@ class LoginForm extends React.Component {
         if (this.isValid()) {
             this.setState({ errors: {}, isLoading: true });
             this.props.login(this.state).then(
-              (res) => this.context.router.push(`/users/${this.state.identifier}`),
+              (res) => this.context.router.push(`/profile`),
               (err) => this.setState({ errors: err.response.data.errors, isLoading: false })
             );
         }

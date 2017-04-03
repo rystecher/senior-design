@@ -66,7 +66,7 @@ export default class ContestNavigator extends React.Component {
                     {navLinks}
                     <ul className='nav navbar-nav navbar-toggler-right'>
                         <li className='nav-item'>
-                            <Link to={`/users/${username}`} className='nav-link'>
+                            <Link to={`/profile`} className='nav-link'>
                                 <span className='glyphicon glyphicon-user'/>{username}
                             </Link>
                         </li>

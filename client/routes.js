@@ -42,7 +42,7 @@ export default (
         }}
     />
     <Route
-        path='/users/:username'
+        path='/profile'
         getComponent={(nextState, cb) => {
             require.ensure([], require => {
                 cb(null, requireAuth(require('./Contests/Home/pages/DisplayContests').default));
