@@ -1,6 +1,7 @@
 import React from 'react';
 import CodeMirror from 'react-codemirror';
 import 'codemirror/lib/codemirror.css';
+import './TextEditor.css';
 import { testCode, submitCode } from '../../../../ContestActions';
 
 
@@ -91,8 +92,9 @@ export default class TextEditor extends React.Component {
                 <br />
                 <textarea name='custom_in' id='custom_in' cols='30' rows='10' />
                 <br />
-                <button ref='testButton' onClick={this.onTestClick}>Test</button>
-                <button ref='subButton' onClick={this.onSubmitClick}>Submit</button>
+                <br />
+                <button ref='testButton' onClick={this.onTestClick} type="button" className="btn btn-default">Test</button>
+                <button ref='subButton' onClick={this.onSubmitClick} type="button" className="btn btn-primary">Submit</button>
             </div>
         );
     }

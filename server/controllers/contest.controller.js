@@ -297,7 +297,7 @@ export function getSolvedArrays(req, res) {
             const solvedInContest = contest.problems.map((problem) => problem.solved);
             const team = contest.teams.id(req.params.team_id);
             const solvedByTeam = team.problem_attempts.map((problem) => problem.solved);
-            res.json({ solved: { solvedInContest, solvedByTeam } });
+            res.json({ solvedInContest, solvedByTeam });
         }
     });
 }
