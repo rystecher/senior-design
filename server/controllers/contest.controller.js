@@ -493,14 +493,14 @@ export function getProblemMetaData(req, res) {
  * @returns void
  */
 export function getContest(contest_id, cb) {
-        Contest.findOne({ cuid: contest_id }, (err, contest) => {
-            if (err) {
-                cb(err);
-            } else {
-                const { admin, name, closed } = contest;
-                cb(null, {name});
-            }
-        });
+    Contest.findOne({ cuid: contest_id }, (err, contest) => {
+        if (err) {
+            cb(err);
+        } else {
+            const { admin, name, closed } = contest;
+            cb(null, { name });
+        }
+    });
 }
 
 /**

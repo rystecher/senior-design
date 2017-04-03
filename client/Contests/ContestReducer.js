@@ -5,33 +5,33 @@ import { ADD_CONTEST, GET_CONTESTS, GET_MY_CONTESTS,
 const initialState = {
     contests: [],
     myContests: [],
-    notMyContests: []
+    notMyContests: [],
 };
 
 const ContestReducer = (state = initialState, action) => {
     switch (action.type) {
-        case GET_CONTESTS :
-            return Object.assign({}, state, {
-                contests: action.contests}
+    case GET_CONTESTS :
+        return Object.assign({}, state, {
+            contests: action.contests }
             );
 
-        case GET_MY_CONTESTS :
-            return Object.assign({}, state, {
-                myContests: action.contests}
+    case GET_MY_CONTESTS :
+        return Object.assign({}, state, {
+            myContests: action.contests }
             );
 
-        case GET_NOT_MY_CONTESTS :
-            return Object.assign({}, state, {
-                    notMyContests: action.contests
-            });
+    case GET_NOT_MY_CONTESTS :
+        return Object.assign({}, state, {
+            notMyContests: action.contests,
+        });
 
-        case DELETE_CONTEST :
-            return {
-                data: state.data.filter(contest => contest.cuid !== action.cuid),
+    case DELETE_CONTEST :
+        return {
+            data: state.data.filter(contest => contest.cuid !== action.cuid),
         };
 
-        default:
-            return state;
+    default:
+        return state;
     }
 };
 
