@@ -19,7 +19,8 @@ export default class ChatSideBar extends React.Component {
                 this.setState({ teams });
             }
         });
-        this.chatIntervId = setInterval(intervalFunc(), 5000);
+        intervalFunc();
+        this.chatIntervId = setInterval(intervalFunc, 5000);
     }
 
     componentWillUnmount() {

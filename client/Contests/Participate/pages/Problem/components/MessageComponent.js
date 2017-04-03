@@ -21,7 +21,8 @@ export default class MessageComponent extends React.Component {
                 this.setState({ messageObjs });
             }
         });
-        this.chatIntervId = setInterval(intervalFunc(), 10000);
+        intervalFunc();
+        this.chatIntervId = setInterval(intervalFunc, 10000);
     }
 
     componentWillUnmount() {
