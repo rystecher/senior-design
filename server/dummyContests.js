@@ -1,6 +1,6 @@
 import Contest from './models/contest';
 
-const team_problems = Array(5).fill({ solved: false });
+const team_problems = new Array(5).fill({ solved: false });
 
 const dummyTeams = [{
     name: 'Team',

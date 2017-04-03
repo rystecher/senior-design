@@ -19,13 +19,7 @@ class LoginForm extends React.Component {
     }
 
     isValid() {
-        const { errors, isValid } = validateLoginInput(this.state);
-
-        if (!isValid) {
-            this.setState({ errors });
-        }
-
-        return isValid;
+        const {errors, isValid} = validateLoginInput(this.state);
     }
 
     onSubmit(e) {
@@ -33,9 +27,10 @@ class LoginForm extends React.Component {
         if (this.isValid()) {
             this.setState({ errors: {}, isLoading: true });
             this.props.login(this.state).then(
-        (res) => this.context.router.push('/contests'),
-        (err) => this.setState({ errors: err.response.data.errors, isLoading: false })
-      );
+              (res) => this.context.router.push(`/users/${this.state.identifier}`),
+              //      this.context.router.push(`/users/${this.state.identifier}`);
+              (err) => this.setState({ errors: err.response.data.errors, isLoading: false })
+            );
         }
     }
 
