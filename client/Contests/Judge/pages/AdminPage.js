@@ -2,33 +2,45 @@
  * Created by courtneybolivar on 21/02/2017.
  */
 import React from 'react';
-import AdminTable from '../components/AdminTable.js'
-import {fetchSubmissions} from '../../ContestActions.js';
+import AdminTable from '../components/AdminTable.js';
+import { withRouter } from 'react-router';
 
-export default class AdminPage extends React.Component {
+class AdminPage extends React.Component {
+
+  /**
+   *
+   * @param props
+   */
   constructor(props) {
     super(props);
     this.state = {
-      contest_id: "cikqgkv4q01ck7453ualdn3hn"
+      contestId: props.params.contestId,
     };
   }
 
-  componentDidMount(){
-    fetchSubmissions("cikqgkv4q01ck7453ualdn3hn").then(res => {
-      this.setState({
-        submissions: res
-      });
-    });
-  }
-
+  /**
+   *
+   * @returns {XML}
+   */
   render() {
-    const adminTable = this.state.submissions ? <AdminTable submissions={this.state.submissions}/> : null;
     return (
       <div>
         <h1> Welcome to the Admin Page </h1>
         <br/>
-        {adminTable}
+        <AdminTable contestId={this.state.contestId}/>
       </div>
     );
   }
 }
+
+AdminPage.propTypes = {
+  params: React.PropTypes.shape({
+    contestId: React.PropTypes.string.isRequired
+  }).isRequired ,
+  router: React.PropTypes.shape({
+    push: React.PropTypes.func.isRequired,
+  }).isRequired,
+};
+
+export default withRouter(AdminPage);
+

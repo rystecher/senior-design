@@ -47,10 +47,8 @@ export function getSubmission(req, res) {
                 res.status(400).send({ err: 'Submission does not exist' });
             } else {
                 readTextFile(`output/${submission.fileName}`).then((expectedOutput) => {
-                    submission.expectedOutput = expectedOutput;
                     readTextFile(`submission/${submission.fileName}`).then((actualOutput) => {
-                        submission.actualOutput = actualOutput;
-                        res.json({ submission });
+                        res.json({ submission, expectedOutput, actualOutput });
                     }).catch(err3 => res.status(500).send(err3));
                 }).catch(err2 => res.status(500).send(err2));
             }
@@ -95,7 +93,7 @@ export function sendFeedback(req, res) {
                 res.status(400).send({ err: 'Submission does not exist' });
             } else {
                 submission.feedback = req.body.feedback;
-                if (req.body.corect && !submission.correct) {
+                if (req.body.correct && !submission.correct) {
                     submission.correct = true;
                     const { contestID, teamID, problemNumber } = submission;
                     markSubmissionCorrect(contestID, teamID, problemNumber);
@@ -120,6 +118,7 @@ export function sendFeedback(req, res) {
  * @returns void
  */
 export function deleteSubmission(req, res) {
+  console.log("in delete submissions controller");
     Submission.findOne({ cuid: req.params.submissionId }).exec((err, submission) => {
         if (err) {
             res.status(500).send(err);

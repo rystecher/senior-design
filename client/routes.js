@@ -103,7 +103,7 @@ export default (
         />
 
       <Route
-        path='submissions(/:teamId/:cuid)'
+        path='submissions'
         getComponent={(nextState, cb) => {
           require.ensure([], require => {
             cb(null, requireAuth(require('./Contests/Judge/pages/AdminPage').default));
@@ -111,7 +111,7 @@ export default (
         }}
       />
       <Route
-        path='submissions(/:teamId)'
+        path='submissions(/:submissionId)'
         getComponent={(nextState, cb) => {
           require.ensure([], require => {
             cb(null, requireAuth(require('./Contests/Judge/pages/SubmissionProblemPage').default));

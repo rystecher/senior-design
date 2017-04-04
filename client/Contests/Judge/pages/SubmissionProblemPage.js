@@ -2,20 +2,52 @@
  * Created by courtneybolivar on 21/02/2017.
  */
 import React from 'react';
-import ConfirmLink from 'react-confirm-dialog';
 import Diff from 'react-diff';
+import {sendFeedback, getSubmission, deleteSubmission} from '../../ContestActions';
+import { withRouter } from 'react-router';
 
-export default class SubmissionProblemPage extends React.Component {
+class SubmissionProblemPage extends React.Component {
 
-
+  /**
+   *
+   * @param props
+   */
   constructor(props) {
     super(props);
-    this.state = {value: 'Correct'};
-
+    this.state = {
+      submissionId: props.params.submissionId,
+      value: "None"
+    };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  /**
+   * get submission data
+   */
+  componentDidMount(){
+    const subId = this.state.submissionId;
+    getSubmission(subId).then(res => {
+      const  submission = res.submission;
+      const actual = res.actualOutput;
+      const expected = res.expectedOutput;
+      this.setState({
+        submission: res.submission,
+        submissionId: subId,
+        contestId: submission.contestID,
+        teamId: submission.teamID,
+        teamName: submission.teamName,
+        problemNumber: submission.problemNumber,
+        expectedOutput: expected,
+        actualOutput: actual
+      });
+    });
+  }
+
+  /**
+   * update the feedback chosen
+   * @param event
+   */
   handleChange(event) {
     this.setState({value: event.target.value});
   }
@@ -25,33 +57,52 @@ export default class SubmissionProblemPage extends React.Component {
    * @param args
    */
   handleSubmit(args) {
+    // set the feedback field
+    this.state.submission.feedback = this.state.value;
 
+    // set correct field:
+    this.state.submission.correct = this.state.value == 'Correct';
+
+    if (this.state.value == "Delete Submission") {
+      deleteSubmission(this.state.submissionId);
+      // go back to the submissions table
+      this.props.router.push(`/contest/${this.state.contestId}/submissions`);
+    }
+    else if(this.state.value == "None")
+      alert("Please Select an Option");
+    else {
+      const req = {
+        correct: this.state.submission.correct,
+        feedback: this.state.value
+      };
+      sendFeedback(this.state.submissionId, req);
+      // go back to submissions table
+      this.props.router.push(`/contest/${this.state.contestId}/submissions`);
+    }
   }
 
 
-
+  /**
+   *
+   * @returns {XML}
+   */
   render() {
-
-    const expectedOutput = "15.00 15.00 \
-    6.25 3.75 \
-    3.75 6.25 \
-    16.25 13.75 \
-    13.75 16.25";
-    const submission = "15.00 15.00 \
-    7.25 3.75 \
-    3.35 6.25 \
-    16.00 13.75 \
-    13 16.25";
+    const output = this.state.expectedOutput;
+    const diff = output ? <Diff inputA={this.state.expectedOutput}
+                                inputB={this.state.actualOutput}
+                                type="chars"
+                                ignoreWhitespace="true"/> : null;
 
     return (
       <div>
-        <h1>Submissions Table for Admin</h1>
+        <h2>Submissions View</h2>
         <br></br>
 
         <form>
           <label>
             Select feedback for this submission:
             <select value={this.state.value} onChange={this.handleChange} >
+              <option value="None">Please Select</option>
               <option value="Correct">Correct</option>
               <option value="Bad Math">Bad Math</option>
               <option value="Bad Format">Bad Format</option>
@@ -59,15 +110,8 @@ export default class SubmissionProblemPage extends React.Component {
               <option value="Delete Submission">Delete Submission</option>
             </select>
           </label>
-          <ConfirmLink action={this.handleSubmit}
-                       confirmText="Send"
-                       cancelText="Cancel"
-                       confirmMessage={"Are you sure you want to send: " + this.state.value + "?"}>
-            <a href="#">Send Feedback</a>
-          </ConfirmLink>
+          <button onClick={this.handleSubmit}>Send Feedback</button>
         </form>
-
-
         <br></br>
         <table>
           <tr>
@@ -75,19 +119,34 @@ export default class SubmissionProblemPage extends React.Component {
             <th>User Output</th>
             <th>Diff</th>
           </tr>
+          <tbody>
           <tr>
             <td>
-              {expectedOutput}
+              {this.state.expectedOutput}
             </td>
             <td>
-              {submission}
+              {this.state.actualOutput}
             </td>
             <td>
-              <Diff inputA={expectedOutput} inputB={submission} type="chars" ignoreWhitespace="true"/>
+              {diff}
             </td>
           </tr>
+          </tbody>
         </table>
       </div>
     );
   }
 }
+
+
+SubmissionProblemPage.propTypes = {
+  params: React.PropTypes.shape({
+    contestId: React.PropTypes.string.isRequired,
+    submissionId: React.PropTypes.string.isRequired,
+  }).isRequired,
+  router: React.PropTypes.shape({
+    push: React.PropTypes.func.isRequired,
+  }).isRequired,
+};
+
+export default withRouter(SubmissionProblemPage);

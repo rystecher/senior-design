@@ -5,43 +5,44 @@ import React from 'react';
 import Submission from './Submission.js';
 import Styles from './Admin.css';
 
-var AdminTable = React.createClass({
+import {fetchSubmissions} from '../../ContestActions.js';
 
+const AdminTable = React.createClass({
 
-  onSelect: function() {
-
-  },
-  /*
-
-
-   <Submission sub={this.props.submissions[0]} />
-   <Submission sub={this.props.submissions[1]} />
-   <Submission sub={this.props.submissions[2]} />
-
-   creates buttons with color labing based on the
-   status field passed in
-
-
-   // compile list of submissions
-   let submissionsList;
-   console.log("length = " + this.props.submissions.length);
-   {Object.keys(this.props.submissions).map((key) => {
-   submissionsList +=  this.props.submissions[key];
-   })};
-   // Team Name // Problem Name // Override Score # // Time data // Send Feedback // Option to view submission (link to problem page)
+  /**
+   *
+   * @returns {{contest_id: string, submissions: Array}}
    */
-  render: function () {
+  getInitialState() {
+    return {
+      contest_id: this.props.contestId,
+      submissions: [],
+    };
+  },
 
-    //compile submissions
-    /*
-    currently gives a warning that each submissions needs a key, since teams
-    can have more than one submission per problem, submissions are not unique
-    in that sense...2 rows with same key only show up once
-     */
-    let i = 0;
-    const contestSubmissions = this.props.submissions.map((numSubs) =>
-        <Submission sub={numSubs}/>
-    );
+  /**
+   *
+   */
+  componentDidMount(){
+    fetchSubmissions(this.state.contest_id).then(res => {
+      this.setState({
+        submissions: res,
+      });
+    });
+  },
+
+  /**
+   *
+   * @returns {XML}
+   */
+   render() {
+
+    const submissions = this.state.submissions;
+    let contestSubmissions  = null; // if we've fetched submissions, contestSubmissions
+                                    // will be an array of <Submission > rows for the table
+    if(this.state.submissions.length > 0) {
+      contestSubmissions = submissions.map((sub) => <Submission sub={sub} key={sub.cuid}/>);
+    }
 
     return (
       <div>
@@ -57,7 +58,6 @@ var AdminTable = React.createClass({
       </div>
     );
   }
-
 });
 
 export default AdminTable;
