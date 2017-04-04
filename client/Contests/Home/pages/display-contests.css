@@ -3,3 +3,7 @@
     margin: 0 auto;
     height: 500px;
 }
+
+.profile-container .ReactTable {
+    margin-top: 48px;
+}
