@@ -94,6 +94,7 @@ class ProblemPage extends React.Component {
 }
 
 ProblemPage.propTypes = {
+    getForbiddenComponent: React.PropTypes.func.isRequired,
     params: React.PropTypes.shape({
         contestId: React.PropTypes.string.isRequired,
         problemNum: React.PropTypes.string,
@@ -101,6 +102,7 @@ ProblemPage.propTypes = {
     router: React.PropTypes.shape({
         push: React.PropTypes.func.isRequired,
     }).isRequired,
+    userRole: React.PropTypes.oneOf(['admin', 'none', 'participant']).isRequired,
 };
 
 export default withRouter(ProblemPage);
