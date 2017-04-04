@@ -53,6 +53,7 @@
     "react-modal": "^1.7.3",
     "react-redux": "^4.4.5",
     "react-router": "^2.4.1",
+    "react-s-alert": "^1.2.2",
     "react-table": "^5.3.5",
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0",
