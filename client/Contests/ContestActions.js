@@ -134,8 +134,29 @@ export function fetchSolvedArrays(contestId, teamId) {
     return callApi(`contests/${contestId}/teams/${teamId}/solved`);
 }
 
-export function fetchSubmissions(contestId) {
-    callApi(`submissions/${contestId}`).then(res => console.log(res));
+export function fetchSubmissions(contest_id) {
+    return callApi(`submissions/${contest_id}/all`).then(res => {
+      //console.log(res);
+      return res.submissions;
+    });
+}
+
+export function sendFeedback(submissionId, req){
+  return callApi(`/submissions/feedback/${submissionId}`, 'post', req).then(res => {
+    console.log("Sending feedback.." + res);
+  });
+}
+
+export function getSubmission(submissionId){
+  return callApi(`/submissions/${submissionId}`).then(res => {
+    return res;
+  });
+}
+
+export function deleteSubmission(submissionId){
+  return callApi(`/submissions/${submissionId}`, 'delete').then(res => {
+    console.log("deleting submission.." + res);
+  });
 }
 
 export function fetchProblem(contestId, problemNum) {
@@ -187,7 +208,6 @@ export function submitCode(contestId, teamId, code, lang, number) {
         problem: { code, lang, number },
     }).then(res => console.log('submit code: ', res));
 }
-
 
 export function fetchNotMyContests(cuids) {
     return callApi('contests/join', 'get', cuids);

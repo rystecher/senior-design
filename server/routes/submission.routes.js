@@ -3,7 +3,7 @@ import * as SubmissionController from '../controllers/submission.controller';
 const router = new Router();
 
 // Gets all submissions for a contest
-router.route('/submissions/:contestId/add').get(SubmissionController.getSubmissions);
+router.route('/submissions/:contestId/all').get(SubmissionController.getSubmissions);
 
 // Gets a single submission
 router.route('/submissions/:submissionId').get(SubmissionController.getSubmission);

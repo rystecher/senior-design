@@ -1,5 +1,6 @@
 import Contest from './models/contest';
 
+
 const team_problems = new Array(5).fill({ solved: false });
 
 const dummyTeams = [{
@@ -13,18 +14,105 @@ const dummyTeams = [{
     score: 20,
     problem_attempts: team_problems,
 }, {
-    name: 'Losing team',
-    _id: '58a2140af3c57bd14d9f0302',
-    score: 12,
-    problem_attempts: team_problems,
+  name: 'Losing team',
+  _id: '58a2140af3c57bd14d9f0302',
+  score: 12,
+  problem_attempts: team_problems,
 }];
 
+const problems_team = [
+  {
+    attempts: ["attempt 0"],
+    solved: true
+  },
+  {
+    attempts: ["attempt 1"],
+    solved: true
+  },
+];
+
+const probelsm_anotherteam = [
+  {
+    attempts: ["attempt 1"],
+    solved: true
+  },
+  {
+    attempts: ["attempt 2"],
+    solved: true
+  },
+  {
+    attempts: ["attempt 3"],
+    solved: true
+  },
+  {
+    attempts: ["attempt 4"],
+    solved: true
+  },
+  {
+    attempts: ["attempt 5"],
+    solved: true
+  },
+  {
+    attempts: ["attempt 6"],
+    solved: true
+  },
+];
+
+const problems_losing = [
+  {
+  attempts: ["attempt 0"],
+  solved: true
+},
+  {
+    attempts: ["attempt 1"],
+    solved: true
+  },
+  {
+    attempts: ["attempt 1"],
+    solved: true
+  },
+];
+
+const dummyTeams = [{
+    name:"Team",
+    _id:"58a2140af3c57bd14d9f0301",
+    score:15,
+    problem_attempts: problems_team,
+}, {
+    name:"Another team",
+    _id:"58a2140af3c57bd14d9f0302",
+    score:20,
+    problem_attempts: probelsm_anotherteam,
+}, {
+    name:"Losing team",
+    _id:"58a2140af3c57bd14d9f0303",
+    score:12,
+    problem_attempts: problems_losing,
+}];
+
+
+
 const dummyProblems = [{
-    name: 'The Magic Hat',
+    name: "Hat Problem",
     fileName: 'the-magic-hat',
     solved: true,
-    solvedBy: 'Cat in the hat',
-}];
+    solvedBy: "Team",
+    problemNumber: 1
+},
+  {
+    name: "Problem 2",
+    fileName: 'the-magic-hat',
+    solved: true,
+    solvedBy: "Another team",
+    problemNumber: 2
+  },
+  {
+    name: "Problem 5",
+    fileName: 'the-magic-hat',
+    solved: true,
+    solvedBy: "Losing team",
+    problemNumber: 5
+  }];
 
 export default function () {
     Contest.count().exec((err, count) => {
