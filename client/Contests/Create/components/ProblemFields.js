@@ -1,5 +1,6 @@
 import React from 'react';
 import Dropzone from 'react-dropzone';
+import ConfirmationDialog from '../../ContestHome/components/ConfirmationDialog';
 import { getProblemMetaData } from '../../ContestActions';
 import './problem_fields.css';
 
@@ -9,6 +10,9 @@ export default class ProblemFields extends React.Component {
         super(props);
         this.contestId = props.contestId;
         this.problemNum = props.problemNum;
+        this.closeModal = this.closeModal.bind(this);
+        this.confirmDelete = this.confirmDelete.bind(this);
+        this.deleteProblem = this.deleteProblem.bind(this);
         this.onSave = this.onSave.bind(this);
         this.onDrop = this.onDrop.bind(this);
         this.getTextFromFile = this.getTextFromFile.bind(this);
@@ -28,6 +32,19 @@ export default class ProblemFields extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         this.getProblemMetaDataWrapper(nextProps.contestId, nextProps.problemNum);
+    }
+
+    closeModal() {
+        this.setState({ showDialog: false });
+    }
+
+    confirmDelete() {
+        this.setState({ showDialog: true });
+    }
+
+    deleteProblem() {
+        this.closeModal();
+        this.props.deleteProblem();
     }
 
     getProblemMetaDataWrapper(contestId, problemNum) {
@@ -129,7 +146,31 @@ export default class ProblemFields extends React.Component {
                     {dragAndDropText}
                 </Dropzone>
                 <button className='btn save' onClick={this.onSave}>Save</button>
+                {this.props.showDelete ?
+                    <button
+                        className='btn delete'
+                        onClick={this.confirmDelete}
+                    >Delete</button> : null
+                }
+                <ConfirmationDialog
+                    showDialog={this.state.showDialog}
+                    closeModal={this.closeModal}
+                    confirm={this.deleteProblem}
+                    confirmText='Delete'
+                    isDelete
+                    text='Are you sure want to delete this problem?'
+                    title='Delete Problem'
+                />
             </div>
         );
     }
 }
+
+ProblemFields.propTypes = {
+    contestId: React.PropTypes.string.isRequired,
+    problemNum: React.PropTypes.string.isRequired,
+    save: React.PropTypes.func.isRequired,
+    deleteProblem: React.PropTypes.func.isRequired,
+    showDelete: React.PropTypes.bool.isRequired,
+    onDropFile: React.PropTypes.func.isRequired,
+};

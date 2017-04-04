@@ -6,6 +6,7 @@ import ProblemViewer from '../components/ProblemView/ProblemViewer';
 import TextEditor from '../components/TextEditor';
 import MessageComponent from '../components/MessageComponent.js';
 import ChatSideBar from '../components/ChatSideBar.js';
+import './ProblemPage.css';
 
 /*
   A component to create the components for this page
@@ -37,20 +38,22 @@ class ProblemPage extends React.Component {
     render() {
         return (
             <div>
+              <ProblemNav
+                problemNum={this.state.problemNum}
+                teamId={this.teamId}
+                contestId={this.contestId}
+                changeProblemNumber={this.changeProblemNumber}
+                numberOfProblems={this.state.numberOfProblems}
+              />
               <div className='row'>
-
                 <div className='col-md-6'>
-                  <ProblemNav
-                      problemNum={this.state.problemNum}
-                      contestId={this.contestId}
-                      changeProblemNumber={this.changeProblemNumber}
-                      numberOfProblems={this.state.numberOfProblems}
-                  />
-                  <ProblemViewer
-                      contestId={this.contestId}
-                      problemNum={this.state.problemNum}
-                      numberOfProblems={this.state.numberOfProblems}
-                  />
+                  <div className="left-col">
+                    <ProblemViewer
+                        contestId={this.contestId}
+                        problemNum={this.state.problemNum}
+                        numberOfProblems={this.state.numberOfProblems}
+                    />
+                  </div>
                 </div>
 
                 <div className='col-md-6'>

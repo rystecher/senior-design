@@ -25,7 +25,7 @@ export default class ProblemNavigator extends React.Component {
                         </li>
                     );
                 })}
-                {this.props.edit !== undefined && numberOfProblems > 0 ?
+                {this.props.edit && numberOfProblems > 0 ?
                     <li
                         className='page-item'
                         onClick={this.props.addProblem}
