@@ -2,6 +2,9 @@ import React from 'react';
 import BarChart from '../components/BarChart.js';
 import { getScoreboardData, hideScoreboard, showScoreboard } from '../../../../ContestActions.js';
 import './scoreboard.css';
+import ReactTable from 'react-table';
+import 'react-table/react-table.css';
+
 
 export default class Scoreboard extends React.Component {
 
@@ -42,16 +45,27 @@ export default class Scoreboard extends React.Component {
     }
 
     render() {
+        const columns = [{
+          header: 'Problem Name',
+          accessor: 'problemName',
+        }, {
+          header: 'First team to solve the problem',
+          accessor: 'firstTeamToSolve',
+        }];
+        const data = [];
         const { scores, labels, scoreboardVisible, numSolved } = this.state;
         const hideClass = scoreboardVisible ? '' : 'active';
         const showClass = scoreboardVisible ? 'active' : '';
         const barchart = scores ?
-            <BarChart
-                username={this.props.username}
-                names={labels}
-                scores={scores}
-                numSolved={numSolved}
-            /> : null;
+            <div>
+              <BarChart
+                  username={this.props.username}
+                  names={labels}
+                  scores={scores}
+                  numSolved={numSolved}
+              />
+              <ReactTable data={data} columns={columns}/>
+            </div>: null;
         return (
             <div className='contest-scoreboard'>
                 {this.props.userRole === 'admin' || scoreboardVisible ?

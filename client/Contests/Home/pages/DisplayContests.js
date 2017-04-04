@@ -3,7 +3,7 @@ import ReactTable from 'react-table';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { getCreatedContests, getJoinedContests, getJoinableContests } from '../DisplayActions';
-import 'react-table/react-table.css'
+import 'react-table/react-table.css';
 
 
 class DisplayContests extends Component {

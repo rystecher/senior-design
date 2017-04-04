@@ -303,6 +303,44 @@ export function getSolvedArrays(req, res) {
 }
 
 /**
+ * Sends the solved arrays for the contest
+ * specified by id and team specified by id
+ * both parameters are passed in req.params
+ *
+ * Response format:
+ * solved:
+ *      solvedInContest: [Boolean]
+ *      solvedByTeam: [Boolean]
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getProblemSolvedByFirstTeam(req, res) {
+    if (!req.params.contest_id) {
+        res.status(403).end();
+    }
+    Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+        if (err) {
+            res.status(500).send(err);
+        } else if (!contest) {
+            res.status(400).send({ err: 'Contest does not exist' });
+        } else {
+            const problems = contest.problems;
+            const solvedBy = [];
+            if (problems) {
+              for (let i = 0; i < problems.length; i++) {
+                solvedBy.push(problems[i].solvedBy);
+              }
+            }
+            const solvedInContest = contest.problems.map((problem) => problem.solved);
+            const team = contest.teams.id(req.params.team_id);
+            const solvedByTeam = team.problem_attempts.map((problem) => problem.solved);
+            res.json({ solved: { solvedInContest, solvedByTeam } });
+        }
+    });
+}
+
+/**
  * Sends the problem file requested
  * @param req
  * @param res
