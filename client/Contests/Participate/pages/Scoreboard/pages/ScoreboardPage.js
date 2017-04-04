@@ -16,14 +16,6 @@ export default class Scoreboard extends React.Component {
     }
 
     componentDidMount() {
-        // getScoreboardData('cikqgkv4q01ck7453ualdn3hn').then(res => {
-        //     this.setState({
-        //         labels: res.teamNames,
-        //         scores: res.teamScores,
-        //         numSolved: res.teamNumSolved,
-        //         scoreboardVisible: res.scoreboardVisible,
-        //     });
-        // });
         getScoreboardData(this.props.params.contestId).then(res => {
             this.setState({
                 labels: res.teamNames,

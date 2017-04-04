@@ -40,6 +40,7 @@ import hackerRank from './routes/hackerRank.routes';
 import users from './routes/users.routes';
 import auth from './routes/auth.routes';
 import dummyContests from './dummyContests';
+import dummySubmissions from './dummySubmissions';
 import serverConfig from './config';
 
 // Set native promises as mongoose promise
@@ -53,7 +54,8 @@ mongoose.connect(serverConfig.mongoURL, (error) => {
     }
 
   // feed some dummy data in DB.
-    dummyContests();
+  dummyContests();
+  dummySubmissions();
 });
 
 // Timeout any requests that take longer than 5 minutes

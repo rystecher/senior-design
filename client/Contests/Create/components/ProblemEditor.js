@@ -1,5 +1,8 @@
 import React from 'react';
 import request from 'superagent';
+import Alert from 'react-s-alert';
+import 'react-s-alert/dist/s-alert-default.css';
+import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 import { setProblemMetaData, fetchProblem } from '../../ContestActions';
 import spdf from 'simple-react-pdf';
 import ProblemFields from './ProblemFields';
@@ -40,7 +43,12 @@ export default class ProblemEditor extends React.Component {
             name: problemName,
             input,
             output,
-        }).then((res) => console.log(res));
+        }).then((res) => {
+            Alert.success('Problem updated', {
+                position: 'bottom-right',
+                effect: 'slide',
+            });
+        });
         if (this.file) {
             const req = request.post(`/api/contests/${this.contestId}/problem/${this.problemNum}/edit`);
             req.set('Content-Type', 'application/pdf');
@@ -48,6 +56,10 @@ export default class ProblemEditor extends React.Component {
             req.attach('file', this.file);
             req.end();
             this.file = null;
+            Alert.success('Problem PDF updated', {
+                position: 'bottom-right',
+                effect: 'slide',
+            });
         }
     }
 
@@ -84,6 +96,7 @@ export default class ProblemEditor extends React.Component {
             (<spdf.SimplePDF file={this.state.pdfUrl} />) : null;
         return (
             <div id='edit'>
+                <Alert stack={{ limit: 3 }} timeout={2500} />
                 <div>
                     {pdf}
                 </div>
