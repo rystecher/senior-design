@@ -3,23 +3,6 @@ import Contest from './models/contest';
 
 const team_problems = new Array(5).fill({ solved: false });
 
-const dummyTeams = [{
-    name: 'Team',
-    _id: '58a2140af3c57bd14d9f0300',
-    score: 15,
-    problem_attempts: team_problems,
-}, {
-    name: 'Another team',
-    _id: '58a2140af3c57bd14d9f0301',
-    score: 20,
-    problem_attempts: team_problems,
-}, {
-  name: 'Losing team',
-  _id: '58a2140af3c57bd14d9f0302',
-  score: 12,
-  problem_attempts: team_problems,
-}];
-
 const problems_team = [
   {
     attempts: ["attempt 0"],
@@ -31,7 +14,7 @@ const problems_team = [
   },
 ];
 
-const probelsm_anotherteam = [
+const problems_anotherteam = [
   {
     attempts: ["attempt 1"],
     solved: true
@@ -82,15 +65,13 @@ const dummyTeams = [{
     name:"Another team",
     _id:"58a2140af3c57bd14d9f0302",
     score:20,
-    problem_attempts: probelsm_anotherteam,
+    problem_attempts: problems_anotherteam,
 }, {
     name:"Losing team",
     _id:"58a2140af3c57bd14d9f0303",
     score:12,
     problem_attempts: problems_losing,
 }];
-
-
 
 const dummyProblems = [{
     name: "Hat Problem",
