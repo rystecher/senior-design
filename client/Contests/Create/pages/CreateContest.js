@@ -1,4 +1,7 @@
 import React from 'react';
+import Alert from 'react-s-alert';
+import 'react-s-alert/dist/s-alert-default.css';
+import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 import { createContest } from '../../ContestActions';
 import { withRouter } from 'react-router';
 import './create_contest.css';
@@ -16,13 +19,20 @@ class CreateContest extends React.Component {
     submit() {
         const { username } = this.props.auth.user;
         const { name, about, rules } = this.state;
-        createContest({
-            name, about, rules, teams: [], admin: username,
-        }).then((res) => {
-            if (res.contest.cuid) {
-                this.props.router.push(`/contest/${res.contest.cuid}/problems/add`);
-            }
-        });
+        if (name.length === 0) {
+            Alert.warning('Cannot create contest without a name', {
+                position: 'bottom-right',
+                effect: 'slide',
+            });
+        } else {
+            createContest({
+                name, about, rules, teams: [], admin: username,
+            }).then((res) => {
+                if (res.contest.cuid) {
+                    this.props.router.push(`/contest/${res.contest.cuid}/problems/add`);
+                }
+            });
+        }
     }
 
     updateField(event) {
@@ -33,6 +43,18 @@ class CreateContest extends React.Component {
     render() {
         return (
             <div>
+                <Alert stack={{ limit: 3 }} timeout={2500} />
+                <nav className='navbar navbar-inverse contest-navigator'>
+                    <div className='navbar-toggleable-md'>
+                        <ul className='nav navbar-nav navbar-toggler-right'>
+                            <li className='nav-item'>
+                                <a to='/contests' className='nav-link'>
+                                    <span className='glyphicon glyphicon-user'></span>{this.props.auth.user.username}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
                 <div id='header-banner'>
                     <input
                         placeholder='Contest Name'
@@ -43,20 +65,22 @@ class CreateContest extends React.Component {
                 </div>
                 <div className='contest-home'>
                     <h2>About</h2>
-                    <textarea name='about'
+                    <textarea
+                        name='about'
                         value={this.state.about}
                         onChange={this.updateField}
                     >
                     </textarea>
                     <h2>Rules</h2>
-                    <textarea name='rules'
+                    <textarea
+                        name='rules'
                         value={this.state.rules}
                         onChange={this.updateField}
                     >
                     </textarea>
                     <div>
                         <button
-                            id='submit'
+                            className='btn create'
                             onClick={this.submit}
                         >
                             Create Contest
@@ -70,6 +94,9 @@ class CreateContest extends React.Component {
 
 CreateContest.propTypes = {
     auth: React.PropTypes.object.isRequired,
+    router: React.PropTypes.shape({
+        push: React.PropTypes.func.isRequired,
+    }).isRequired,
 };
 
 function mapStateToProps(state) {

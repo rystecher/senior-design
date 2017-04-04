@@ -9,6 +9,10 @@
     margin-bottom: 16px;
 }
 
+.contest-home h2 {
+    text-align: center;
+}
+
 .contest-home > div {
     text-align: left;
     font-size: 1em;
@@ -19,7 +23,7 @@
     white-space: normal;
 }
 
-.contest-container .btn, .btn.confirm {
+.contest-container .btn, .btn.confirm, .btn.create {
     color: #448AFF;
     background-image: none;
     background-color: transparent;
@@ -47,7 +51,8 @@
 
 .contest-container .btn:hover,
 .contest-container .btn.active,
-.btn.confirm:hover {
+.btn.confirm:hover,
+.btn.create:hover {
     color: #fff;
     background-color: #448AFF;
     border-color: #448AFF;
@@ -59,7 +64,8 @@
     border-color: #9E9E9E;
 }
 
-.contest-container .btn:hover:focus {
+.contest-container .btn:hover:focus,
+.btn.create:hover:focus {
     background: #2962FF;
     border-color: #2962FF;
 }
@@ -67,9 +73,8 @@
 .contest-container .btn:focus,
 .contest-container .btn:active,
 .contest-container .btn:hover,
-.btn.cancel:focus,
-.btn.cancel:active,
-.btn.cancel:hover {
+.btn.cancel:focus, .btn.cancel:active, .btn.cancel:hover,
+.btn.create:focus, .btn.create:active, .btn.create:hover {
     outline: none;
     box-shadow: none;
 }

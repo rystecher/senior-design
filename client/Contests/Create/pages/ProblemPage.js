@@ -60,16 +60,14 @@ class ProblemPage extends React.Component {
                 } else {
                     this.props.router.push(`/contest/${this.contestId}/problems/add`);
                 }
-                this.showAlert('Problem deleted', 'success');
             }
         });
     }
 
-    showAlert(text, type) {
-        return null;
-    }
-
     render() {
+        if (this.props.userRole !== 'admin') {
+            return this.props.getForbiddenComponent();
+        }
         const problemNum = this.props.params.problemNum;
         const ProblemDisplay = problemNum > 0 ?
             <ProblemEditor
