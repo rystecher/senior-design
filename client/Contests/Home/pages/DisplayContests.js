@@ -71,8 +71,8 @@ class DisplayContests extends Component {
                     });
                 });
             };
-            if (this.state.createdContestsID) {
-                addContestRows(this.state.createdContestsID, 'Creator');
+            if (this.state.createdContests) {
+                addContestRows(this.state.createdContests, 'Creator');
             }
             if (this.state.joinedContests) {
                 addContestRows(this.state.joinedContests, 'Participant');
