@@ -74,7 +74,7 @@ class SubmissionProblemPage extends React.Component {
         }
         else if (this.state.value == 'None')
             alert('Please Select an Option');
-    else {
+        else {
             const req = {
                 correct: this.state.submission.correct,
                 feedback: this.state.value,
