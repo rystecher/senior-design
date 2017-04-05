@@ -26,7 +26,7 @@ const contestProblem = new Schema({
     name: { type: 'String' },
     fileName: { type: 'String', required: true },
     solved: { type: 'Boolean', default: false, required: true },
-    solvedBy: { type: 'String'},
+    solvedBy: { type: 'String' },
 });
 // fileName used for pdf, input file, and output file
 // pdf/fileName.pdf, input/fileName.txt, and output/fileName.txt

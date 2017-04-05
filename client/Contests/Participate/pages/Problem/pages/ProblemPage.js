@@ -5,7 +5,6 @@ import ProblemNav from '../components/ProblemView/ProblemNavigator';
 import ProblemViewer from '../components/ProblemView/ProblemViewer';
 import TextEditor from '../components/TextEditor';
 import MessageComponent from '../components/MessageComponent.js';
-import ChatSideBar from '../components/ChatSideBar.js';
 import './ProblemPage.css';
 
 /*
@@ -37,17 +36,17 @@ class ProblemPage extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className='participant-problem-container'>
               <ProblemNav
-                problemNum={this.state.problemNum}
-                teamId={this.teamId}
-                contestId={this.contestId}
-                changeProblemNumber={this.changeProblemNumber}
-                numberOfProblems={this.state.numberOfProblems}
+                  problemNum={this.state.problemNum}
+                  teamId={this.teamId}
+                  contestId={this.contestId}
+                  changeProblemNumber={this.changeProblemNumber}
+                  numberOfProblems={this.state.numberOfProblems}
               />
               <div className='row'>
                 <div className='col-md-6'>
-                  <div className="left-col">
+                  <div className='left-col'>
                     <ProblemViewer
                         contestId={this.contestId}
                         problemNum={this.state.problemNum}
@@ -67,9 +66,6 @@ class ProblemPage extends React.Component {
 
               <MessageComponent
                   team_id={this.teamId}
-                  contest_id={this.contestId}
-              />
-              <ChatSideBar
                   contest_id={this.contestId}
               />
             </div>

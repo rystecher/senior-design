@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import ContestNavigator from './ContestNavigator';
 import { getUserRole } from './ContestActions';
+import './contest.css';
 
 class ContestWrapper extends React.Component {
 
@@ -69,7 +70,9 @@ class ContestWrapper extends React.Component {
                     username={username}
                     userRole={this.state.userRole}
                 />
-                {childrenWithProps}
+                <div className='contest-child-container'>
+                    {childrenWithProps}
+                </div>
             </div>
         );
     }
