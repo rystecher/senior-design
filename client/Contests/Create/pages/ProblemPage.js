@@ -60,16 +60,14 @@ class ProblemPage extends React.Component {
                 } else {
                     this.props.router.push(`/contest/${this.contestId}/problems/add`);
                 }
-                this.showAlert('Problem deleted', 'success');
             }
         });
     }
 
-    showAlert(text, type) {
-        return null;
-    }
-
     render() {
+        if (this.props.userRole !== 'admin') {
+            return this.props.getForbiddenComponent();
+        }
         const problemNum = this.props.params.problemNum;
         const ProblemDisplay = problemNum > 0 ?
             <ProblemEditor
@@ -96,6 +94,7 @@ class ProblemPage extends React.Component {
 }
 
 ProblemPage.propTypes = {
+    getForbiddenComponent: React.PropTypes.func.isRequired,
     params: React.PropTypes.shape({
         contestId: React.PropTypes.string.isRequired,
         problemNum: React.PropTypes.string,
@@ -103,6 +102,7 @@ ProblemPage.propTypes = {
     router: React.PropTypes.shape({
         push: React.PropTypes.func.isRequired,
     }).isRequired,
+    userRole: React.PropTypes.oneOf(['admin', 'none', 'participant']).isRequired,
 };
 
 export default withRouter(ProblemPage);

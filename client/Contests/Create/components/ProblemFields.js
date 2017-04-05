@@ -1,5 +1,8 @@
 import React from 'react';
 import Dropzone from 'react-dropzone';
+import Alert from 'react-s-alert';
+import 'react-s-alert/dist/s-alert-default.css';
+import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 import ConfirmationDialog from '../../ContestHome/components/ConfirmationDialog';
 import { getProblemMetaData } from '../../ContestActions';
 import './problem_fields.css';
@@ -80,8 +83,21 @@ export default class ProblemFields extends React.Component {
 
     onSave() {
         const { input, output, problemName } = this.state;
-        if (input.length === 0 || output.length === 0 || problemName.length === 0) {
-
+        if (problemName.length === 0) {
+            Alert.warning('Cannot add problem without a name', {
+                position: 'bottom-right',
+                effect: 'slide',
+            });
+        } else if (input.length === 0 || output.length === 0) {
+            Alert.warning('Please enter input or output', {
+                position: 'bottom-right',
+                effect: 'slide',
+            });
+        } else if (!this.file && !this.problemNum) {
+            Alert.warning('Please upload a pdf file for the problem', {
+                position: 'bottom-right',
+                effect: 'slide',
+            });
         } else {
             this.props.save(input, output, problemName);
         }
@@ -112,6 +128,7 @@ export default class ProblemFields extends React.Component {
             this.state.input.substring(0, 500) + '...';
         return (
             <div className='problem-fields'>
+                <Alert stack={{ limit: 3 }} timeout={2500} />
                 <input
                     placeholder='Problem Name'
                     name='problemName'

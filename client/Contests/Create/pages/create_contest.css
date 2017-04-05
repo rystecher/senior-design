@@ -16,27 +16,10 @@
     font-size: 1em;
 }
 
-#submit {
-    display: block;
-    margin: 0 auto;
-    color: #9E9E9E;
-    background-image: none;
-    background-color: transparent;
-    border-color:  #9E9E9E;
-    border-radius: 40px;
-    width: 150px;
-    padding: 12px 8px;
+.btn.create {
+    width: 100%;
 }
 
-#submit:hover {
-    color: #fff;
-    background-color: #9E9E9E;
-    border-color: #9E9E9E;
-}
-
-#submit:focus, #submit:active, #submit:hover, #submit:active:focus {
-    outline: none;
-}
 
 #header-banner {
     background: #03A9F4;

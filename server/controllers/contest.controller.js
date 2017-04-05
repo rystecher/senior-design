@@ -323,6 +323,29 @@ export function getSolvedArrays(req, res) {
     });
 }
 
+
+export function getSolvedBy(req, res) {
+    if (!req.params.contest_id) {
+        res.status(403).end();
+    }
+    Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+        if (err) {
+            res.status(500).send(err);
+        } else if (!contest) {
+            res.status(400).send({ err: 'Contest does not exist' });
+        } else {
+            const solvedBy = [];
+            contest.problems.forEach((problem) => {
+                solvedBy.push({
+                    name: problem.name,
+                    solvedBy: problem.solvedBy,
+                });
+            });
+            res.json({ solvedBy });
+        }
+    });
+}
+
 /**
  * Sends the problem file requested
  * @param req

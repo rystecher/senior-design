@@ -29,7 +29,6 @@ export class App extends Component {
                         },
                         ]}
                     />
-                    <Header />
                     <FlashMessagesList />
                     <div className={styles.container}>
                         {this.props.children}

@@ -1,4 +1,7 @@
 import React from 'react';
+import Alert from 'react-s-alert';
+import 'react-s-alert/dist/s-alert-default.css';
+import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 import ConfirmationDialog from '../components/ConfirmationDialog';
 import { getContestInfo, joinContest, openContest, closeContest } from '../../ContestActions';
 import './home.css';
@@ -88,13 +91,12 @@ export default class ContestHome extends React.Component {
             if (res.success) {
                 this.setState({ open: true });
             } else {
-                this.showAlert('Cannot open contest without any problems', 'error');
+                Alert.error('Cannot open contest without any problems', {
+                    position: 'bottom-right',
+                    effect: 'slide',
+                });
             }
         });
-    }
-
-    showAlert(text, type) {
-        return null;
     }
 
     render() {
@@ -111,6 +113,7 @@ export default class ContestHome extends React.Component {
         }
         return (
             <div>
+                <Alert stack={{ limit: 3 }} timeout={2500} />
                 <div id='header-banner'>
                     <h1>{this.state.name}</h1>
                     {this.props.userRole !== 'admin' ?
@@ -148,10 +151,18 @@ export default class ContestHome extends React.Component {
                             Join Contest
                         </button> : null
                     }
-                    <h2>About</h2>
-                    <div>{this.state.about}</div>
-                    <h2>Rules</h2>
-                    <div>{this.state.rules}</div>
+                    {this.state.about && this.state.about.length > 0 ?
+                        <div>
+                            <h2>About</h2>
+                            <div>{this.state.about}</div>
+                        </div> : null
+                    }
+                    {this.state.rules && this.state.rules.length > 0 ?
+                        <div>
+                            <h2>Rules</h2>
+                            <div>{this.state.rules}</div>
+                        </div> : null
+                    }
                 </div>
             </div>
         );

@@ -22,6 +22,19 @@ class DisplayContests extends Component {
         super(props);
         this.state = {};
         this.goToContestHomePage = this.goToContestHomePage.bind(this);
+        this.columns = [{
+            header: 'Contest name',
+            accessor: 'contestName',
+        }, {
+            header: 'Admin',
+            accessor: 'contestAdmin',
+        }, {
+            header: 'Status',
+            accessor: 'contestStart',
+        }, {
+            header: 'Role',
+            accessor: 'userStatusWithContest',
+        }];
     }
 
     componentDidMount() {
@@ -42,19 +55,6 @@ class DisplayContests extends Component {
     }
 
     render() {
-        const columns = [{
-            header: 'Contest name',
-            accessor: 'contestName',
-        }, {
-            header: 'Admin',
-            accessor: 'contestAdmin',
-        }, {
-            header: 'Status',
-            accessor: 'contestStart',
-        }, {
-            header: 'Role',
-            accessor: 'userStatusWithContest',
-        }];
         const data = [];
         let loading = false;
         if (!this.state.createdContests || !this.state.joinedContests || !this.state.joinableContests) {
@@ -96,7 +96,7 @@ class DisplayContests extends Component {
                 </nav>
                 <ReactTable
                     data={data}
-                    columns={columns}
+                    columns={this.columns}
                     loading={loading}
                     showPageSizeOptions={false}
                     defaultPageSize={10}

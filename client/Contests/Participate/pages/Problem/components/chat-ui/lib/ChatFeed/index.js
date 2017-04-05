@@ -111,11 +111,6 @@ const styles = {
     flex: 1,
     overflow: 'scroll',
     'overflowX': 'hidden',
-    height: 200,
-    width: 500,
-    margin: 10,
-    padding: 5,
-    border: '1px solid #c3c3c3'
   },
   chatbubbleWrapper: {
     marginTop: 10,

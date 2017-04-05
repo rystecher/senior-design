@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import ContestNavigator from './ContestNavigator';
 import { getUserRole } from './ContestActions';
@@ -36,7 +37,15 @@ class ContestWrapper extends React.Component {
     }
 
     getForbiddenComponent() {
-        return null;
+        return (
+            <div>
+                <h4 className='hidden-text'>
+                    This is not the page you are looking for.<br />
+                    Move along. Move along...<br /><br />
+                    <Link to={'/profile'}>Return to Home Page</Link>
+                </h4>
+            </div>
+        );
     }
 
     render() {

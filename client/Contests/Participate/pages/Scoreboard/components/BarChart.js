@@ -6,7 +6,7 @@ export default class BarChart extends React.Component {
     constructor(props) {
         super(props);
         const colors = new Array(this.props.scores.length).fill('rgba(178,225,102,0.5)');
-        const teamIdx = this.props.names.findIndex((name) => name === 'Team');
+        const teamIdx = this.props.names.findIndex((name) => name === props.username);
         if (teamIdx !== -1) {
             colors[teamIdx] = 'rgba(54, 162, 235, 0.2)';
         }
@@ -30,7 +30,7 @@ export default class BarChart extends React.Component {
             tooltipTemplate: (v) => {
                 const teamIdx = that.props.names.findIndex((name) => name === v.label);
                 const time = that.props.scores[teamIdx];
-                return `Time score: ${time}`;
+                return `Time: ${time} minutes`;
             },
         };
         return (
