@@ -72,7 +72,15 @@ export default class Scoreboard extends React.Component {
                   scores={scores}
                   numSolved={numSolved}
               />
-              <ReactTable data={data} columns={columns}/>
+              <ReactTable
+                data={data}
+                columns={columns}
+                loading={loading}
+                showPageSizeOptions={false}
+                defaultPageSize={10}
+                showFilters
+                className='-highlight'
+              />
             </div>: null;
         return (
             <div className='contest-scoreboard'>
