@@ -1,3 +1,11 @@
 .left-col {
   border-right: 1px solid #c3c3c3;
 }
+
+.right-col {
+  border-left: 1px solid #c3c3c3;
+}
+
+.container {
+  margin-top: 10px;
+}

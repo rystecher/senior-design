@@ -37,7 +37,7 @@ class ProblemPage extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="container">
               <ProblemNav
                 problemNum={this.state.problemNum}
                 teamId={this.teamId}
@@ -46,14 +46,12 @@ class ProblemPage extends React.Component {
                 numberOfProblems={this.state.numberOfProblems}
               />
               <div className='row'>
-                <div className='col-md-6'>
-                  <div className="left-col">
-                    <ProblemViewer
-                        contestId={this.contestId}
-                        problemNum={this.state.problemNum}
-                        numberOfProblems={this.state.numberOfProblems}
-                    />
-                  </div>
+                <div className='col-md-6 left-col'>
+                  <ProblemViewer
+                      contestId={this.contestId}
+                      problemNum={this.state.problemNum}
+                      numberOfProblems={this.state.numberOfProblems}
+                  />
                 </div>
 
                 <div className='col-md-6'>
