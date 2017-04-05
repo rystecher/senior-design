@@ -126,7 +126,14 @@ export default (
           });
         }}
       />
-
+      <Route
+        path='submissions(/:teamId/:submissionId)'
+        getComponent={(nextState, cb) => {
+          require.ensure([], require => {
+            cb(null, requireAuth(require('./Contests/Participate/pages/Submission/pages/ParticipantPage').default));
+          });
+        }}
+      />
     </Route>
     <Route
         path='/my'

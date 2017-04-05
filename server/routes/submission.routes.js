@@ -14,4 +14,10 @@ router.route('/submissions/feedback/:submissionId').post(SubmissionController.se
 // Posts feedback for a submission
 router.route('/submissions/:submissionId').delete(SubmissionController.deleteSubmission);
 
+// Get all submissions for a team in a contest
+router.route('/submissions/:contestId/:teamId/all').get(SubmissionController.getSubmissionsForTeam);
+
+// Get a single submission's code for a team in a contest
+router.route('/submissions/:contestId/:teamId/:submissionId').get(SubmissionController.getCodeForSubmission);
+
 export default router;

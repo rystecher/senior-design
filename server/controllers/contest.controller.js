@@ -249,6 +249,7 @@ export function addProblemAttempt(req, res) {
                                     correct: problem.solved,
                                     fileName,
                                     feedBack,
+                                    code: code,
                                 });
                                 contest.save((err) => {
                                     if (err) {
