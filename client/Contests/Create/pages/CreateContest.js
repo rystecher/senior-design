@@ -49,7 +49,7 @@ class CreateContest extends React.Component {
                         <ul className='nav navbar-nav navbar-toggler-right'>
                             <li className='nav-item'>
                                 <a to='/contests' className='nav-link'>
-                                    <span className='glyphicon glyphicon-user'></span>{this.props.auth.user.username}
+                                    <span className='glyphicon glyphicon-user'/>{this.props.auth.user.username}
                                 </a>
                             </li>
                         </ul>

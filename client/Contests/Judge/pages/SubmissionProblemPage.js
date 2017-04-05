@@ -65,14 +65,14 @@ class SubmissionProblemPage extends React.Component {
         this.state.submission.feedback = this.state.value;
 
     // set correct field:
-        this.state.submission.correct = this.state.value == 'Correct';
+        this.state.submission.correct = this.state.value === 'Correct';
 
-        if (this.state.value == 'Delete Submission') {
+        if (this.state.value === 'Delete Submission') {
             deleteSubmission(this.state.submissionId);
       // go back to the submissions table
             this.props.router.push(`/contest/${this.state.contestId}/submissions`);
         }
-        else if (this.state.value == 'None')
+        else if (this.state.value === 'None')
             alert('Please Select an Option');
     else {
             const req = {
@@ -91,8 +91,8 @@ class SubmissionProblemPage extends React.Component {
    * @returns {XML}
    */
   render() {
-    const teamName = (this.state.teamName != null) ? this.state.teamName : "Loading";
-    const problemName = (this.state.problemName != null) ? this.state.problemName : "Loading";
+    const teamName = (this.state.teamName !== null) ? this.state.teamName : "Loading";
+    const problemName = (this.state.problemName !== null) ? this.state.problemName : "Loading";
 
     const output = this.state.expectedOutput;
     const diff = output ? <Diff inputA={this.state.expectedOutput}
@@ -120,7 +120,7 @@ class SubmissionProblemPage extends React.Component {
       <div>
         <h2>{teamName}: {problemName}</h2>
 
-        <br></br>
+        <br/>
 
         <form>
           <label>
@@ -136,7 +136,7 @@ class SubmissionProblemPage extends React.Component {
           </label>
           <button onClick={this.handleSubmit} >Send Feedback</button>
         </form>
-        <br></br>
+        <br/>
 
         <ReactTable
           styles={styles}
