@@ -228,7 +228,7 @@ export function addProblemAttempt(req, res) {
                                         team.numSolved++;
                                         if (!contest.problems[number].solved) {
                                             contest.problems[number].solved = true;
-                                            contest.problems[number].solvedBy = req.params.team_id;
+                                            contest.problems[number].solvedBy = team.name;
                                         }
                                     }
                                 }
@@ -302,20 +302,8 @@ export function getSolvedArrays(req, res) {
     });
 }
 
-/**
- * Sends the solved arrays for the contest
- * specified by id and team specified by id
- * both parameters are passed in req.params
- *
- * Response format:
- * solved:
- *      solvedInContest: [Boolean]
- *      solvedByTeam: [Boolean]
- * @param req
- * @param res
- * @returns void
- */
-export function getProblemSolvedByFirstTeam(req, res) {
+
+export function getSolvedBy(req, res) {
     if (!req.params.contest_id) {
         res.status(403).end();
     }
@@ -325,17 +313,14 @@ export function getProblemSolvedByFirstTeam(req, res) {
         } else if (!contest) {
             res.status(400).send({ err: 'Contest does not exist' });
         } else {
-            const problems = contest.problems;
             const solvedBy = [];
-            if (problems) {
-              for (let i = 0; i < problems.length; i++) {
-                solvedBy.push(problems[i].solvedBy);
-              }
-            }
-            const solvedInContest = contest.problems.map((problem) => problem.solved);
-            const team = contest.teams.id(req.params.team_id);
-            const solvedByTeam = team.problem_attempts.map((problem) => problem.solved);
-            res.json({ solved: { solvedInContest, solvedByTeam } });
+            contest.problems.forEach((problem) => {
+                solvedBy.push({
+                    name: problem.name,
+                    solvedBy: problem.solvedBy,
+                });
+            });
+            res.json({ solvedBy: solvedBy });
         }
     });
 }

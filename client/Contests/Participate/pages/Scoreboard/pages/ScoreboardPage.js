@@ -1,6 +1,6 @@
 import React from 'react';
 import BarChart from '../components/BarChart.js';
-import { getScoreboardData, hideScoreboard, showScoreboard } from '../../../../ContestActions.js';
+import { getScoreboardData, hideScoreboard, showScoreboard, getSolvedBy} from '../../../../ContestActions.js';
 import './scoreboard.css';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
@@ -24,6 +24,11 @@ export default class Scoreboard extends React.Component {
                 scoreboardVisible: res.scoreboardVisible,
             });
         });
+        getSolvedBy(this.props.params.contestId).then(res => {
+            this.setState({
+                solvedBy: res.solvedBy,
+            });
+        });
     }
 
     hideScoreboard() {
@@ -45,6 +50,17 @@ export default class Scoreboard extends React.Component {
           accessor: 'firstTeamToSolve',
         }];
         const data = [];
+        let loading = false;
+        if (!this.state.solvedBy) {
+            loading = true;
+        } else {
+            this.state.solvedBy.forEach((problem) => {
+                data.push({
+                    problemName: problem.name,
+                    firstTeamToSolve: problem.solvedBy,
+                });
+            });
+        }
         const { scores, labels, scoreboardVisible, numSolved } = this.state;
         const hideClass = scoreboardVisible ? '' : 'active';
         const showClass = scoreboardVisible ? 'active' : '';
@@ -60,15 +76,6 @@ export default class Scoreboard extends React.Component {
             </div>: null;
         return (
             <div className='contest-scoreboard'>
-                {this.props.userRole === 'admin' || scoreboardVisible ?
-                    barchart :
-                    <div>
-                        <h4 className='hidden-text'>
-                            The contest administrator is hiding the scoreboard!
-                            Things must be getting interesting...
-                        </h4>
-                    </div>
-                }
                 {this.props.userRole === 'admin' ?
                     <div className='full-width'>
                         <div className='btn-wrapper'>
@@ -85,6 +92,16 @@ export default class Scoreboard extends React.Component {
                         </div>
                     </div> : null
                 }
+                {this.props.userRole === 'admin' || scoreboardVisible ?
+                    barchart :
+                    <div>
+                        <h4 className='hidden-text'>
+                            The contest administrator is hiding the scoreboard!
+                            Things must be getting interesting...
+                        </h4>
+                    </div>
+                }
+
             </div>
         );
     }
