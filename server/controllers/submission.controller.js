@@ -46,7 +46,6 @@ export function getSubmissionsForTeam(req, res) {
             } else if (!submissions) {
                 res.json({ submissions: [] });
             } else {
-                console.log(submissions);
                 res.json({ submissions: submissions });
             }
         });

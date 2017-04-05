@@ -30,6 +30,8 @@ if (process.env.NODE_ENV !== 'production') {
     require('./Contests/Home/pages/DisplayContests');
     require('./Contests/Judge/pages/AdminPage');
     require('./Contests/Judge/pages/SubmissionProblemPage');
+    require('./Contests/Participate/pages/Submission/pages/ParticipantSubmissionsPage');
+    require('./Contests/Participate/pages/Submission/pages/ParticipantSubmissionProblemPage');
 }
 
 // react-router setup with code-splitting
@@ -116,7 +118,7 @@ export default (
             }}
         />
         <Route
-            path='submissions/:submissionId'
+            path='submissions/admin/:submissionId'
             getComponent={(nextState, cb) => {
                 require.ensure([], require => {
                     cb(null, requireAuth(require('./Contests/Judge/pages/SubmissionProblemPage').default));
@@ -124,10 +126,18 @@ export default (
             }}
         />
         <Route
-          path='submissions(/:teamId/:submissionId)'
+          path='submissions/:teamId'
           getComponent={(nextState, cb) => {
             require.ensure([], require => {
-              cb(null, requireAuth(require('./Contests/Participate/pages/Submission/pages/ParticipantPage').default));
+              cb(null, requireAuth(require('./Contests/Participate/pages/Submission/pages/ParticipantSubmissionsPage').default));
+            });
+          }}
+        />
+        <Route
+          path='submissions/:teamId/:submissionId'
+          getComponent={(nextState, cb) => {
+            require.ensure([], require => {
+              cb(null, requireAuth(require('./Contests/Participate/pages/Submission/pages/ParticipantSubmissionProblemPage').default));
             });
           }}
         />
