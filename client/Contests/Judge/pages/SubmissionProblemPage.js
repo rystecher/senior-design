@@ -5,6 +5,9 @@ import React from 'react';
 import Diff from 'react-diff';
 import {sendFeedback, getSubmission, deleteSubmission} from '../../ContestActions';
 import { withRouter } from 'react-router';
+import ReactTable from 'react-table';
+import './SubmissionsProblemPage.css';
+import styles from 'react-table/react-table.css';
 
 class SubmissionProblemPage extends React.Component {
 
@@ -37,6 +40,7 @@ class SubmissionProblemPage extends React.Component {
         contestId: submission.contestID,
         teamId: submission.teamID,
         teamName: submission.teamName,
+        problemName: submission.problemName,
         problemNumber: submission.problemNumber,
         expectedOutput: expected,
         actualOutput: actual
@@ -87,15 +91,35 @@ class SubmissionProblemPage extends React.Component {
    * @returns {XML}
    */
   render() {
+    const teamName = (this.state.teamName != null) ? this.state.teamName : "Loading";
+    const problemName = (this.state.problemName != null) ? this.state.problemName : "Loading";
+
     const output = this.state.expectedOutput;
     const diff = output ? <Diff inputA={this.state.expectedOutput}
                                 inputB={this.state.actualOutput}
                                 type="chars"
                                 ignoreWhitespace="true"/> : null;
+    const columns = [{
+      header: 'Expected Output',
+      accessor: 'expected'
+    }, {
+      header: 'Actual Output',
+      accessor: 'actual'
+    }, {
+      header: 'Diff',
+      accessor: 'diff'
+    }];
+
+    const data = [{
+      expected: this.state.expectedOutput,
+      actual: this.state.actualOutput,
+      diff: diff
+    }];
 
     return (
       <div>
-        <h2>Submissions View</h2>
+        <h2>{teamName}: {problemName}</h2>
+
         <br></br>
 
         <form>
@@ -110,29 +134,20 @@ class SubmissionProblemPage extends React.Component {
               <option value="Delete Submission">Delete Submission</option>
             </select>
           </label>
-          <button onClick={this.handleSubmit}>Send Feedback</button>
+          <button onClick={this.handleSubmit} >Send Feedback</button>
         </form>
         <br></br>
-        <table>
-          <tr>
-            <th>Expected Output</th>
-            <th>User Output</th>
-            <th>Diff</th>
-          </tr>
-          <tbody>
-          <tr>
-            <td>
-              {this.state.expectedOutput}
-            </td>
-            <td>
-              {this.state.actualOutput}
-            </td>
-            <td>
-              {diff}
-            </td>
-          </tr>
-          </tbody>
-        </table>
+
+        <ReactTable
+          styles={styles}
+          data={data}
+          columns={columns}
+          showPageSizeOptions={false}
+          defaultPageSize={1}
+          showPagination={false}
+          className='-highlight'
+        />
+
       </div>
     );
   }
