@@ -168,9 +168,9 @@ export default class ProblemFields extends React.Component {
 
 ProblemFields.propTypes = {
     contestId: React.PropTypes.string.isRequired,
-    problemNum: React.PropTypes.string.isRequired,
+    problemNum: React.PropTypes.string,
     save: React.PropTypes.func.isRequired,
-    deleteProblem: React.PropTypes.func.isRequired,
-    showDelete: React.PropTypes.bool.isRequired,
+    deleteProblem: React.PropTypes.func,
+    showDelete: React.PropTypes.bool,
     onDropFile: React.PropTypes.func.isRequired,
 };
