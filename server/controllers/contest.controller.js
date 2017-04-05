@@ -228,7 +228,7 @@ export function addProblemAttempt(req, res) {
                                         team.numSolved++;
                                         if (!contest.problems[number].solved) {
                                             contest.problems[number].solved = true;
-                                            contest.problems[number].solvedBy = req.params.team_id;
+                                            contest.problems[number].solvedBy = team.name;
                                         }
                                     }
                                 }
@@ -298,6 +298,29 @@ export function getSolvedArrays(req, res) {
             const team = contest.teams.id(req.params.team_id);
             const solvedByTeam = team.problem_attempts.map((problem) => problem.solved);
             res.json({ solvedInContest, solvedByTeam });
+        }
+    });
+}
+
+
+export function getSolvedBy(req, res) {
+    if (!req.params.contest_id) {
+        res.status(403).end();
+    }
+    Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+        if (err) {
+            res.status(500).send(err);
+        } else if (!contest) {
+            res.status(400).send({ err: 'Contest does not exist' });
+        } else {
+            const solvedBy = [];
+            contest.problems.forEach((problem) => {
+                solvedBy.push({
+                    name: problem.name,
+                    solvedBy: problem.solvedBy,
+                });
+            });
+            res.json({ solvedBy: solvedBy });
         }
     });
 }
