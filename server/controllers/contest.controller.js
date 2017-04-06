@@ -219,7 +219,7 @@ export function addProblemAttempt(req, res) {
                         } else {
                             const fileName = contest.problems[number].fileName + '.txt';
                             readTextFile('input/' + fileName).then((input) => {
-                                hackerrankCall(code, lang, input, (error, response) => {
+                                hackerrankCall(code, lang, [input], (error, response) => {
                                     const { stderr, stdout, compilemessage, message } = JSON.parse(response.body).result;
                                     const hadStdError = stderr !== null && !stderr.every((error) => error === false);
                                     problem.attempts.push(code);
