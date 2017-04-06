@@ -42,8 +42,7 @@
 }
 
 .contest-home .open, .contest-home .closed {
-    width: 48%;
-    margin-left: 1%;
+    width: 32%;
     margin-right: 1%;
 }
 
@@ -66,6 +65,12 @@
 .btn.create:hover:focus {
     background: #2962FF;
     border-color: #2962FF;
+}
+
+.contest-container .btn.disabled:hover:focus {
+    background-color: #fff;
+    border-color: #ccc;
+    color: #ccc;
 }
 
 .contest-container .btn:focus,

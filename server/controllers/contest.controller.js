@@ -615,6 +615,42 @@ export function getContestInfo(req, res) {
 }
 
 /**
+ * Update the info for the contest home page
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function updateContestInfo(req, res) {
+    if (!req.params.contestId || !req.body.info) {
+        res.status(403).end();
+    } else {
+        Contest.findOne({ cuid: req.params.contestId })
+        .select('about name rules')
+        .exec((err, contest) => {
+            if (err) {
+                res.status(500).send(err);
+            } else if (!contest) {
+                res.status(400).send({ err: 'Contest does not exist' });
+            } else if (typeof contest.start === 'number') {
+                res.status(400).send({ err: 'Contest already started' });
+            } else {
+                contest.about = req.body.info.about;
+                contest.name = req.body.info.name;
+                contest.rules = req.body.info.rules;
+                contest.save((err, saved) => {
+                    if (err) {
+                        res.status(500).send(err);
+                    } else {
+                        res.json({ success: true });
+                    }
+                });
+            }
+        });
+    }
+}
+
+
+/**
  * Get the number of problems in a specified contest
  * @param req
  * @param res

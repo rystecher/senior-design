@@ -22,6 +22,7 @@ if (process.env.NODE_ENV !== 'production') {
     require('./Contests/Create/pages/ProblemPage');
     require('./Contests/Home/pages/HomePage');
     require('./Contests/ContestHome/pages/HomePage');
+    require('./Contests/ContestHome/pages/EditContestPage');
     require('./Contests/Participate/pages/Problem/pages/ProblemPage');
     require('./Contests/Pages/MyContests/MyContests');
     require('./Contests/Participate/pages/Scoreboard/pages/ScoreboardPage');
@@ -74,6 +75,14 @@ export default (
             getComponent={(nextState, cb) => {
                 require.ensure([], require => {
                     cb(null, requireAuth(require('./Contests/ContestHome/pages/HomePage').default));
+                });
+            }}
+        />
+        <Route
+            path='edit'
+            getComponent={(nextState, cb) => {
+                require.ensure([], require => {
+                    cb(null, requireAuth(require('./Contests/ContestHome/pages/EditContestPage').default));
                 });
             }}
         />
