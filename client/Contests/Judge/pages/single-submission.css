@@ -1,0 +1,33 @@
+.ReactTable .rt-td {
+  white-space:pre-wrap
+}
+
+.single-submissions-container .ReactTable,
+.single-submissions-container .rt-table {
+    width: 1200px;
+    margin: 0 auto;
+    height: 500px;
+}
+
+.single-submissions-container h2 {
+    padding-top: 16px;
+    text-align: center;
+}
+
+.feedback-container, .feedback-container .input-group {
+    margin: 0 auto;
+}
+
+.feedback-container .input-group {
+    margin: 24px auto;
+    width: 350px;
+}
+
+.single-submissions-container .input-group .btn {
+    padding: .25em;
+    width: 80px;
+}
+
+.single-submissions-container .input-group select {
+    width: 270px;
+}
