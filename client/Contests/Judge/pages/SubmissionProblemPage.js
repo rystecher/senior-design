@@ -1,160 +1,123 @@
-/**
- * Created by courtneybolivar on 21/02/2017.
- */
 import React from 'react';
 import Diff from 'react-diff';
 import { sendFeedback, getSubmission, deleteSubmission } from '../../ContestActions';
 import { withRouter } from 'react-router';
 import ReactTable from 'react-table';
-import './SubmissionsProblemPage.css';
+import Alert from 'react-s-alert';
+import './single-submission.css';
 import styles from 'react-table/react-table.css';
 
-class SubmissionProblemPage extends React.Component {
+class SingleSubmissionPage extends React.Component {
 
-  /**
-   *
-   * @param props
-   */
     constructor(props) {
         super(props);
-        this.state = {
-            submissionId: props.params.submissionId,
-            value: 'None',
-        };
+        this.state = { value: 'None', loading: true };
+        this.columns = [{
+            header: 'Expected Output',
+            accessor: 'expected',
+        }, {
+            header: 'Actual Output',
+            accessor: 'actual',
+        }, {
+            header: 'Diff',
+            accessor: 'diff',
+        }];
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-  /**
-   * get submission data
-   */
-  componentDidMount(){
-    const subId = this.state.submissionId;
-    getSubmission(subId).then(res => {
-      const  submission = res.submission;
-      const actual = res.actualOutput;
-      const expected = res.expectedOutput;
-      this.setState({
-        submission: res.submission,
-        submissionId: subId,
-        contestId: submission.contestID,
-        teamId: submission.teamID,
-        teamName: submission.teamName,
-        problemName: submission.problemName,
-        problemNumber: submission.problemNumber,
-        expectedOutput: expected,
-        actualOutput: actual
-      });
-    });
-  }
+    componentDidMount() {
+        getSubmission(this.props.params.submissionId).then(res => {
+            if (res.submission) {
+                this.setState({
+                    submission: res.submission,
+                    contestId: res.submission.contestID,
+                    teamName: res.submission.teamName,
+                    problemName: res.submission.problemName,
+                    problemNumber: res.submission.problemNumber,
+                    expectedOutput: res.expectedOutput,
+                    actualOutput: res.actualOutput,
+                    loading: false,
+                });
+            }
+        });
+    }
 
-  /**
-   * update the feedback chosen
-   * @param event
-   */
     handleChange(event) {
         this.setState({ value: event.target.value });
     }
 
-  /**
-   * push response/feedback
-   * @param args
-   */
     handleSubmit(args) {
-    // set the feedback field
-        this.state.submission.feedback = this.state.value;
-
-    // set correct field:
-        this.state.submission.correct = this.state.value === 'Correct';
-
         if (this.state.value === 'Delete Submission') {
-            deleteSubmission(this.state.submissionId);
-      // go back to the submissions table
+            deleteSubmission(this.props.params.submissionId);
             this.props.router.push(`/contest/${this.state.contestId}/submissions`);
-        }
-        else if (this.state.value === 'None')
-            alert('Please Select an Option');
-    else {
-            const req = {
-                correct: this.state.submission.correct,
+        } else if (this.state.value === 'None') {
+            Alert.warning('Please select a feedback message', {
+                position: 'bottom-right',
+                effect: 'slide',
+            });
+        } else {
+            sendFeedback(this.props.params.submissionId, {
+                correct: this.state.value === 'Correct',
                 feedback: this.state.value,
-            };
-            sendFeedback(this.state.submissionId, req);
-      // go back to submissions table
-            this.props.router.push(`/contest/${this.state.contestId}/submissions`);
+            }).then(() => this.props.router.push(`/contest/${this.state.contestId}/submissions`));
         }
     }
 
+    render() {
+        const teamName = this.state.teamName || '';
+        const problemName = this.state.problemName || '';
+        const diff = this.state.expectedOutput ?
+            <Diff
+                inputA={this.state.expectedOutput}
+                inputB={this.state.actualOutput}
+                type='chars'
+                ignoreWhitespace='true'
+            /> : null;
+        const data = [{
+            expected: this.state.expectedOutput,
+            actual: this.state.actualOutput,
+            diff,
+        }];
 
-  /**
-   *
-   * @returns {XML}
-   */
-  render() {
-    const teamName = (this.state.teamName !== null) ? this.state.teamName : "Loading";
-    const problemName = (this.state.problemName !== null) ? this.state.problemName : "Loading";
-
-    const output = this.state.expectedOutput;
-    const diff = output ? <Diff inputA={this.state.expectedOutput}
-                                inputB={this.state.actualOutput}
-                                type="chars"
-                                ignoreWhitespace="true"/> : null;
-    const columns = [{
-      header: 'Expected Output',
-      accessor: 'expected'
-    }, {
-      header: 'Actual Output',
-      accessor: 'actual'
-    }, {
-      header: 'Diff',
-      accessor: 'diff'
-    }];
-
-    const data = [{
-      expected: this.state.expectedOutput,
-      actual: this.state.actualOutput,
-      diff: diff
-    }];
-
-    return (
-      <div>
-        <h2>{teamName}: {problemName}</h2>
-
-        <br/>
-
-        <form>
-          <label>
-            Select feedback for this submission:
-            <select value={this.state.value} onChange={this.handleChange} >
-              <option value='None'>Please Select</option>
-              <option value='Correct'>Correct</option>
-              <option value='Bad Math'>Bad Math</option>
-              <option value='Bad Format'>Bad Format</option>
-              <option value='Compiler Error'>Compiler Error</option>
-              <option value='Delete Submission'>Delete Submission</option>
-            </select>
-          </label>
-          <button onClick={this.handleSubmit} >Send Feedback</button>
-        </form>
-        <br/>
-
-        <ReactTable
-          styles={styles}
-          data={data}
-          columns={columns}
-          showPageSizeOptions={false}
-          defaultPageSize={1}
-          showPagination={false}
-          className='-highlight'
-        />
-
-      </div>
-    );
+        return (
+            <div className='single-submissions-container'>
+                <h2>{teamName}: {problemName}</h2>
+                <div className='feedback-container'>
+                    <div className='input-group'>
+                        <select value={this.state.value} onChange={this.handleChange} >
+                            <option value='None'>Please Select</option>
+                            <option value='Correct'>Correct</option>
+                            <option value='Bad Math'>Bad Math</option>
+                            <option value='Bad Format'>Bad Format</option>
+                            <option value='Compiler Error'>Compiler Error</option>
+                            <option value='Delete Submission'>Delete Submission</option>
+                        </select>
+                        <span className='input-group-btn'>
+                            <button
+                                onClick={this.handleSubmit}
+                                className='btn'
+                                type='button'
+                            >Send</button>
+                        </span>
+                    </div>
+                </div>
+                <ReactTable
+                    loading={this.state.loading}
+                    styles={styles}
+                    data={data}
+                    columns={this.columns}
+                    showPageSizeOptions={false}
+                    defaultPageSize={1}
+                    showPagination={false}
+                />
+            </div>
+        );
     }
 }
 
 
-SubmissionProblemPage.propTypes = {
+SingleSubmissionPage.propTypes = {
     params: React.PropTypes.shape({
         contestId: React.PropTypes.string.isRequired,
         submissionId: React.PropTypes.string.isRequired,
@@ -164,4 +127,4 @@ SubmissionProblemPage.propTypes = {
     }).isRequired,
 };
 
-export default withRouter(SubmissionProblemPage);
+export default withRouter(SingleSubmissionPage);
