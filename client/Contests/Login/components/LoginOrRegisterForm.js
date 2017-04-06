@@ -13,7 +13,7 @@ class LoginOrRegisterForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      identifier: '',
+      username: '',
       password: '',
       errors: {},
       isLoading: false,
@@ -25,6 +25,8 @@ class LoginOrRegisterForm extends React.Component {
     this.onSubmitLogin = this.onSubmitLogin.bind(this);
     this.onSubmitRegister = this.onSubmitRegister.bind(this);
     this.checkUserExists = this.checkUserExists.bind(this);
+    this.isValidRegister = this.isValidRegister.bind(this);
+    this.isValidLogin = this.isValidLogin.bind(this);
   }
 
   /**
@@ -51,14 +53,12 @@ class LoginOrRegisterForm extends React.Component {
    * @param e
    */
   checkUserExists(e) {
-    console.log("checking user exists");
     const field = e.target.name;
     const val = e.target.value;
     if (val !== '') {
       this.props.isUserExists(val).then(res => {
         if (res.data.user.length > 0) {
           this.setState({username_taken:true});
-          console.log("username taken!");
         }
       });
     }
@@ -77,14 +77,13 @@ class LoginOrRegisterForm extends React.Component {
       this.setState({ errors: {}, isLoading: true });
       console.log("valid register");
       this.props.userRegisterRequest(this.state).then(
-        // here is where you redirect
         () => {
           this.props.addFlashMessage({
             type: 'success',
             text: 'You signed up successfully. Welcome!',
           });
 
-          // now log the user in: (copied from onSubmitLogin)
+          // log user in
           if (this.isValidLogin()) {
             console.log("in is valid login");
             this.setState({ errors: {}, isLoading: true });
@@ -93,9 +92,6 @@ class LoginOrRegisterForm extends React.Component {
               (err) => this.setState({ errors: err.response.data.errors, isLoading: false })
             );
           }
-          // end of stuff copied
-
-          this.context.router.push('/login');
         },
         ({ response }) => this.setState({ errors: response.data, isLoading: false })
       );
@@ -128,10 +124,11 @@ class LoginOrRegisterForm extends React.Component {
   onSubmitLogin(e) {
     e.preventDefault();
     if (this.isValidLogin()) {
-      console.log("in is valid login");
       this.setState({ errors: {}, isLoading: true });
       this.props.login(this.state).then(
-        (res) => this.context.router.push(`/profile`),
+        (res) => {
+          this.context.router.push(`/profile`);
+        },
         (err) => this.setState({ errors: err.response.data.errors, isLoading: false })
       );
     }
@@ -147,12 +144,12 @@ class LoginOrRegisterForm extends React.Component {
       <form>
 
         <TextFieldGroup
-          error={errors.identifier}
+          error={errors.username}
           label='Username'
           onChange={this.onChange}
           checkUserExists={this.checkUserExists}
-          value={this.state.identifier}
-          field='identifier'
+          value={this.state.username}
+          field='username'
         />
 
         <TextFieldGroup

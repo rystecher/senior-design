@@ -1,14 +1,10 @@
 import React, { PropTypes, Component } from 'react';
-import { withRouter } from 'react-router';
-import LoginForm from '../../Login/components/LoginForm.js';
-import RegisterForm from '../../Login/components/RegisterForm.js';
 import LoginOrRegisterForm from '../../Login/components/LoginOrRegisterForm.js';
 import { connect } from 'react-redux';
 import { userRegisterRequest, isUserExists } from '../../Login/actions/registerActions';
 import { addFlashMessage } from '../../Login/actions/flashMessages';
+import './HomePage.css'
 import '../../contest-navigator.css';
-import { Link } from 'react-router';
-import styles from './HomePage.css';
 
 class HomePage extends React.Component {
 

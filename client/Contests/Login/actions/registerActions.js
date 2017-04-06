@@ -8,9 +8,9 @@ export function userRegisterRequest(userData) {
     };
 }
 
-export function isUserExists(identifier) {
+export function isUserExists(username) {
     return dispatch => {
-        return axios.get(`/api/users/${identifier}`);
+        return axios.get(`/api/users/${username}`);
     // return callApi(`users/${username}`);
     };
 }

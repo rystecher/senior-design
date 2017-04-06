@@ -4,8 +4,8 @@ import isEmpty from 'lodash/isEmpty';
 export default function validateRegisterInput(data) {
     let errors = {};
 
-    if (Validator.isEmpty(data.identifier)) {
-        errors.identifier = 'This field is required';
+    if (Validator.isEmpty(data.username)) {
+        errors.username = 'This field is required';
     }
     if (Validator.isEmpty(data.password)) {
         errors.password = 'This field is required';
