@@ -57,6 +57,12 @@ export default class ContestNavigator extends React.Component {
                             to={`/contest/${contestId}/scoreboard/${teamId}`}
                         >ScoreBoard</Link>
                     </li>
+                    <li className={page === 'submissions' ? 'nav-item active' : 'nav-item'}>
+                        <Link
+                            className='nav-link'
+                            to={`/contest/${contestId}/submissions/${teamId}`}
+                        >Submissions</Link>
+                    </li>
                 </ul>
             );
         }

@@ -31,7 +31,52 @@ export function getSubmissions(req, res) {
 }
 
 /**
- * Get all submissions for a contest
+ * Get all submissions for a team
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getSubmissionsForTeam(req, res) {
+    if (!req.params.contestId || !req.params.teamId) {
+        res.status(403).end();
+    } else {
+        Submission.find({ contestID: req.params.contestId , teamID: req.params.teamId}).exec((err, submissions) => {
+            if (err) {
+                res.status(500).send(err);
+            } else if (!submissions) {
+                res.json({ submissions: [] });
+            } else {
+                res.json({ submissions: submissions });
+            }
+        });
+    }
+}
+
+/**
+ * Get all submissions for a team
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getCodeForSubmission(req, res) {
+    if (!req.params.submissionId) {
+        res.status(403).end();
+    } else {
+        Submission.findOne({ cuid: req.params.submissionId }).exec((err, submission) => {
+            if (err) {
+                res.status(500).send(err);
+            } else if (!submission) {
+                res.status(400).send({ err: 'Submission does not exist' });
+            } else {
+                res.json({ code: submission.code });
+            }
+        });
+    }
+}
+
+
+/**
+ * Get a single submission for a contest
  * @param req
  * @param res
  * @returns void
@@ -181,5 +226,5 @@ export function createTestFeedbackMessage(message, compileMessage, stdout, time,
     } else {
         feedBack = stdout;
     }
-    return { from: 'Automated', message: 'Test result: ' + feedBack + `Ran in ${time} seconds` };
+    return { from: 'Automated', message: 'Test result: ' + feedBack + `\nRan in ${time} seconds` };
 }

@@ -1,6 +1,6 @@
-var fs = require('fs');
-var path = require('path');
-var ExternalsPlugin = require('webpack-externals-plugin');
+let fs = require('fs');
+const path = require('path');
+const ExternalsPlugin = require('webpack-externals-plugin');
 
 module.exports = {
 

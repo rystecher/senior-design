@@ -145,20 +145,28 @@ export function fetchSubmissions(contest_id) {
     });
 }
 
+export function fetchSubmissionsForTeam(contest_id, team_id) {
+    return callApi(`submissions/${contest_id}/${team_id}/all`);
+}
+
+export function getCodeForSubmission(contest_id, team_id, submission_id){
+  return callApi(`submissions/${contest_id}/${team_id}/${submission_id}`);
+}
+
 export function sendFeedback(submissionId, req){
-  return callApi(`/submissions/feedback/${submissionId}`, 'post', req).then(res => {
+  return callApi(`submissions/feedback/${submissionId}`, 'post', req).then(res => {
     console.log("Sending feedback.." + res);
   });
 }
 
 export function getSubmission(submissionId){
-  return callApi(`/submissions/${submissionId}`).then(res => {
+  return callApi(`submissions/${submissionId}`).then(res => {
     return res;
   });
 }
 
 export function deleteSubmission(submissionId){
-  return callApi(`/submissions/${submissionId}`, 'delete').then(res => {
+  return callApi(`submissions/${submissionId}`, 'delete').then(res => {
     console.log("deleting submission.." + res);
   });
 }
@@ -202,15 +210,15 @@ export function getNotMyContests(contests) {
 }
 
 export function testCode(contestId, teamId, code, lang, testcases) {
-    callApi(`contests/${contestId}/teams/${teamId}/submit/testCode`, 'post', {
+    return callApi(`contests/${contestId}/teams/${teamId}/submit/testCode`, 'post', {
         problem: { code, lang, testcases },
-    }).then(res => console.log('Testing code: ', res));
+    }).then(res => true);
 }
 
 export function submitCode(contestId, teamId, code, lang, number) {
-    callApi(`contests/${contestId}/teams/${teamId}/submit`, 'post', {
+    return callApi(`contests/${contestId}/teams/${teamId}/submit`, 'post', {
         problem: { code, lang, number },
-    }).then(res => console.log('submit code: ', res));
+    }).then(res => true);
 }
 
 export function fetchNotMyContests(cuids) {

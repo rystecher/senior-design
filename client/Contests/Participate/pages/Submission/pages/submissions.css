@@ -1,0 +1,13 @@
+.submissions-container .ReactTable, .rt-table {
+    width: 1000px;
+    margin: 0 auto;
+    height: 500px;
+}
+
+.submissions-container .ReactTable {
+    margin-top: 96px;
+}
+
+.submissions-container {
+    margin-right: 200px;
+}

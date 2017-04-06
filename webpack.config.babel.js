@@ -1,9 +1,9 @@
-var cssnext = require('postcss-cssnext');
-var postcssFocus = require('postcss-focus');
-var postcssReporter = require('postcss-reporter');
+const cssnext = require('postcss-cssnext');
+const postcssFocus = require('postcss-focus');
+const postcssReporter = require('postcss-reporter');
 const path = require('path');
 
-var cssModulesIdentName = '[name]__[local]__[hash:base64:5]';
+let cssModulesIdentName = '[name]__[local]__[hash:base64:5]';
 if (process.env.NODE_ENV === 'production') {
   cssModulesIdentName = '[hash:base64]';
 }

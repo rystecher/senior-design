@@ -21,6 +21,5 @@
 .hidden-text {
     width: 50%;
     text-align: center;
-    margin: 0 auto;
-    margin-top: 40vh;
+  margin: 40vh auto 0;
 }

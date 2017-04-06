@@ -88,7 +88,7 @@ class DisplayContests extends Component {
                         <ul className='nav navbar-nav navbar-toggler-right'>
                             <li className='nav-item'>
                                 <a to='/contests' className='nav-link'>
-                                    <span className='glyphicon glyphicon-user'></span>{this.props.auth.user.username}
+                                    <span className='glyphicon glyphicon-user'/>{this.props.auth.user.username}
                                 </a>
                             </li>
                         </ul>
@@ -105,7 +105,9 @@ class DisplayContests extends Component {
                     getTdProps={(state, rowInfo, column, instance) => {
                         return {
                             onClick: e => {
-                                this.goToContestHomePage(rowInfo.row.contestId);
+                                if (rowInfo) {
+                                    this.goToContestHomePage(rowInfo.row.contestId);
+                                }
                             },
                         };
                     }}

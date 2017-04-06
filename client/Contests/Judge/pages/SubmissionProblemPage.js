@@ -5,6 +5,9 @@ import React from 'react';
 import Diff from 'react-diff';
 import { sendFeedback, getSubmission, deleteSubmission } from '../../ContestActions';
 import { withRouter } from 'react-router';
+import ReactTable from 'react-table';
+import './SubmissionsProblemPage.css';
+import styles from 'react-table/react-table.css';
 
 class SubmissionProblemPage extends React.Component {
 
@@ -25,24 +28,25 @@ class SubmissionProblemPage extends React.Component {
   /**
    * get submission data
    */
-    componentDidMount() {
-        const subId = this.state.submissionId;
-        getSubmission(subId).then(res => {
-            const submission = res.submission;
-            const actual = res.actualOutput;
-            const expected = res.expectedOutput;
-            this.setState({
-                submission: res.submission,
-                submissionId: subId,
-                contestId: submission.contestID,
-                teamId: submission.teamID,
-                teamName: submission.teamName,
-                problemNumber: submission.problemNumber,
-                expectedOutput: expected,
-                actualOutput: actual,
-            });
-        });
-    }
+  componentDidMount(){
+    const subId = this.state.submissionId;
+    getSubmission(subId).then(res => {
+      const  submission = res.submission;
+      const actual = res.actualOutput;
+      const expected = res.expectedOutput;
+      this.setState({
+        submission: res.submission,
+        submissionId: subId,
+        contestId: submission.contestID,
+        teamId: submission.teamID,
+        teamName: submission.teamName,
+        problemName: submission.problemName,
+        problemNumber: submission.problemNumber,
+        expectedOutput: expected,
+        actualOutput: actual
+      });
+    });
+  }
 
   /**
    * update the feedback chosen
@@ -61,14 +65,14 @@ class SubmissionProblemPage extends React.Component {
         this.state.submission.feedback = this.state.value;
 
     // set correct field:
-        this.state.submission.correct = this.state.value == 'Correct';
+        this.state.submission.correct = this.state.value === 'Correct';
 
-        if (this.state.value == 'Delete Submission') {
+        if (this.state.value === 'Delete Submission') {
             deleteSubmission(this.state.submissionId);
       // go back to the submissions table
             this.props.router.push(`/contest/${this.state.contestId}/submissions`);
         }
-        else if (this.state.value == 'None')
+        else if (this.state.value === 'None')
             alert('Please Select an Option');
     else {
             const req = {
@@ -86,18 +90,37 @@ class SubmissionProblemPage extends React.Component {
    *
    * @returns {XML}
    */
-    render() {
-        const output = this.state.expectedOutput;
-        const diff = output ? <Diff inputA={this.state.expectedOutput}
-            inputB={this.state.actualOutput}
-            type='chars'
-            ignoreWhitespace='true'
-        /> : null;
+  render() {
+    const teamName = (this.state.teamName !== null) ? this.state.teamName : "Loading";
+    const problemName = (this.state.problemName !== null) ? this.state.problemName : "Loading";
 
-        return (
+    const output = this.state.expectedOutput;
+    const diff = output ? <Diff inputA={this.state.expectedOutput}
+                                inputB={this.state.actualOutput}
+                                type="chars"
+                                ignoreWhitespace="true"/> : null;
+    const columns = [{
+      header: 'Expected Output',
+      accessor: 'expected'
+    }, {
+      header: 'Actual Output',
+      accessor: 'actual'
+    }, {
+      header: 'Diff',
+      accessor: 'diff'
+    }];
+
+    const data = [{
+      expected: this.state.expectedOutput,
+      actual: this.state.actualOutput,
+      diff: diff
+    }];
+
+    return (
       <div>
-        <h2>Submissions View</h2>
-        <br></br>
+        <h2>{teamName}: {problemName}</h2>
+
+        <br/>
 
         <form>
           <label>
@@ -111,29 +134,20 @@ class SubmissionProblemPage extends React.Component {
               <option value='Delete Submission'>Delete Submission</option>
             </select>
           </label>
-          <button onClick={this.handleSubmit}>Send Feedback</button>
+          <button onClick={this.handleSubmit} >Send Feedback</button>
         </form>
-        <br></br>
-        <table>
-          <tr>
-            <th>Expected Output</th>
-            <th>User Output</th>
-            <th>Diff</th>
-          </tr>
-          <tbody>
-          <tr>
-            <td>
-              {this.state.expectedOutput}
-            </td>
-            <td>
-              {this.state.actualOutput}
-            </td>
-            <td>
-              {diff}
-            </td>
-          </tr>
-          </tbody>
-        </table>
+        <br/>
+
+        <ReactTable
+          styles={styles}
+          data={data}
+          columns={columns}
+          showPageSizeOptions={false}
+          defaultPageSize={1}
+          showPagination={false}
+          className='-highlight'
+        />
+
       </div>
     );
     }

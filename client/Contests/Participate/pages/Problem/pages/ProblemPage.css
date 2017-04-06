@@ -1,24 +1,32 @@
 .left-col {
-  border-right: 1px solid #c3c3c3;
+  border-right: 2px solid #c3c3c3;
 }
 
-.right-col {
-  border-left: 1px solid #c3c3c3;
-}
 
 .participant-problem-container {
   margin: 10px 30px 20px 30px;
 }
 
+.participant-problem-container .chatbox {
+  margin: 10px 0;
+}
 
-participant-problem-container .chat-history {
-  padding: 5px;
+.participant-problem-container .chatbox input {
+  width: 100%;
+  margin:1px 0;
+  padding: 1px;
+}
+
+.participant-problem-container #chatPanel {
+  margin: 0 10px;
+}
+
+.participant-problem-container .chat-history {
   border: 1px solid #c3c3c3;
+  height: 150px;
 }
 
 .participant-problem-container .chatbubbleWrapper {
-  marginTop: 10;
-  marginBottom: 10;
   overflow: auto;
   position: relative;
 }

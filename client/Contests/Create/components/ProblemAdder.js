@@ -1,5 +1,4 @@
 import React from 'react';
-import Dropzone from 'react-dropzone';
 import request from 'superagent';
 import { setProblemMetaData } from '../../ContestActions';
 import ProblemFields from './ProblemFields';
