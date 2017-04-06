@@ -11,8 +11,9 @@ const submissionSchema = new Schema({
     correct: { type: 'Boolean', required: true },
     hadStdError: { type: 'Boolean', required: true },
     feedback: String,
-    fileName: String,
-    code: { type: String }
+    expectedOutputFileName: String,
+    actualOutputFileName: String,
+    code: { type: String },
 });
 
 export default mongoose.model('Submission', submissionSchema);
