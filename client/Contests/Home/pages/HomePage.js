@@ -3,8 +3,8 @@ import LoginOrRegisterForm from '../../Login/components/LoginOrRegisterForm.js';
 import { connect } from 'react-redux';
 import { userRegisterRequest, isUserExists } from '../../Login/actions/registerActions';
 import { addFlashMessage } from '../../Login/actions/flashMessages';
-import './HomePage.css'
 import '../../contest-navigator.css';
+import './HomePage.css'
 
 class HomePage extends React.Component {
 

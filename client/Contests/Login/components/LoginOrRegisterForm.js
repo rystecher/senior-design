@@ -161,11 +161,11 @@ class LoginOrRegisterForm extends React.Component {
           type='password'
         />
         <div className='form-group'>
-          <button label='register' onClick={this.onSubmitRegister} disabled={this.state.isLoading || this.state.invalid} className='btn btn-primary btn-lg login'>
+          <button label='register' onClick={this.onSubmitRegister} disabled={this.state.isLoading || this.state.invalid} className='login-btn btn-primary btn-lg'>
             Register
           </button>
           <div className="divider"/>
-          <button label='login' onClick={this.onSubmitLogin} disabled={this.state.isLoading || this.state.invalid} className='btn btn-primary btn-lg login'>
+          <button label='login' onClick={this.onSubmitLogin} disabled={this.state.isLoading || this.state.invalid} className='login-btn btn-primary btn-lg'>
             Login
           </button>
         </div>
