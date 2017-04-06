@@ -8,6 +8,7 @@
     width: 200px;
     z-index: 500;
     border-left: 1px solid #82B1FF;
+    background: #ffffff;
 }
 
 .list-group-item.read {

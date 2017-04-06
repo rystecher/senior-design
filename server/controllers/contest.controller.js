@@ -219,7 +219,7 @@ export function addProblemAttempt(req, res) {
                         } else {
                             const fileName = contest.problems[number].fileName + '.txt';
                             readTextFile('input/' + fileName).then((input) => {
-                                hackerrankCall(code, lang, input, (error, response) => {
+                                hackerrankCall(code, lang, [input], (error, response) => {
                                     const { stderr, stdout, compilemessage, message } = JSON.parse(response.body).result;
                                     const hadStdError = stderr !== null && !stderr.every((error) => error === false);
                                     problem.attempts.push(code);
@@ -239,7 +239,7 @@ export function addProblemAttempt(req, res) {
                                                 team.numSolved++;
                                                 if (!contest.problems[number].solved) {
                                                     contest.problems[number].solved = true;
-                                                    contest.problems[number].solvedBy = req.params.team_id;
+                                                    contest.problems[number].solvedBy = team.name;
                                                 }
                                             }
                                         }
@@ -260,6 +260,7 @@ export function addProblemAttempt(req, res) {
                                             correct: problem.solved,
                                             fileName,
                                             feedBack,
+                                            code: code
                                         });
                                         contest.save((err) => {
                                             if (err) {

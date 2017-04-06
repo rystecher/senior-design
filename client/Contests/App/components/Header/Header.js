@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { logout } from '../../../Login/actions/authActions';
 
 // Import Style
-import styles from './Header.css';
 
 class Header extends React.Component {
 // export function Header(props, context) {

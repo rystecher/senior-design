@@ -1,8 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router';
 import './contest-navigator.css';
+import { logout } from './Login/actions/authActions';
+import { connect } from 'react-redux';
 
-export default class ContestNavigator extends React.Component {
+class ContestNavigator extends React.Component {
+
+    logout(e) {
+        this.props.logout();
+    }
 
     render() {
         const { contestId, page, teamId, username, userRole } = this.props;
@@ -57,6 +63,12 @@ export default class ContestNavigator extends React.Component {
                             to={`/contest/${contestId}/scoreboard/${teamId}`}
                         >ScoreBoard</Link>
                     </li>
+                    <li className={page === 'submissions' ? 'nav-item active' : 'nav-item'}>
+                        <Link
+                            className='nav-link'
+                            to={`/contest/${contestId}/submissions/${teamId}`}
+                        >Submissions</Link>
+                    </li>
                 </ul>
             );
         }
@@ -68,6 +80,11 @@ export default class ContestNavigator extends React.Component {
                         <li className='nav-item'>
                             <Link to={`/profile`} className='nav-link'>
                                 <span className='glyphicon glyphicon-user'/>{username}
+                            </Link>
+                        </li>
+                        <li className='nav-item'>
+                            <Link to={`/login`} className='nav-link' onClick={this.logout.bind(this)}>
+                                Logout
                             </Link>
                         </li>
                     </ul>
@@ -86,3 +103,11 @@ ContestNavigator.propTypes = {
     username: React.PropTypes.string.isRequired,
     userRole: React.PropTypes.oneOf(['admin', 'participant', 'none']).isRequired,
 };
+
+function mapStateToProps(state) {
+    return {
+        auth: state.auth,
+    };
+}
+
+export default connect(mapStateToProps, { logout })(ContestNavigator);

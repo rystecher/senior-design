@@ -25,16 +25,14 @@
 
 .contest-container .btn, .btn.confirm, .btn.create {
     color: #448AFF;
-    background-image: none;
-    background-color: transparent;
-    border-color:  #448AFF;
+  background: transparent none;
+  border-color:  #448AFF;
     padding: 12px 8px;
 }
 
 .btn.cancel {
-    background-image: none;
-    background-color: transparent;
-    color: #9E9E9E;
+  background: transparent none;
+  color: #9E9E9E;
     border-color:  #9E9E9E;
 }
 
@@ -96,11 +94,10 @@
 
 #header-banner > h1 {
     width: 50vw;
-    margin: 0 auto;
-    text-align: center;
+  text-align: center;
     font-size: 2em;
-    margin-bottom: 20px;
-    color: white;
+  margin: 0 auto 20px;
+  color: white;
     padding-top: 134px;
 }
 

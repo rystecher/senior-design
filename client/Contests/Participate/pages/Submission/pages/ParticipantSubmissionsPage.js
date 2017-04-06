@@ -1,19 +1,15 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { fetchSubmissions } from '../../ContestActions.js';
+import {fetchSubmissionsForTeam} from '../../../../ContestActions.js';
 import ReactTable from 'react-table';
 import './submissions.css';
-import ChatSideBar from '../../Participate/pages/Problem/components/ChatSideBar';
 
-class AdminSubmissionsPage extends React.Component {
+class ParticipantSubmissionsPage extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {};
         this.columns = [{
-            header: 'Team',
-            accessor: 'teamName',
-        }, {
             header: 'Problem',
             accessor: 'problemName',
         }, {
@@ -23,21 +19,15 @@ class AdminSubmissionsPage extends React.Component {
     }
 
     componentDidMount() {
-        const intervalFunc = fetchSubmissions(this.props.params.contestId).then(res => {
+        fetchSubmissionsForTeam(this.props.params.contestId, this.props.params.teamId).then(res => {
             this.setState({
-                submissions: res,
+                submissions: res.submissions,
             });
         });
-        intervalFunc();
-        this.chatIntervId = setInterval(intervalFunc, 15000);
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.chatIntervId);
     }
 
     goToSingleSubmissionPage(cuid) {
-        this.props.router.push(`/contest/${this.props.params.contestId}/submissions/admin/${cuid}`);
+        this.props.router.push(`/contest/${this.props.params.contestId}/submissions/${this.state.team_id}/${cuid}`);
     }
 
     render() {
@@ -47,7 +37,6 @@ class AdminSubmissionsPage extends React.Component {
             loading = false;
             this.state.submissions.forEach((submission) => {
                 data.push({
-                    teamName: submission.teamName,
                     problemName: submission.problemName,
                     feedback: submission.feedback,
                     cuid: submission.cuid,
@@ -73,21 +62,19 @@ class AdminSubmissionsPage extends React.Component {
                         };
                     }}
                 />
-                <ChatSideBar
-                    contest_id={this.props.params.contestId}
-                />
             </div>
         );
     }
 }
 
-AdminSubmissionsPage.propTypes = {
+ParticipantSubmissionsPage.propTypes = {
     params: React.PropTypes.shape({
         contestId: React.PropTypes.string.isRequired,
+        teamId: React.PropTypes.string.isRequired,
     }).isRequired,
     router: React.PropTypes.shape({
         push: React.PropTypes.func.isRequired,
     }).isRequired,
 };
 
-export default withRouter(AdminSubmissionsPage);
+export default withRouter(ParticipantSubmissionsPage);

@@ -60,7 +60,7 @@ export default class ChatFeed extends Component {
   /**
    * Determines what type of message/messages to render.
    *
-   * @return {message_nodes} - a list of message JSX objects to be rendered in
+   * @return {messages} - a list of message JSX objects to be rendered in
    *   our UI.
    * @param messages
    */

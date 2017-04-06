@@ -142,9 +142,8 @@ export function fetchSolvedArrays(contestId, teamId) {
     return callApi(`contests/${contestId}/teams/${teamId}/solved`);
 }
 
-export function fetchSubmissions(contest_id) {
-    return callApi(`submissions/${contest_id}/all`).then(res => {
-      // console.log(res);
+export function fetchSubmissions(contestId) {
+    return callApi(`submissions/${contestId}/all`).then(res => {
         return res.submissions;
     });
 }
@@ -165,6 +164,14 @@ export function deleteSubmission(submissionId) {
     return callApi(`/submissions/${submissionId}`, 'delete').then(res => {
         console.log('deleting submission..' + res);
     });
+}
+
+export function fetchSubmissionsForTeam(contestId, teamId) {
+    return callApi(`submissions/${contestId}/${teamId}/all`);
+}
+
+export function getCodeForSubmission(contestId, teamId, submissionId) {
+    return callApi(`submissions/${contestId}/${teamId}/${submissionId}`);
 }
 
 export function fetchProblem(contestId, problemNum) {
