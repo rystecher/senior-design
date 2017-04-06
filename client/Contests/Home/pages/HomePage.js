@@ -6,21 +6,25 @@ import LoginOrRegisterForm from '../../Login/components/LoginOrRegisterForm.js';
 import { connect } from 'react-redux';
 import { userRegisterRequest, isUserExists } from '../../Login/actions/registerActions';
 import { addFlashMessage } from '../../Login/actions/flashMessages';
+import '../../contest-navigator.css';
+import { Link } from 'react-router';
+import styles from './HomePage.css';
 
 class HomePage extends React.Component {
 
     constructor(props){
       super(props);
+      this.state = {register: true}
     }
 
     render() {
       const { userRegisterRequest, addFlashMessage, isUserExists } = this.props;
       return (
         <div>
-          <h1>Bucknell Spring Programming Contest</h1>
-          <br />
-          <div className='col-md-4 col-md-offset-4'>
-            <RegisterForm
+
+          <h1 className="center">Bucknell Programming Competition 2017</h1>
+          <div className='col-md-4 col-md-offset-4 login'>
+            <LoginOrRegisterForm
               isUserExists={isUserExists}
               userRegisterRequest={userRegisterRequest}
               addFlashMessage={addFlashMessage}/>

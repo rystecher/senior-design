@@ -19,6 +19,7 @@ class LoginForm extends React.Component {
     }
 
     isValid() {
+      console.log(this.state);
         const {errors, isValid} = validateLoginInput(this.state);
         if (!isValid) {
             this.setState({ errors });
@@ -47,7 +48,6 @@ class LoginForm extends React.Component {
 
         return (
       <form onSubmit={this.onSubmit}>
-        <h1>Login</h1>
 
         {errors.form && <div className='alert alert-danger'>{errors.form}</div>}
 
@@ -68,7 +68,9 @@ class LoginForm extends React.Component {
             type='password'
         />
 
-        <div className='form-group'><button className='btn btn-primary btn-lg' disabled={isLoading}>Login</button></div>
+        <div className='form-group'>
+          <button className='btn btn-primary btn-lg' disabled={isLoading}>Login</button>
+        </div>
       </form>
     );
     }

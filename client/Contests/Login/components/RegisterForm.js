@@ -36,6 +36,7 @@ class RegisterForm extends React.Component {
     checkUserExists(e) {
         const field = e.target.name;
         const val = e.target.value;
+        console.log("e " + e + " field " + field + " val " + val);
         if (val !== '') {
             this.props.isUserExists(val).then(res => {
                 let errors = this.state.errors;
@@ -98,12 +99,12 @@ class RegisterForm extends React.Component {
         />
 
         <TextFieldGroup
-            error={errors.passwordConfirmation}
-            label='Password Confirmation'
-            onChange={this.onChange}
-            value={this.state.passwordConfirmation}
-            field='passwordConfirmation'
-            type='password'
+          error={errors.passwordConfirmation}
+          label='Password Confirmation'
+          onChange={this.onChange}
+          value={this.state.passwordConfirmation}
+          field='passwordConfirmation'
+          type='password'
         />
 
         <div className='form-group'>

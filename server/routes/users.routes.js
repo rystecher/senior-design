@@ -21,8 +21,8 @@ function validateInput(data, otherValidations) {
   });
 }
 
-router.get('/:identifier', (req, res) => {
-    User.find({ username: req.params.identifier }, { _id: 0, username: 1 })
+router.get('/:username', (req, res) => {
+    User.find({ username: req.params.username }, { _id: 0, username: 1 })
   .then(user => {
       res.json({ user });
   });
