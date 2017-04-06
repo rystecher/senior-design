@@ -5,6 +5,8 @@ import { withRouter } from 'react-router';
 import { getCreatedContests, getJoinedContests, getJoinableContests } from '../DisplayActions';
 import 'react-table/react-table.css';
 import './display-contests.css';
+import { logout } from '../.././Login/actions/authActions';
+import { Link } from 'react-router';
 
 function getContestStatus(contest) {
     let status = 'Not started';
@@ -54,6 +56,10 @@ class DisplayContests extends Component {
         this.props.router.push(`/contest/${contestId}/home/`);
     }
 
+    logout(e) {
+        this.props.logout();
+    }
+
     render() {
         const data = [];
         let loading = false;
@@ -87,9 +93,14 @@ class DisplayContests extends Component {
                     <div className='navbar-toggleable-md'>
                         <ul className='nav navbar-nav navbar-toggler-right'>
                             <li className='nav-item'>
-                                <a to='/contests' className='nav-link'>
+                                <Link to='/profile' className='nav-link'>
                                     <span className='glyphicon glyphicon-user'/>{this.props.auth.user.username}
-                                </a>
+                                </Link>
+                            </li>
+                            <li className='nav-item'>
+                                <Link to='/login' className='nav-link' onClick={this.logout.bind(this)}>
+                                    Logout
+                                </Link>
                             </li>
                         </ul>
                     </div>
@@ -130,4 +141,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(withRouter(DisplayContests));
+export default connect(mapStateToProps, { logout })(withRouter(DisplayContests));
