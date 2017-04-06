@@ -1,18 +1,17 @@
 import React from 'react';
-import Alert from 'react-s-alert';
-import 'react-s-alert/dist/s-alert-default.css';
-import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 import ConfirmationDialog from '../components/ConfirmationDialog';
 import { getContestInfo, joinContest, openContest, closeContest } from '../../ContestActions';
 import './home.css';
+import { withRouter } from 'react-router';
 
-export default class ContestHome extends React.Component {
+class ContestHome extends React.Component {
 
     constructor(props) {
         super(props);
         this.closeConfirm = this.closeConfirm.bind(this);
         this.closeContest = this.closeContest.bind(this);
         this.closeModal = this.closeModal.bind(this);
+        this.editContest = this.editContest.bind(this);
         this.join = this.join.bind(this);
         this.openConfirm = this.openConfirm.bind(this);
         this.openContest = this.openContest.bind(this);
@@ -62,6 +61,12 @@ export default class ContestHome extends React.Component {
         this.setState({ showDialog: false });
     }
 
+    editContest() {
+        if (!this.state.open) {
+            this.props.router.push(`/contest/${this.props.params.contestId}/edit`);
+        }
+    }
+
     join() {
         if (!this.joined) {
             this.joined = true;
@@ -104,6 +109,7 @@ export default class ContestHome extends React.Component {
             return null;
         }
         let openClass = this.state.open ? 'active' : '';
+        const editClass = this.state.open ? 'disabled' : '';
         let closedClass = '';
         if (!this.state.open) {
             closedClass = 'disabled';
@@ -113,7 +119,6 @@ export default class ContestHome extends React.Component {
         }
         return (
             <div>
-                <Alert stack={{ limit: 3 }} timeout={2500} />
                 <div id='header-banner'>
                     <h1>{this.state.name}</h1>
                     {'admin' !== this.props.userRole ?
@@ -123,6 +128,11 @@ export default class ContestHome extends React.Component {
                 <div className='contest-home'>
                     {'admin' === this.props.userRole ?
                         <div className='btn-wrapper'>
+                            <button
+                                type='button'
+                                className={`btn open ${editClass}`}
+                                onClick={this.editContest}
+                            >Edit</button>
                             <button
                                 type='button'
                                 className={`btn open ${openClass}`}
@@ -143,7 +153,7 @@ export default class ContestHome extends React.Component {
                         text={this.state.text}
                         title={this.state.title}
                     />
-                    {'none' === this.props.userRole && !this.state.closed ?
+                    {'none' === this.props.userRole && !this.state.closed && this.state.open ?
                         <button
                             className='btn btn-secondary join'
                             onClick={this.join}
@@ -174,6 +184,11 @@ ContestHome.propTypes = {
     params: React.PropTypes.shape({
         contestId: React.PropTypes.string.isRequired,
     }).isRequired,
+    router: React.PropTypes.shape({
+        push: React.PropTypes.func.isRequired,
+    }).isRequired,
     username: React.PropTypes.string.isRequired,
     userRole: React.PropTypes.oneOf(['admin', 'none', 'participant']).isRequired,
 };
+
+export default withRouter(ContestHome);

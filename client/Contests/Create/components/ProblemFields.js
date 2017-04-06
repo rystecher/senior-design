@@ -1,8 +1,6 @@
 import React from 'react';
 import Dropzone from 'react-dropzone';
 import Alert from 'react-s-alert';
-import 'react-s-alert/dist/s-alert-default.css';
-import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 import ConfirmationDialog from '../../ContestHome/components/ConfirmationDialog';
 import { getProblemMetaData } from '../../ContestActions';
 import './problem_fields.css';
@@ -128,7 +126,6 @@ export default class ProblemFields extends React.Component {
             this.state.input.substring(0, 500) + '...';
         return (
             <div className='problem-fields'>
-                <Alert stack={{ limit: 3 }} timeout={2500} />
                 <input
                     placeholder='Problem Name'
                     name='problemName'

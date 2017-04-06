@@ -1,8 +1,6 @@
 import React from 'react';
 import request from 'superagent';
 import Alert from 'react-s-alert';
-import 'react-s-alert/dist/s-alert-default.css';
-import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 import { setProblemMetaData, fetchProblem } from '../../ContestActions';
 import spdf from 'simple-react-pdf';
 import ProblemFields from './ProblemFields';
@@ -96,7 +94,6 @@ export default class ProblemEditor extends React.Component {
             (<spdf.SimplePDF file={this.state.pdfUrl} />) : null;
         return (
             <div id='edit'>
-                <Alert stack={{ limit: 3 }} timeout={2500} />
                 <div>
                     {pdf}
                 </div>
