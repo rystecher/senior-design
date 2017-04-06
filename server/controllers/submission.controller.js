@@ -40,13 +40,13 @@ export function getSubmissionsForTeam(req, res) {
     if (!req.params.contestId || !req.params.teamId) {
         res.status(403).end();
     } else {
-        Submission.find({ contestID: req.params.contestId , teamID: req.params.teamId}).exec((err, submissions) => {
+        Submission.find({ contestID: req.params.contestId, teamID: req.params.teamId }).exec((err, submissions) => {
             if (err) {
                 res.status(500).send(err);
             } else if (!submissions) {
                 res.json({ submissions: [] });
             } else {
-                res.json({ submissions: submissions });
+                res.json({ submissions });
             }
         });
     }
@@ -91,8 +91,8 @@ export function getSubmission(req, res) {
             } else if (!submission) {
                 res.status(400).send({ err: 'Submission does not exist' });
             } else {
-                readTextFile(`output/${submission.fileName}`).then((expectedOutput) => {
-                    readTextFile(`submission/${submission.fileName}`).then((actualOutput) => {
+                readTextFile(`output/${submission.expectedOutputFileName}`).then((expectedOutput) => {
+                    readTextFile(`submission/${submission.actualOutputFileName}`).then((actualOutput) => {
                         res.json({ submission, expectedOutput, actualOutput });
                     }).catch(err3 => res.status(500).send(err3));
                 }).catch(err2 => res.status(500).send(err2));
@@ -163,7 +163,7 @@ export function sendFeedback(req, res) {
  * @returns void
  */
 export function deleteSubmission(req, res) {
-  console.log("in delete submissions controller");
+    console.log('in delete submissions controller');
     Submission.findOne({ cuid: req.params.submissionId }).exec((err, submission) => {
         if (err) {
             res.status(500).send(err);

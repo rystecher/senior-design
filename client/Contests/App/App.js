@@ -1,11 +1,6 @@
 import React, { Component, PropTypes } from 'react';
-
-// Import Style
 import styles from './App.css';
-
-// Import Components
 import Helmet from 'react-helmet';
-import Footer from './components/Footer/Footer';
 import FlashMessagesList from '../Login/components/FlashMessagesList';
 
 export class App extends Component {
@@ -32,7 +27,6 @@ export class App extends Component {
                     <div className={styles.container}>
                         {this.props.children}
                     </div>
-                    <Footer />
                 </div>
             </div>
         );

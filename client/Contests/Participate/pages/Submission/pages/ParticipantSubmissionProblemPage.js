@@ -18,9 +18,7 @@ class ParticipantSubmissionProblemPage extends React.Component {
     render() {
         const text = this.state.code ? this.state.code : '';
         return (
-            <textarea rows="50" cols="80">
-              {text}
-            </textarea>
+            <textarea rows="50" cols="80" value={text}  />
           );
     }
 }

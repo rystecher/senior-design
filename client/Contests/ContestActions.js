@@ -50,14 +50,12 @@ export function fetchContests() {
     };
 }
 
-export function fetchContest(cuid) {
-    return (dispatch) => {
-        return callApi(`contests/${cuid}`).then(res => console.log(res));
-    };
+export function getContestInfo(contestId) {
+    return callApi(`contests/${contestId}/info`);
 }
 
-export function getContestInfo(cuid) {
-    return callApi(`contests/${cuid}/info`);
+export function updateContestInfo(contestId, info) {
+    return callApi(`contests/${contestId}/info`, 'post', { info });
 }
 
 export function getScoreboardData(contestId) {
@@ -138,37 +136,36 @@ export function fetchSolvedArrays(contestId, teamId) {
     return callApi(`contests/${contestId}/teams/${teamId}/solved`);
 }
 
-export function fetchSubmissions(contest_id) {
-    return callApi(`submissions/${contest_id}/all`).then(res => {
-      //console.log(res);
-      return res.submissions;
+export function fetchSubmissions(contestId) {
+    return callApi(`submissions/${contestId}/all`).then(res => {
+        return res.submissions;
     });
 }
 
-export function fetchSubmissionsForTeam(contest_id, team_id) {
-    return callApi(`submissions/${contest_id}/${team_id}/all`);
+export function sendFeedback(submissionId, req) {
+    return callApi(`/submissions/feedback/${submissionId}`, 'post', req).then(res => {
+        console.log('Sending feedback..' + res);
+    });
 }
 
-export function getCodeForSubmission(contest_id, team_id, submission_id){
-  return callApi(`submissions/${contest_id}/${team_id}/${submission_id}`);
+export function getSubmission(submissionId) {
+    return callApi(`/submissions/${submissionId}`).then(res => {
+        return res;
+    });
 }
 
-export function sendFeedback(submissionId, req){
-  return callApi(`submissions/feedback/${submissionId}`, 'post', req).then(res => {
-    console.log("Sending feedback.." + res);
-  });
+export function deleteSubmission(submissionId) {
+    return callApi(`/submissions/${submissionId}`, 'delete').then(res => {
+        console.log('deleting submission..' + res);
+    });
 }
 
-export function getSubmission(submissionId){
-  return callApi(`submissions/${submissionId}`).then(res => {
-    return res;
-  });
+export function fetchSubmissionsForTeam(contestId, teamId) {
+    return callApi(`submissions/${contestId}/${teamId}/all`);
 }
 
-export function deleteSubmission(submissionId){
-  return callApi(`submissions/${submissionId}`, 'delete').then(res => {
-    console.log("deleting submission.." + res);
-  });
+export function getCodeForSubmission(contestId, teamId, submissionId) {
+    return callApi(`submissions/${contestId}/${teamId}/${submissionId}`);
 }
 
 export function fetchProblem(contestId, problemNum) {

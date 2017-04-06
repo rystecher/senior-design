@@ -239,14 +239,15 @@ export function addProblemAttempt(req, res) {
                                                 team.numSolved++;
                                                 if (!contest.problems[number].solved) {
                                                     contest.problems[number].solved = true;
-                                                    contest.problems[number].solvedBy = req.params.team_id;
+                                                    contest.problems[number].solvedBy = team.name;
                                                 }
                                             }
                                         }
                                         const stdOutput = (Array.isArray(stdout)) && stdout.length !== 0 ? stdout[0] : null;
                                         const stdError = (Array.isArray(stderr)) && stderr.length !== 0 ? stderr[0] : null;
                                         const output = hadStdError ? stdError : stdOutput || compilemessage;
-                                        fs.writeFile('submission/' + fileName, output);
+                                        const actualOutputFileName = shortid.generate() + '.txt';
+                                        fs.writeFile('submission/' + actualOutputFileName, output);
                                         const feedBack = createFeedbackMessage(problem.solved, message, compilemessage, number, hadStdError, stderr);
                                         team.messages.push(feedBack);
                                         createSubmission({
@@ -258,9 +259,10 @@ export function addProblemAttempt(req, res) {
                                             problemNumber: number,
                                             hadStdError,
                                             correct: problem.solved,
-                                            fileName,
+                                            expectedOutputFileName: fileName,
+                                            actualOutputFileName,
                                             feedBack,
-                                            code: code
+                                            code,
                                         });
                                         contest.save((err) => {
                                             if (err) {
@@ -613,6 +615,42 @@ export function getContestInfo(req, res) {
         });
     }
 }
+
+/**
+ * Update the info for the contest home page
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function updateContestInfo(req, res) {
+    if (!req.params.contestId || !req.body.info) {
+        res.status(403).end();
+    } else {
+        Contest.findOne({ cuid: req.params.contestId })
+        .select('about name rules')
+        .exec((err, contest) => {
+            if (err) {
+                res.status(500).send(err);
+            } else if (!contest) {
+                res.status(400).send({ err: 'Contest does not exist' });
+            } else if (typeof contest.start === 'number') {
+                res.status(400).send({ err: 'Contest already started' });
+            } else {
+                contest.about = req.body.info.about;
+                contest.name = req.body.info.name;
+                contest.rules = req.body.info.rules;
+                contest.save((err, saved) => {
+                    if (err) {
+                        res.status(500).send(err);
+                    } else {
+                        res.json({ success: true });
+                    }
+                });
+            }
+        });
+    }
+}
+
 
 /**
  * Get the number of problems in a specified contest
