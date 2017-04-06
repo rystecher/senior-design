@@ -135,7 +135,7 @@ export function sendTeamMessage(message, contestId, teamId) {
             const team = contest.teams.id(teamId);
             if (team) {
                 team.messages.push(message);
-                if (message.from === 'Team') {
+                if ('Team' === message.from) {
                     team.messagedJudge = true;
                 }
                 contest.save();

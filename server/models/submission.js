@@ -12,7 +12,7 @@ const submissionSchema = new Schema({
     hadStdError: { type: 'Boolean', required: true },
     feedback: String,
     fileName: String,
-    code: { type: String, required: true }
+    code: { type: String }
 });
 
 export default mongoose.model('Submission', submissionSchema);

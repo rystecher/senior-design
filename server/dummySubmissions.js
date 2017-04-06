@@ -41,7 +41,7 @@ const submission3 = {
 
 export default function () {
   Submission.count().exec((err, count) => {
-    if (count > 0) {
+    if (0 < count) {
       return;
     }
 

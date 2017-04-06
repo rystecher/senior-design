@@ -97,7 +97,7 @@ const dummyProblems = [{
 
 export default function () {
     Contest.count().exec((err, count) => {
-        if (count > 0) {
+        if (0 < count) {
             return;
         }
 

@@ -116,12 +116,12 @@ export default class ContestHome extends React.Component {
                 <Alert stack={{ limit: 3 }} timeout={2500} />
                 <div id='header-banner'>
                     <h1>{this.state.name}</h1>
-                    {this.props.userRole !== 'admin' ?
+                    {'admin' !== this.props.userRole ?
                         <h4>Created by {this.state.admin}</h4> : null
                     }
                 </div>
                 <div className='contest-home'>
-                    {this.props.userRole === 'admin' ?
+                    {'admin' === this.props.userRole ?
                         <div className='btn-wrapper'>
                             <button
                                 type='button'
@@ -143,7 +143,7 @@ export default class ContestHome extends React.Component {
                         text={this.state.text}
                         title={this.state.title}
                     />
-                    {this.props.userRole === 'none' && !this.state.closed ?
+                    {'none' === this.props.userRole && !this.state.closed ?
                         <button
                             className='btn btn-secondary join'
                             onClick={this.join}
@@ -151,13 +151,13 @@ export default class ContestHome extends React.Component {
                             Join Contest
                         </button> : null
                     }
-                    {this.state.about && this.state.about.length > 0 ?
+                    {this.state.about && 0 < this.state.about.length ?
                         <div>
                             <h2>About</h2>
                             <div>{this.state.about}</div>
                         </div> : null
                     }
-                    {this.state.rules && this.state.rules.length > 0 ?
+                    {this.state.rules && 0 < this.state.rules.length ?
                         <div>
                             <h2>Rules</h2>
                             <div>{this.state.rules}</div>

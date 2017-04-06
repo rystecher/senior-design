@@ -11,7 +11,7 @@ function validateInput(data, otherValidations) {
 
     return User.find({ username: data.username })
   .then(user => {
-      if (user.length > 0) {
+      if (0 < user.length) {
           errors.username = 'Username already taken';
       }
       return {

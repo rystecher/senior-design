@@ -19,7 +19,7 @@ class CreateContest extends React.Component {
     submit() {
         const { username } = this.props.auth.user;
         const { name, about, rules } = this.state;
-        if (name.length === 0) {
+        if (0 === name.length) {
             Alert.warning('Cannot create contest without a name', {
                 position: 'bottom-right',
                 effect: 'slide',

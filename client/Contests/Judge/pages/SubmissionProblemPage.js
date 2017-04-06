@@ -65,15 +65,17 @@ class SubmissionProblemPage extends React.Component {
         this.state.submission.feedback = this.state.value;
 
     // set correct field:
-        this.state.submission.correct = this.state.value === 'Correct';
+        this.state.submission.correct = 'Correct' === this.state.value;
 
-        if (this.state.value === 'Delete Submission') {
+        if ('Delete Submission' === this.state.value) {
             deleteSubmission(this.state.submissionId);
       // go back to the submissions table
             this.props.router.push(`/contest/${this.state.contestId}/submissions`);
         }
-        else if (this.state.value === 'None')
-            alert('Please Select an Option');
+        else if ('None' === this.state.value)
+            {
+              alert('Please Select an Option');
+            }
     else {
             const req = {
                 correct: this.state.submission.correct,
@@ -91,8 +93,8 @@ class SubmissionProblemPage extends React.Component {
    * @returns {XML}
    */
   render() {
-    const teamName = (this.state.teamName !== null) ? this.state.teamName : "Loading";
-    const problemName = (this.state.problemName !== null) ? this.state.problemName : "Loading";
+    const teamName = (null !== this.state.teamName) ? this.state.teamName : "Loading";
+    const problemName = (null !== this.state.problemName) ? this.state.problemName : "Loading";
 
     const output = this.state.expectedOutput;
     const diff = output ? <Diff inputA={this.state.expectedOutput}

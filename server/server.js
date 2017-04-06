@@ -157,7 +157,9 @@ app.use((req, res, next) => {
 
 // Handle timed-out connections
 function haltOnTimedout(req, res, next) {
-    if (!req.timedout) next();
+    if (!req.timedout) {
+      next();
+    }
 }
 
 // start app

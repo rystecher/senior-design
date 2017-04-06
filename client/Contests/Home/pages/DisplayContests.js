@@ -12,7 +12,7 @@ function getContestStatus(contest) {
     let status = 'Not started';
     if (contest.closed) {
         status = 'Closed';
-    } else if (typeof contest.start === 'number') {
+    } else if ('number' === typeof contest.start) {
         status = 'Open';
     }
     return status;
