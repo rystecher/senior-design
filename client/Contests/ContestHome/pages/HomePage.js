@@ -104,6 +104,7 @@ export default class ContestHome extends React.Component {
             return null;
         }
         let openClass = this.state.open ? 'active' : '';
+        const editClass = this.state.open ? 'disabled' : '';
         let closedClass = '';
         if (!this.state.open) {
             closedClass = 'disabled';
@@ -123,6 +124,11 @@ export default class ContestHome extends React.Component {
                 <div className='contest-home'>
                     {this.props.userRole === 'admin' ?
                         <div className='btn-wrapper'>
+                            <button
+                                type='button'
+                                className={`btn open ${editClass}`}
+                                onClick={this.editContest}
+                            >Edit</button>
                             <button
                                 type='button'
                                 className={`btn open ${openClass}`}

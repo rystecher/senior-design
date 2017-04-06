@@ -17,6 +17,9 @@ router.route('/contests/:contest_id').get(ContestController.getContest);
 // Get contest info for contest home page
 router.route('/contests/:contest_id/info').get(ContestController.getContestInfo);
 
+// Updates contest info for contest home page
+router.route('/contests/:contestId/info').post(ContestController.getContestInfo);
+
 // Sets the start time for a contest
 router.route('/contests/:contest_id/open').post(ContestController.openContest);
 
