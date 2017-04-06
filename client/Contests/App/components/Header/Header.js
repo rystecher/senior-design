@@ -30,8 +30,6 @@ class Header extends React.Component {
         const guestLinks = (
       <div className='navbar-header'>
         <Link to='/' className='navbar-brand'>Home</Link>
-        <Link to='/register' className='navbar-brand'>Register</Link>
-        <Link to='/login' className='navbar-brand'>Login</Link>
       </div>
     );
 

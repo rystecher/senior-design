@@ -4,8 +4,8 @@ import User from '../models/user';
 let router = express.Router();
 
 router.post('/', (req, res, next) => {
-    const { identifier, password } = req.body;
-    User.getAuthenticated(identifier, password, function (err, token, user) {
+    const { username, password } = req.body;
+    User.getAuthenticated(username, password, function (err, token, user) {
         if (err) {
             console.log(err);
             res.status(401).send('Invalid Username or Password');

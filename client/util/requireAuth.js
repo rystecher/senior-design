@@ -10,7 +10,7 @@ export default function (ComposedComponent) {
                 //     type: 'error',
                 //     text: 'You need to login to access this page',
                 // });
-                this.context.router.push('/login');
+                this.context.router.push('/');
             }
         }
 

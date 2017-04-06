@@ -26,8 +26,6 @@ if (process.env.NODE_ENV !== 'production') {
     require('./Contests/Participate/pages/Problem/pages/ProblemPage');
     require('./Contests/Pages/MyContests/MyContests');
     require('./Contests/Participate/pages/Scoreboard/pages/ScoreboardPage');
-    require('./Contests/Login/pages/RegisterPage');
-    require('./Contests/Login/pages/LoginPage');
     require('./Contests/Home/pages/DisplayContests');
     require('./Contests/Judge/pages/AdminPage');
     require('./Contests/Judge/pages/SubmissionProblemPage');
@@ -161,23 +159,6 @@ export default (
         }}
     />
 
-  <Route
-      path='/register'
-      getComponent={(nextState, cb) => {
-          require.ensure([], require => {
-              cb(null, require('./Contests/Login/pages/RegisterPage').default);
-          });
-      }}
-  />
-    <Route
-        path='/login'
-        getComponent={(nextState, cb) => {
-            require.ensure([], require => {
-                cb(null, require('./Contests/Login/pages/LoginPage').default);
-            });
-        }}
-
-    />
       />
     </Route>
 );
