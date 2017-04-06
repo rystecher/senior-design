@@ -37,7 +37,7 @@ export function getCreatedContests(req, res) {
                 res.status(400).send(err);
             } else {
                 Contest.find({ cuid: { $in: user.createdContestsID } }, { _id: 0 })
-            .select('name admin closed cuid')
+            .select('name admin closed cuid start')
             .exec((err, contests) => {
                 if (err) {
                     res.status(500).send(err);
@@ -69,7 +69,7 @@ export function getJoinedContests(req, res) {
                 }
 
                 Contest.find({ cuid: { $in: participatedContestsList } }, { _id: 0 })
-                .select('name admin closed cuid')
+                .select('name admin closed cuid start')
                 .exec((err, contests) => {
                     if (err) {
                         res.status(500).send(err);
@@ -101,7 +101,7 @@ export function getJoinableContests(req, res) {
                 const allCreatedAndParticipated = participatedContestsList.concat(user.createdContestsID);
 
                 Contest.find({ cuid: { $nin: allCreatedAndParticipated } }, { _id: 0 })
-                .select('name admin closed cuid')
+                .select('name admin closed cuid start')
                 .exec((err, contests) => {
                     if (err) {
                         res.status(500).send(err);
