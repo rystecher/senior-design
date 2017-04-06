@@ -50,12 +50,6 @@ export function fetchContests() {
     };
 }
 
-export function fetchContest(cuid) {
-    return (dispatch) => {
-        return callApi(`contests/${cuid}`).then(res => console.log(res));
-    };
-}
-
 export function getContestInfo(contestId) {
     return callApi(`contests/${contestId}/info`);
 }

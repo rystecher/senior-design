@@ -23,10 +23,8 @@ class AdminSubmissionsPage extends React.Component {
     }
 
     componentDidMount() {
-        const intervalFunc = fetchSubmissions(this.props.params.contestId).then(res => {
-            this.setState({
-                submissions: res,
-            });
+        const intervalFunc = () => fetchSubmissions(this.props.params.contestId).then(res => {
+            this.setState({ submissions: res });
         });
         intervalFunc();
         this.chatIntervId = setInterval(intervalFunc, 15000);
