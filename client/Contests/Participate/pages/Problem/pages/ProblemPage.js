@@ -45,29 +45,25 @@ class ProblemPage extends React.Component {
                   numberOfProblems={this.state.numberOfProblems}
               />
               <div className='row'>
-                <div className='col-md-6'>
-                  <div className='left-col'>
-                    <ProblemViewer
-                        contestId={this.contestId}
-                        problemNum={this.state.problemNum}
-                        numberOfProblems={this.state.numberOfProblems}
-                    />
-                  </div>
+                <div className='col-md-6 left-col'>
+                  <ProblemViewer
+                      contestId={this.contestId}
+                      problemNum={this.state.problemNum}
+                      numberOfProblems={this.state.numberOfProblems}
+                  />
                 </div>
-
-                <div className='col-md-6'>
+                <div className='col-md-6 right-col'>
                   <TextEditor
                       team_id={this.teamId}
                       contest_id={this.contestId}
                       problemNum={this.state.problemNum}
                   />
+                  <MessageComponent
+                    team_id={this.teamId}
+                    contest_id={this.contestId}
+                  />
                 </div>
               </div>
-
-              <MessageComponent
-                  team_id={this.teamId}
-                  contest_id={this.contestId}
-              />
             </div>
         );
     }

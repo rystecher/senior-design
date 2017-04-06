@@ -207,15 +207,15 @@ export function getNotMyContests(contests) {
 }
 
 export function testCode(contestId, teamId, code, lang, testcases) {
-    callApi(`contests/${contestId}/teams/${teamId}/submit/testCode`, 'post', {
+    return callApi(`contests/${contestId}/teams/${teamId}/submit/testCode`, 'post', {
         problem: { code, lang, testcases },
-    }).then(res => console.log('Testing code: ', res));
+    }).then(res => true);
 }
 
 export function submitCode(contestId, teamId, code, lang, number) {
-    callApi(`contests/${contestId}/teams/${teamId}/submit`, 'post', {
+    return callApi(`contests/${contestId}/teams/${teamId}/submit`, 'post', {
         problem: { code, lang, number },
-    }).then(res => console.log('submit code: ', res));
+    }).then(res => true);
 }
 
 export function fetchNotMyContests(cuids) {

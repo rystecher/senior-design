@@ -2,3 +2,18 @@
   border: 1px solid #c3c3c3;
   margin: 10px 0;
 }
+
+#custom_in {
+  height: 130px;
+  margin-top: 5px;
+  width: 100%;
+}
+
+.form-group {
+  display: block;
+}
+
+.btn {
+  width: 49%;
+  margin: 0 2px;
+}

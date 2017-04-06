@@ -226,5 +226,5 @@ export function createTestFeedbackMessage(message, compileMessage, stdout, time,
     } else {
         feedBack = stdout;
     }
-    return { from: 'Automated', message: 'Test result: ' + feedBack + `Ran in ${time} seconds` };
+    return { from: 'Automated', message: 'Test result: ' + feedBack + `\nRan in ${time} seconds` };
 }

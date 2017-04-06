@@ -10,6 +10,8 @@ import { testCode, submitCode } from '../../../../ContestActions';
 if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
     require('codemirror/mode/python/python');
     require('codemirror/mode/javascript/javascript');
+    require('codemirror/mode/clike/clike');
+    require('codemirror/mode/ruby/ruby');
 }
 
 // Initial text editor prompts in different languages
@@ -27,49 +29,72 @@ export default class TextEditor extends React.Component {
             readOnly: false,
             mode: 'python', // Syntax for text editor
             lang: 'python',
+            isBusy: false,
         };
         this.onTestClick = this.onTestClick.bind(this);
         this.onSubmitClick = this.onSubmitClick.bind(this);
         // Check local storage to recover any autosaved code
-        if (localStorage['problem' + this.props.problemNum]) {
-            this.state.code = localStorage[`problem${this.props.problemNum}`];
+        if (localStorage[`problem${this.props.problemNum}code`]) {
+            this.state.code = localStorage[`problem${this.props.problemNum}code`];
+            this.state.mode = localStorage[`problem${this.props.problemNum}mode`];
+            this.state.lang = localStorage[`problem${this.props.problemNum}lang`];
         }
     }
 
     updateCode = (newCode) => {
         this.setState({ code: newCode });
         // autosave code to local storage for each problem
-        localStorage[`problem${this.props.problemNum}`] = this.state.code;
+        localStorage[`problem${this.props.problemNum}code`] = this.state.code;
     };
 
     changeMode = (e) => {
         let lang = e.target.value;
-        // Handles different languages with the same syntax
+        let mode = lang;
+        // Sometimes language != mode so we handle it here
         switch (lang) {
-        // Python syntax applies to Python3
-        case 'python3':
-            this.setState({
-                mode: 'python',
-                lang,
-            });
+        case 'c':
+            mode = 'text/x-csrc';
             break;
-        default:
-            this.setState({
-                mode: lang,
-                lang,
-            });
+        case 'cpp':
+            mode = 'text/x-c++src';
+            break;
+        case 'java':
+            mode = 'text/x-java';
+            break;
+        case 'python3':
+            mode = 'python';
+            break;
+        case 'octave':
+            mode = 'text/x-octave';
+            break;
+        case 'scala':
+            mode = 'text/x-scala';
+            break;
         }
+        this.setState({
+          mode: mode,
+          lang: lang
+        });
+        // Update local storage
+        localStorage[`problem${this.props.problemNum}mode`] = mode;
+        localStorage[`problem${this.props.problemNum}lang`] = lang;
     };
 
     onTestClick() {
+        this.setState({isBusy: true});
         const { contest_id, team_id } = this.props;
         let userTestInput = document.getElementById('custom_in').value;
-        testCode(contest_id, team_id, this.state.code, this.state.lang, [userTestInput]);
+        testCode(contest_id, team_id, this.state.code, this.state.lang, [userTestInput]).then(res => {
+          this.setState({isBusy: false});
+        });
     }
 
     onSubmitClick() {
+        this.setState({isBusy: true});
         const { contest_id, team_id, problemNum } = this.props;
-        submitCode(contest_id, team_id, this.state.code, this.state.lang, (problemNum - 1));
+        submitCode(contest_id, team_id, this.state.code, this.state.lang, (problemNum-1)).then(res => {
+          this.setState({isBusy: false});
+        });
     }
 
     render() {
@@ -84,7 +109,13 @@ export default class TextEditor extends React.Component {
                 <select onChange={this.changeMode} value={this.state.lang}>
                     <option value='python'>Python</option>
                     <option value='python3'>Python 3</option>
+                    <option value='c'>C</option>
+                    <option value='cpp'>C++</option>
+                    <option value='java'>Java</option>
                     <option value='javascript'>JavaScript</option>
+                    <option value='octave'>Matlab</option>
+                    <option value='ruby'>Ruby</option>
+                    <option value='scala'>Scala</option>
                 </select>
 
                 <CodeMirror ref='editor' value={this.state.code} onChange={this.updateCode} options={options} />
@@ -93,8 +124,10 @@ export default class TextEditor extends React.Component {
                 <textarea name='custom_in' id='custom_in' cols='30' rows='10' />
                 <br />
                 <br />
-                <button ref='testButton' onClick={this.onTestClick} type="button" className="btn btn-default">Test</button>
-                <button ref='subButton' onClick={this.onSubmitClick} type="button" className="btn btn-primary">Submit</button>
+                <div className='form-group'>
+                  <button ref='testButton' disabled={this.state.isBusy} onClick={this.onTestClick} type="button" className="btn btn-primary">Test</button>
+                  <button ref='subButton' disabled={this.state.isBusy} onClick={this.onSubmitClick} type="button" className="btn btn-primary">Submit</button>
+                </div>
             </div>
         );
     }

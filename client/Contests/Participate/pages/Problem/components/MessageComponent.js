@@ -47,7 +47,7 @@ export default class MessageComponent extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="chatbox">
                 <ChatFeed
                     messages={this.state.messageObjs}
                     bubblesCentered={false}
@@ -58,11 +58,19 @@ export default class MessageComponent extends React.Component {
                     onKeyDown={this.sendMessage.bind(this)}
                     type='text' value={this.state.value}
                     onChange={this.handleChange}
+                    style={styles.inputField}
                 />
             </div>
         );
     }
 }
+
+const styles = {
+  inputField: {
+    display:'inherit',
+  }
+
+};
 
 MessageComponent.propTypes = {
     contest_id: React.PropTypes.string.isRequired,

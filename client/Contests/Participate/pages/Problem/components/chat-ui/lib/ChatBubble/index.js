@@ -48,7 +48,6 @@ const styles = {
     paddingBottom: 4,
     paddingLeft: 14,
     paddingRight: 14,
-    height: 24,
     width: '-webkit-fit-content'
   },
   chatbubbleOrientationNormal: {

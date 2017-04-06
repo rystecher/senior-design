@@ -24,11 +24,3 @@
   height: 760px;
   overflow-y: scroll;
 }
-
-.participant-problem-container .chat-history {
-    height: 200px;
-    width: 500px;
-    margin: 10px;
-    padding: 5px;
-    border: 1px solid #c3c3c3;
-}
