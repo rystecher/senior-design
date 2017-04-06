@@ -69,7 +69,7 @@ export default class TextEditor extends React.Component {
 
     onSubmitClick() {
         const { contest_id, team_id, problemNum } = this.props;
-        submitCode(contest_id, team_id, this.state.code, this.state.lang, problemNum);
+        submitCode(contest_id, team_id, this.state.code, this.state.lang, (problemNum-1));
     }
 
     render() {
