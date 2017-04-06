@@ -2,3 +2,11 @@
   border: 1px solid #c3c3c3;
   margin: 10px 0;
 }
+
+#custom_in {
+  height: 130px;
+}
+
+.btn {
+  margin: 0 5px;
+}

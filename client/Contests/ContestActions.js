@@ -72,6 +72,10 @@ export function showScoreboard(contestId) {
     return callApi(`contests/${contestId}/scoreboard/show`, 'post', {});
 }
 
+export function getSolvedBy(contestId) {
+    return callApi(`contests/${contestId}/scoreboard/solvedBy`);
+}
+
 export function getNumberOfProblems(contestId) {
     return callApi(`contests/${contestId}/number_of_problems`);
 }

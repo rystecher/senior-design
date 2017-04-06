@@ -40,6 +40,9 @@ router.route('/contests/:contest_id/scoreboard/hide').post(ContestController.hid
 // Shows scoreboard for contest
 router.route('/contests/:contest_id/scoreboard/show').post(ContestController.showScoreboard);
 
+//
+router.route('/contests/:contest_id/scoreboard/solvedBy').get(ContestController.getSolvedBy);
+
 //* ************************************************************
 
 // Adds a new member to a team

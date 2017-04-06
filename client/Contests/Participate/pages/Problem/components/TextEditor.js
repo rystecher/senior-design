@@ -10,6 +10,8 @@ import { testCode, submitCode } from '../../../../ContestActions';
 if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
     require('codemirror/mode/python/python');
     require('codemirror/mode/javascript/javascript');
+    require('codemirror/mode/clike/clike');
+    require('codemirror/mode/ruby/ruby');
 }
 
 // Initial text editor prompts in different languages
@@ -44,13 +46,42 @@ export default class TextEditor extends React.Component {
 
     changeMode = (e) => {
         let lang = e.target.value;
-        // Handles different languages with the same syntax
+        // Sometimes language != mode so we handle it here
         switch (lang) {
-        // Python syntax applies to Python3
+        case 'c':
+            this.setState({
+              mode: 'text/x-csrc',
+              lang,
+            });
+            break;
+        case 'cpp':
+            this.setState({
+              mode: 'text/x-c++src',
+              lang,
+            });
+            break;
+        case 'java':
+            this.setState({
+              mode: 'text/x-java',
+              lang,
+            });
+            break;
         case 'python3':
             this.setState({
-                mode: 'python',
-                lang,
+              mode: 'python',
+              lang,
+            });
+            break;
+        case 'octave':
+            this.setState({
+              mode: 'text/x-octave',
+              lang,
+            });
+            break;
+        case 'scala':
+            this.setState({
+              mode: 'text/x-scala',
+              lang,
             });
             break;
         default:
@@ -69,7 +100,7 @@ export default class TextEditor extends React.Component {
 
     onSubmitClick() {
         const { contest_id, team_id, problemNum } = this.props;
-        submitCode(contest_id, team_id, this.state.code, this.state.lang, problemNum);
+        submitCode(contest_id, team_id, this.state.code, this.state.lang, (problemNum-1));
     }
 
     render() {
@@ -84,7 +115,13 @@ export default class TextEditor extends React.Component {
                 <select onChange={this.changeMode} value={this.state.lang}>
                     <option value='python'>Python</option>
                     <option value='python3'>Python 3</option>
+                    <option value='c'>C</option>
+                    <option value='cpp'>C++</option>
+                    <option value='java'>Java</option>
                     <option value='javascript'>JavaScript</option>
+                    <option value='octave'>Matlab</option>
+                    <option value='ruby'>Ruby</option>
+                    <option value='scala'>Scala</option>
                 </select>
 
                 <CodeMirror ref='editor' value={this.state.code} onChange={this.updateCode} options={options} />

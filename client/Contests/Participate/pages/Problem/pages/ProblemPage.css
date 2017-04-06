@@ -6,6 +6,19 @@
   border-left: 1px solid #c3c3c3;
 }
 
-.container {
-  margin-top: 10px;
+.participant-problem-container {
+  margin: 10px 30px 20px 30px;
+}
+
+
+participant-problem-container .chat-history {
+  padding: 5px;
+  border: 1px solid #c3c3c3;
+}
+
+.participant-problem-container .chatbubbleWrapper {
+  marginTop: 10;
+  marginBottom: 10;
+  overflow: auto;
+  position: relative;
 }

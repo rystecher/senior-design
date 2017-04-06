@@ -1,20 +1,26 @@
 .chat-sidebar {
     position: fixed;
     right: 0;
-    top: 0;
+    top: 48px;
+    bottom: 0;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     width: 200px;
-    height: 100vh;
-    background: gray;
-    margin-top: 47px;
+    z-index: 500;
+    border-left: 1px solid #82B1FF;
 }
 
 .list-group-item.read {
-    opacity: 0.8;
+    opacity: 0.38;
 }
 
 .chat-sidebar > .list-group-item:first-child,
 .chat-sidebar > .list-group-item:last-child {
      border-radius: 0;
+}
+
+.chat-sidebar > .list-group-item:focus,
+.chat-sidebar > .list-group-item:hover {
+    text-decoration: none;
+    background: rgba(0,0,0,0.05);
 }

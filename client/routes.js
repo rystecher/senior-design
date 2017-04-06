@@ -16,7 +16,6 @@ if (typeof require.ensure !== 'function') {
   https://github.com/gaearon/react-hot-loader/issues/288 is fixed.
  */
 if (process.env.NODE_ENV !== 'production') {
-
     // Require async routes only in development for react-hot-reloader to work.
     require('./Contests/ContestWrapper');
     require('./Contests/Create/pages/CreateContest');
@@ -100,7 +99,6 @@ export default (
                 });
             }}
         />
-
         <Route
             path='scoreboard(/:teamId)'
             getComponent={(nextState, cb) => {
@@ -109,23 +107,22 @@ export default (
                 });
             }}
         />
-
-      <Route
-        path='submissions'
-        getComponent={(nextState, cb) => {
-          require.ensure([], require => {
-            cb(null, requireAuth(require('./Contests/Judge/pages/AdminPage').default));
-          });
-        }}
-      />
-      <Route
-        path='submissions(/:submissionId)'
-        getComponent={(nextState, cb) => {
-          require.ensure([], require => {
-            cb(null, requireAuth(require('./Contests/Judge/pages/SubmissionProblemPage').default));
-          });
-        }}
-      />
+        <Route
+            path='submissions'
+            getComponent={(nextState, cb) => {
+                require.ensure([], require => {
+                    cb(null, requireAuth(require('./Contests/Judge/pages/AdminPage').default));
+                });
+            }}
+        />
+        <Route
+            path='submissions/:submissionId'
+            getComponent={(nextState, cb) => {
+                require.ensure([], require => {
+                    cb(null, requireAuth(require('./Contests/Judge/pages/SubmissionProblemPage').default));
+                });
+            }}
+        />
 
     </Route>
     <Route

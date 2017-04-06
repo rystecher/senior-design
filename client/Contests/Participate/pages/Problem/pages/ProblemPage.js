@@ -5,7 +5,6 @@ import ProblemNav from '../components/ProblemView/ProblemNavigator';
 import ProblemViewer from '../components/ProblemView/ProblemViewer';
 import TextEditor from '../components/TextEditor';
 import MessageComponent from '../components/MessageComponent.js';
-import ChatSideBar from '../components/ChatSideBar.js';
 import './ProblemPage.css';
 
 /*
@@ -37,13 +36,13 @@ class ProblemPage extends React.Component {
 
     render() {
         return (
-            <div className="container">
+            <div className='participant-problem-container'>
               <ProblemNav
-                problemNum={this.state.problemNum}
-                teamId={this.teamId}
-                contestId={this.contestId}
-                changeProblemNumber={this.changeProblemNumber}
-                numberOfProblems={this.state.numberOfProblems}
+                  problemNum={this.state.problemNum}
+                  teamId={this.teamId}
+                  contestId={this.contestId}
+                  changeProblemNumber={this.changeProblemNumber}
+                  numberOfProblems={this.state.numberOfProblems}
               />
               <div className='row'>
                 <div className='col-md-6 left-col'>
@@ -53,23 +52,18 @@ class ProblemPage extends React.Component {
                       numberOfProblems={this.state.numberOfProblems}
                   />
                 </div>
-
-                <div className='col-md-6'>
+                <div className='col-md-6 right-col'>
                   <TextEditor
                       team_id={this.teamId}
                       contest_id={this.contestId}
                       problemNum={this.state.problemNum}
                   />
+                  <MessageComponent
+                    team_id={this.teamId}
+                    contest_id={this.contestId}
+                  />
                 </div>
               </div>
-
-              <MessageComponent
-                  team_id={this.teamId}
-                  contest_id={this.contestId}
-              />
-              <ChatSideBar
-                  contest_id={this.contestId}
-              />
             </div>
         );
     }

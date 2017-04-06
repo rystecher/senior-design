@@ -1,6 +1,7 @@
 import React from 'react';
 import { fetchProblem } from '../../../../../ContestActions';
 import spdf from 'simple-react-pdf';
+import './ProblemView.css';
 
 export default class ProblemViewer extends React.Component {
 
