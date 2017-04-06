@@ -246,7 +246,8 @@ export function addProblemAttempt(req, res) {
                                         const stdOutput = (Array.isArray(stdout)) && stdout.length !== 0 ? stdout[0] : null;
                                         const stdError = (Array.isArray(stderr)) && stderr.length !== 0 ? stderr[0] : null;
                                         const output = hadStdError ? stdError : stdOutput || compilemessage;
-                                        fs.writeFile('submission/' + fileName, output);
+                                        const actualOutputFileName = shortid.generate() + '.txt';
+                                        fs.writeFile('submission/' + actualOutputFileName, output);
                                         const feedBack = createFeedbackMessage(problem.solved, message, compilemessage, number, hadStdError, stderr);
                                         team.messages.push(feedBack);
                                         createSubmission({
@@ -258,9 +259,10 @@ export function addProblemAttempt(req, res) {
                                             problemNumber: number,
                                             hadStdError,
                                             correct: problem.solved,
-                                            fileName,
+                                            expectedOutputFileName: fileName,
+                                            actualOutputFileName,
                                             feedBack,
-                                            code: code
+                                            code,
                                         });
                                         contest.save((err) => {
                                             if (err) {
