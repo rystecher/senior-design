@@ -4,6 +4,9 @@ import { connect } from 'react-redux';
 import ContestNavigator from './ContestNavigator';
 import { getUserRole } from './ContestActions';
 import './contest.css';
+import Alert from 'react-s-alert';
+import 'react-s-alert/dist/s-alert-default.css';
+import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 
 class ContestWrapper extends React.Component {
 
@@ -73,6 +76,7 @@ class ContestWrapper extends React.Component {
                 <div className='contest-child-container'>
                     {childrenWithProps}
                 </div>
+                <Alert stack={{ limit: 3 }} timeout={2500} />
             </div>
         );
     }

@@ -15,7 +15,7 @@ class EditContestPage extends React.Component {
     componentDidMount() {
         getContestInfo(this.props.params.contestId).then(res => {
             if (res.name) {
-                const { about, name, rules } = res;
+                const { about, name, rules, open } = res;
                 this.setState({ about, name, rules, open, loading: false });
             }
         });
@@ -51,7 +51,6 @@ class EditContestPage extends React.Component {
         }
         return (
             <div>
-                <Alert stack={{ limit: 3 }} timeout={2500} />
                 <div id='header-banner'>
                     <input
                         placeholder='Contest Name'

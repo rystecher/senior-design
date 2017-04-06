@@ -630,8 +630,8 @@ export function updateContestInfo(req, res) {
                 res.status(500).send(err);
             } else if (!contest) {
                 res.status(400).send({ err: 'Contest does not exist' });
-            } else if (typeof contest.start !== 'number') {
-                res.status(400).send(err);
+            } else if (typeof contest.start === 'number') {
+                res.status(400).send({ err: 'Contest already started' });
             } else {
                 contest.about = req.body.info.about;
                 contest.name = req.body.info.name;

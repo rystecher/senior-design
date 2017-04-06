@@ -23,11 +23,17 @@ class AdminSubmissionsPage extends React.Component {
     }
 
     componentDidMount() {
-        fetchSubmissions(this.props.params.contestId).then(res => {
+        const intervalFunc = fetchSubmissions(this.props.params.contestId).then(res => {
             this.setState({
                 submissions: res,
             });
         });
+        intervalFunc();
+        this.chatIntervId = setInterval(intervalFunc, 15000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.chatIntervId);
     }
 
     goToSingleSubmissionPage(cuid) {
