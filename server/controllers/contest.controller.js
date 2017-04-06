@@ -239,7 +239,7 @@ export function addProblemAttempt(req, res) {
                                                 team.numSolved++;
                                                 if (!contest.problems[number].solved) {
                                                     contest.problems[number].solved = true;
-                                                    contest.problems[number].solvedBy = req.params.team_id;
+                                                    contest.problems[number].solvedBy = team.name;
                                                 }
                                             }
                                         }

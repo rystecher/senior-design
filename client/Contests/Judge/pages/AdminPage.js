@@ -31,7 +31,7 @@ class AdminSubmissionsPage extends React.Component {
     }
 
     goToSingleSubmissionPage(cuid) {
-        this.props.router.push(`/contest/${this.props.params.contestId}/submissions/${cuid}`);
+        this.props.router.push(`/contest/${this.props.params.contestId}/submissions/admin/${cuid}`);
     }
 
     render() {
