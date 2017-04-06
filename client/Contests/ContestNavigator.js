@@ -83,7 +83,7 @@ class ContestNavigator extends React.Component {
                             </Link>
                         </li>
                         <li className='nav-item'>
-                            <Link to={`/login`} className='nav-link' onClick={this.logout.bind(this)}>
+                            <Link to={`/`} className='nav-link' onClick={this.logout.bind(this)}>
                                 Logout
                             </Link>
                         </li>
