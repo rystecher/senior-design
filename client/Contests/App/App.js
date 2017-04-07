@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import styles from './App.css';
 import Helmet from 'react-helmet';
-import FlashMessagesList from '../Login/components/FlashMessagesList';
 
 export class App extends Component {
 
@@ -23,7 +22,6 @@ export class App extends Component {
                         },
                         ]}
                     />
-                    <FlashMessagesList />
                     <div className={styles.container}>
                         {this.props.children}
                     </div>

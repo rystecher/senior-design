@@ -7,6 +7,9 @@ import validateRegisterInput from '../../../../server/controllers/validateRegist
 import validateLoginInput from '../../../../server/controllers/validateLoginInput';
 import { login } from '../actions/authActions';
 import { connect } from 'react-redux';
+import Alert from 'react-s-alert';
+import 'react-s-alert/dist/s-alert-default.css';
+import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 
 
 class LoginOrRegisterForm extends React.Component {
@@ -17,14 +20,11 @@ class LoginOrRegisterForm extends React.Component {
       password: '',
       errors: {},
       isLoading: false,
-      invalid: false,
-      username_taken: false,
     };
 
     this.onChange = this.onChange.bind(this);
     this.onSubmitLogin = this.onSubmitLogin.bind(this);
     this.onSubmitRegister = this.onSubmitRegister.bind(this);
-    this.checkUserExists = this.checkUserExists.bind(this);
     this.isValidRegister = this.isValidRegister.bind(this);
     this.isValidLogin = this.isValidLogin.bind(this);
   }
@@ -49,22 +49,6 @@ class LoginOrRegisterForm extends React.Component {
   }
 
   /**
-   * sets username_taken field
-   * @param e
-   */
-  checkUserExists(e) {
-    const field = e.target.name;
-    const val = e.target.value;
-    if (val !== '') {
-      this.props.isUserExists(val).then(res => {
-        if (res.data.user.length > 0) {
-          this.setState({username_taken:true});
-        }
-      });
-    }
-  }
-
-  /**
    * tries to register user or sends message that user name is alread
    * taken
    * @param e
@@ -72,36 +56,33 @@ class LoginOrRegisterForm extends React.Component {
   onSubmitRegister(e) {
     e.preventDefault();
 
-
-    if (this.isValidRegister() && !this.state.username_taken ) {
+    if (this.isValidRegister()) {
       this.setState({ errors: {}, isLoading: true });
       console.log("valid register");
       this.props.userRegisterRequest(this.state).then(
         () => {
-          this.props.addFlashMessage({
-            type: 'success',
-            text: 'You signed up successfully. Welcome!',
-          });
-
           // log user in
           if (this.isValidLogin()) {
-            console.log("in is valid login");
             this.setState({ errors: {}, isLoading: true });
             this.props.login(this.state).then(
               (res) => this.context.router.push(`/profile`),
               (err) => this.setState({ errors: err.response.data.errors, isLoading: false })
             );
+            /** TODO: have this success message appear for longer.
+            Alert.success('You signed up successfully. Welcome!', {
+                position: 'bottom-right',
+                effect: 'slide',
+            });*/
           }
         },
-        ({ response }) => this.setState({ errors: response.data, isLoading: false })
+        ({ response }) => {
+          this.setState({ errors: response.data, isLoading: false });
+          Alert.warning(this.state.errors.username, {
+              position: 'bottom-right',
+              effect: 'slide',
+          });
+        }
       );
-    }
-    else if (this.state.username_taken){
-      console.log("invalid username");
-      this.props.addFlashMessage({
-        type: 'error',
-        text: 'This username is already taken. Please try again.',
-      });
     }
   }
 
@@ -129,7 +110,14 @@ class LoginOrRegisterForm extends React.Component {
         (res) => {
           this.context.router.push(`/profile`);
         },
-        (err) => this.setState({ errors: err.response.data.errors, isLoading: false })
+        (err) => {
+          this.setState({ errors: err.response.data.errors, isLoading: false });
+          console.log(this.state.errors);
+          Alert.warning(this.state.errors.form, {
+              position: 'bottom-right',
+              effect: 'slide',
+          });
+        }
       );
     }
   }
@@ -142,12 +130,11 @@ class LoginOrRegisterForm extends React.Component {
     const { errors } = this.state;
     return (
       <form>
-
+        <Alert stack={{ limit: 3 }} timeout={2500} />
         <TextFieldGroup
           error={errors.username}
           label='Username'
           onChange={this.onChange}
-          checkUserExists={this.checkUserExists}
           value={this.state.username}
           field='username'
         />
@@ -161,11 +148,11 @@ class LoginOrRegisterForm extends React.Component {
           type='password'
         />
         <div className='form-group'>
-          <button label='register' onClick={this.onSubmitRegister} disabled={this.state.isLoading || this.state.invalid} className='login-btn btn-primary btn-lg'>
+          <button label='register' onClick={this.onSubmitRegister} disabled={this.state.isLoading} className='login-btn btn-primary btn-lg'>
             Register
           </button>
           <div className="divider"/>
-          <button label='login' onClick={this.onSubmitLogin} disabled={this.state.isLoading || this.state.invalid} className='login-btn btn-primary btn-lg'>
+          <button label='login' onClick={this.onSubmitLogin} disabled={this.state.isLoading} className='login-btn btn-primary btn-lg'>
             Login
           </button>
         </div>
@@ -176,8 +163,6 @@ class LoginOrRegisterForm extends React.Component {
 
 LoginOrRegisterForm.propTypes = {
   userRegisterRequest: React.PropTypes.func.isRequired,
-  addFlashMessage: React.PropTypes.func.isRequired,
-  isUserExists: React.PropTypes.func.isRequired,
   login: React.PropTypes.func.isRequired,
 };
 
