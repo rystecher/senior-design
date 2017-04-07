@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import ReactTable from 'react-table';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { withRouter, Link } from 'react-router';
 import { getCreatedContests, getJoinedContests, getJoinableContests } from '../DisplayActions';
 import 'react-table/react-table.css';
 import './display-contests.css';
 import { logout } from '../.././Login/actions/authActions';
-import { Link } from 'react-router';
+import ContestNavigator from '../../ContestNavigator';
 
 function getContestStatus(contest) {
     let status = 'Not started';
@@ -89,22 +89,17 @@ class DisplayContests extends Component {
         }
         return (
             <div className='profile-container'>
-                <nav className='navbar navbar-inverse contest-navigator'>
-                    <div className='navbar-toggleable-md'>
-                        <ul className='nav navbar-nav navbar-toggler-right'>
-                            <li className='nav-item'>
-                                <Link to='/profile' className='nav-link'>
-                                    <span className='glyphicon glyphicon-user'/>{this.props.auth.user.username}
-                                </Link>
-                            </li>
-                            <li className='nav-item'>
-                                <Link to='/login' className='nav-link' onClick={this.logout.bind(this)}>
-                                    Logout
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
+                <ContestNavigator
+                    contestId='wont be used'
+                    page='none'
+                    username={this.props.auth.user.username}
+                    userRole='none'
+                />
+                <button
+                    className='btn create'
+                    onClick={() => this.props.router.push('/create-contest')}
+                >Create Contest
+                </button>
                 <ReactTable
                     data={data}
                     columns={this.columns}

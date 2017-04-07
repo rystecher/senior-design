@@ -116,6 +116,20 @@ function markSubmissionCorrect(contestId, teamId, problemNum) {
             const team = contest.teams.id(teamId);
             const problem = team.problem_attempts[problemNum]; // problem object of team
             team.score += computeScore(contest.start, problem.attempts.length);
+            team.numSolved += 1;
+            contest.save();
+        }
+    });
+}
+
+function markSubmissionIncorrect(contestId, teamId, problemNum) {
+    Contest.findOne({ cuid: contestId }, (err, contest) => {
+        if (!err && contest) {
+            const team = contest.teams.id(teamId);
+            const problem = team.problem_attempts[problemNum]; // problem object of team
+            team.score -= computeScore(contest.start, problem.attempts.length); // this won't be exact
+            team.score = Math.max(team.score, 0); // make sure they don't have negative time score
+            team.numSolved -= 1;
             contest.save();
         }
     });
@@ -142,6 +156,10 @@ export function sendFeedback(req, res) {
                     submission.correct = true;
                     const { contestID, teamID, problemNumber } = submission;
                     markSubmissionCorrect(contestID, teamID, problemNumber);
+                } else if (!req.body.correct && submission.correct) {
+                    submission.correct = false;
+                    const { contestID, teamID, problemNumber } = submission;
+                    markSubmissionIncorrect(contestID, teamID, problemNumber);
                 }
                 sendTeamMessage(genSubmissionResponse(submission), submission.teamID);
                 submission.save(err => {
@@ -215,16 +233,16 @@ export function createFeedbackMessage(correct, msg, compileMessage, problemNum, 
 }
 
 export function createTestFeedbackMessage(message, compileMessage, stdout, time, hadStdError, stderr) {
-    let feedBack = 'Awaiting feedback from our server...';
+    let feedback = 'Awaiting feedback from our server...';
   // Ran out of time
     if ('Terminated due to timeout' === message && 10 === time) {
-        feedBack = message + ' after 10 seconds.';
+        feedback = message + ' after 10 seconds.';
     } else if (compileMessage !== undefined) {
-        feedBack = compileMessage;
+        feedback = compileMessage;
     } else if (hadStdError) {
-        feedBack = 'Standard Error: ' + stderr.toString();
+        feedback = 'Standard Error: ' + stderr.toString();
     } else {
-        feedBack = stdout;
+        feedback = stdout;
     }
-    return { from: 'Automated', message: 'Test result: ' + feedBack + `\nRan in ${time} seconds` };
+    return { from: 'Automated', message: 'Test result: ' + feedback + `\nRan in ${time} seconds` };
 }

@@ -5,6 +5,11 @@
 }
 
 .profile-container .ReactTable {
-    margin-top: 96px;
+    margin-bottom: 96px;
 }
 
+.profile-container .btn.create {
+    width: 50%;
+    margin: 96px auto 48px;
+    display: block;
+}
