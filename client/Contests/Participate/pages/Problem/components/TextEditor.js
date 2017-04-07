@@ -17,7 +17,7 @@ if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
 
 // Initial text editor prompts in different languages
 const prompts = {
-    python: 'def addOne(x):\n    return x + 1\nprint addOne(1)',
+    python: 'def addOne(x):\n  return x + 1\nprint addOne(1)',
 };
 
 // The text editor where users can write and edit code
