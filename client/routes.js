@@ -24,7 +24,6 @@ if (process.env.NODE_ENV !== 'production') {
     require('./Contests/ContestHome/pages/HomePage');
     require('./Contests/ContestHome/pages/EditContestPage');
     require('./Contests/Participate/pages/Problem/pages/ProblemPage');
-    require('./Contests/Pages/MyContests/MyContests');
     require('./Contests/Participate/pages/Scoreboard/pages/ScoreboardPage');
     require('./Contests/Home/pages/DisplayContests');
     require('./Contests/Judge/pages/AdminPage');
@@ -150,15 +149,5 @@ export default (
         />
 
     </Route>
-    <Route
-        path='/my'
-        getComponent={(nextState, cb) => {
-            require.ensure([], require => {
-                cb(null, requireAuth(require('./Contests/Pages/MyContests/MyContests').default));
-            });
-        }}
-    />
-
-      />
     </Route>
 );

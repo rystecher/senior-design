@@ -5,12 +5,6 @@ const router = new Router();
 // Get all Contests
 router.route('/contests/all').get(ContestController.getContests);
 
-// Get all Contests
-router.route('/contests/my').get(ContestController.getContestsFromIds);
-
-// Get all Contests
-router.route('/contests/join').get(ContestController.getContestsNotInIds);
-
 // Get one contest by cuid
 router.route('/contests/:contest_id').get(ContestController.getContest);
 
