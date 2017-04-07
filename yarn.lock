@@ -5160,8 +5160,8 @@ pbkdf2-compat@2.0.1:
   resolved "https://registry.yarnpkg.com/pbkdf2-compat/-/pbkdf2-compat-2.0.1.tgz#b6e0c8fa99494d94e0511575802a59a5c142f288"
 
 pdfjs-dist@^1.5.222:
-  version "1.7.418"
-  resolved "https://registry.yarnpkg.com/pdfjs-dist/-/pdfjs-dist-1.7.418.tgz#a9174003071cd1ff507e7e73dc81ad1125bf280e"
+  version "1.8.172"
+  resolved "https://registry.yarnpkg.com/pdfjs-dist/-/pdfjs-dist-1.8.172.tgz#613da9c7ea9d8f4367f8c229a3839e290dc151c3"
   dependencies:
     node-ensure "^0.0.0"
     worker-loader "^0.8.0"
