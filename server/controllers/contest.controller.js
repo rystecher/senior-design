@@ -149,7 +149,7 @@ export function testProblemAttempt(req, res) {
             const { stderr, stdout, compileMessage, message, time } = JSON.parse(response.body).result;
             const hadStdError = null !== stderr && !stderr.every((error) => false === error);
       // Parse result
-            const feedBack = createTestFeedbackMessage(message, compileMessage, stdout, time, hadStdError, stderr);
+            const feedback = createTestFeedbackMessage(message, compileMessage, stdout, time, hadStdError, stderr);
       // Send feedback
             Contest.findOne({ cuid: req.params.contest_id }, (err, contest) => {
                 if (err) {
@@ -159,12 +159,12 @@ export function testProblemAttempt(req, res) {
                 } else {
                     const team = contest.teams.id(req.params.team_id);
                     if (team) {
-                        team.messages.push(feedBack);
+                        team.messages.push(feedback);
                         contest.save((err2) => {
                             if (err2) {
                                 res.status(500).send(err);
                             } else {
-                                res.json(feedBack);
+                                res.json(feedback);
                             }
                         });
                     } else {
@@ -195,8 +195,8 @@ export function addProblemAttempt(req, res) {
             } else if (contest.closed) {
                 const team = contest.teams.id(req.params.team_id);
                 if (team) {
-                    const feedBack = 'The contest is over! No more submissions!';
-                    team.messages.push({ from: 'Automated', message: feedBack });
+                    const feedback = 'The contest is over! No more submissions!';
+                    team.messages.push({ from: 'Automated', message: feedback });
                     res.status(400).send({ err: 'Contest is closed' });
                 } else {
                     res.status(400).send({ err: 'Team does not exist' });
@@ -207,14 +207,14 @@ export function addProblemAttempt(req, res) {
                     const problem = team.problem_attempts[number]; // problem object of team
                     if (problem) {
                         if (problem.solved) {
-                            const feedBack = 'You have already solved this problem';
-                            team.messages.push({ from: 'Automated', message: feedBack });
-                            res.status(500).send({ err: feedBack });
+                            const feedback = 'You have already solved this problem';
+                            team.messages.push({ from: 'Automated', message: feedback });
+                            res.status(500).send({ err: feedback });
                             contest.save();
                         } else if (problem.attempts.indexOf(code) !== -1) {
-                            const feedBack = 'You have already submitted this code';
-                            team.messages.push({ from: 'Automated', message: feedBack });
-                            res.status(500).send({ err: feedBack });
+                            const feedback = 'You have already submitted this code';
+                            team.messages.push({ from: 'Automated', message: feedback });
+                            res.status(500).send({ err: feedback });
                             contest.save();
                         } else {
                             const fileName = contest.problems[number].fileName + '.txt';
@@ -248,8 +248,8 @@ export function addProblemAttempt(req, res) {
                                         const output = hadStdError ? stdError : stdOutput || compilemessage;
                                         const actualOutputFileName = shortid.generate() + '.txt';
                                         fs.writeFile('submission/' + actualOutputFileName, output);
-                                        const feedBack = createFeedbackMessage(problem.solved, message, compilemessage, number, hadStdError, stderr);
-                                        team.messages.push(feedBack);
+                                        const feedback = createFeedbackMessage(problem.solved, message, compilemessage, number, hadStdError, stderr);
+                                        team.messages.push(feedback);
                                         createSubmission({
                                             cuid: cuid(),
                                             teamName: team.name,
@@ -261,7 +261,7 @@ export function addProblemAttempt(req, res) {
                                             correct: problem.solved,
                                             expectedOutputFileName: fileName,
                                             actualOutputFileName,
-                                            feedBack,
+                                            feedback,
                                             code,
                                         });
                                         contest.save((err) => {
@@ -269,7 +269,7 @@ export function addProblemAttempt(req, res) {
                                                 res.status(500).send(err);
                                             } else {
                                                 res.json({
-                                                    feedBack,
+                                                    feedback,
                                                     correct: problem.solved,
                                                 });
                                             }

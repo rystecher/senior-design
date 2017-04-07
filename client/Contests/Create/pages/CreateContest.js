@@ -6,6 +6,7 @@ import { createContest } from '../../ContestActions';
 import { withRouter } from 'react-router';
 import './create_contest.css';
 import { connect } from 'react-redux';
+import ContestNavigator from '../../ContestNavigator';
 
 class CreateContest extends React.Component {
 
@@ -44,17 +45,12 @@ class CreateContest extends React.Component {
         return (
             <div>
                 <Alert stack={{ limit: 3 }} timeout={2500} />
-                <nav className='navbar navbar-inverse contest-navigator'>
-                    <div className='navbar-toggleable-md'>
-                        <ul className='nav navbar-nav navbar-toggler-right'>
-                            <li className='nav-item'>
-                                <a to='/contests' className='nav-link'>
-                                    <span className='glyphicon glyphicon-user'/>{this.props.auth.user.username}
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
+                <ContestNavigator
+                    contestId='wont be used'
+                    page='none'
+                    username={this.props.auth.user.username}
+                    userRole='none'
+                />
                 <div id='header-banner'>
                     <input
                         placeholder='Contest Name'

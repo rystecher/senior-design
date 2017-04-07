@@ -78,12 +78,12 @@ class ContestNavigator extends React.Component {
                     {navLinks}
                     <ul className='nav navbar-nav navbar-toggler-right'>
                         <li className='nav-item'>
-                            <Link to={`/profile`} className='nav-link'>
-                                <span className='glyphicon glyphicon-user'/>{username}
+                            <Link to={'/profile'} className='nav-link'>
+                                <span className='glyphicon glyphicon-user' />{username}
                             </Link>
                         </li>
                         <li className='nav-item'>
-                            <Link to={`/`} className='nav-link' onClick={this.logout.bind(this)}>
+                            <Link to={'/'} className='nav-link' onClick={this.logout.bind(this)}>
                                 Logout
                             </Link>
                         </li>
@@ -97,7 +97,7 @@ class ContestNavigator extends React.Component {
 ContestNavigator.propTypes = {
     contestId: React.PropTypes.string.isRequired,
     page: React.PropTypes.oneOf([
-        'home', 'problems', 'scoreboard', 'submissions',
+        'home', 'problems', 'scoreboard', 'submissions', 'none',
     ]).isRequired,
     teamId: React.PropTypes.string,
     username: React.PropTypes.string.isRequired,
