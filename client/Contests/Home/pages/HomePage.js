@@ -1,8 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import LoginOrRegisterForm from '../../Login/components/LoginOrRegisterForm.js';
 import { connect } from 'react-redux';
-import { userRegisterRequest, isUserExists } from '../../Login/actions/registerActions';
-import { addFlashMessage } from '../../Login/actions/flashMessages';
+import { userRegisterRequest } from '../../Login/actions/registerActions';
 import '../../contest-navigator.css';
 import './HomePage.css'
 
@@ -14,16 +13,14 @@ class HomePage extends React.Component {
     }
 
     render() {
-      const { userRegisterRequest, addFlashMessage, isUserExists } = this.props;
+      const { userRegisterRequest } = this.props;
       return (
         <div>
 
           <h1 className="center">Bucknell Programming Competition 2017</h1>
           <div className='col-md-4 col-md-offset-4 login'>
             <LoginOrRegisterForm
-              isUserExists={isUserExists}
-              userRegisterRequest={userRegisterRequest}
-              addFlashMessage={addFlashMessage}/>
+              userRegisterRequest={userRegisterRequest}/>
           </div>
         </div>
 
@@ -33,9 +30,7 @@ class HomePage extends React.Component {
 
 HomePage.propTypes = {
   userRegisterRequest: React.PropTypes.func.isRequired,
-  addFlashMessage: React.PropTypes.func.isRequired,
-  isUserExists: React.PropTypes.func.isRequired,
 };
 
 
-export default connect(null, { userRegisterRequest, addFlashMessage, isUserExists })(HomePage);
+export default connect(null, { userRegisterRequest })(HomePage);
