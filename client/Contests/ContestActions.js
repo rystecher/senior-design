@@ -1,19 +1,8 @@
 import callApi, { callApiForFile } from '../util/apiCaller';
 
 // Export Constants
-export const ADD_CONTEST = 'ADD_CONTEST';
-export const GET_CONTESTS = 'GET_CONTESTS';
-export const GET_MY_CONTESTS = 'GET_MY_CONTESTS';
-export const GET_NOT_MY_CONTESTS = 'GET_NOT_MY_CONTESTS';
-export const DELETE_CONTEST = 'DELETE_CONTEST';
 
 // Export Actions
-export function addContest(contest) {
-    return {
-        type: ADD_CONTEST,
-        contest,
-    };
-}
 
 export function addContestRequest(contest) {
     return callApi('contests', 'post', contest);
@@ -33,21 +22,6 @@ export function addAccountToTeam(contestId, teamId, account_id) {
     callApi(`contests/${contestId}/teams/${teamId}`, 'post', {
         account_id,
     }).then(res => console.log(res));
-}
-
-export function getContests(contests) {
-    return {
-        type: GET_CONTESTS,
-        contests,
-    };
-}
-
-export function fetchContests() {
-    return (dispatch) => {
-        return callApi('contests').then(res => {
-            dispatch(getContests(res.contests));
-        });
-    };
 }
 
 export function getContestInfo(contestId) {
@@ -186,26 +160,6 @@ export function getProblemMetaData(contestId, problemNum) {
     return callApi(`contests/${contestId}/problem/${problemNum}/metadata`);
 }
 
-export function getMyContests(contests) {
-    return {
-        type: GET_MY_CONTESTS,
-        contests,
-    };
-}
-
-export function fetchMyContests(cuids) {
-    return (dispatch) => {
-        return callApi('contests/my', 'get', cuids).then(res => dispatch(getMyContests(res.contests)));
-    };
-}
-
-export function getNotMyContests(contests) {
-    return {
-        type: GET_NOT_MY_CONTESTS,
-        contests,
-    };
-}
-
 export function testCode(contestId, teamId, code, lang, testcases) {
     return callApi(`contests/${contestId}/teams/${teamId}/submit/testCode`, 'post', {
         problem: { code, lang, testcases },
@@ -216,21 +170,4 @@ export function submitCode(contestId, teamId, code, lang, number) {
     return callApi(`contests/${contestId}/teams/${teamId}/submit`, 'post', {
         problem: { code, lang, number },
     }).then(res => true);
-}
-
-export function fetchNotMyContests(cuids) {
-    return callApi('contests/join', 'get', cuids);
-}
-
-export function deleteContest(cuid) {
-    return {
-        type: DELETE_CONTEST,
-        cuid,
-    };
-}
-
-export function deleteContestRequest(cuid) {
-    return (dispatch) => {
-        return callApi(`contests/${cuid}`, 'delete').then(() => dispatch(deleteContest(cuid)));
-    };
 }
