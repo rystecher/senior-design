@@ -161,7 +161,7 @@ export function sendFeedback(req, res) {
                     const { contestID, teamID, problemNumber } = submission;
                     markSubmissionIncorrect(contestID, teamID, problemNumber);
                 }
-                sendTeamMessage(genSubmissionResponse(submission), submission.teamID);
+                sendTeamMessage(genSubmissionResponse(submission), submission.contestID, submission.teamID);
                 submission.save(err => {
                     if (err) {
                         res.status(500).send(err);
@@ -213,7 +213,7 @@ export function deleteSubmission(req, res) {
 function genSubmissionResponse(submission) {
     return {
         from: 'Judges',
-        message: `Judge: Your submission for problem #${submission.problemNumber},
+        message: `Judge: Your submission for problem #${submission.problemNumber + 1},
         ${submission.problemName}, has been marked: ${submission.feedback}`,
     };
 }
