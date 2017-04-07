@@ -13,28 +13,28 @@ class ContestNavigator extends React.Component {
     render() {
         const { contestId, page, teamId, username, userRole } = this.props;
         let navLinks = null;
-        if (userRole === 'admin') {
+        if ('admin' === userRole) {
             navLinks = (
                 <ul className='nav navbar-nav navbar-toggler-left'>
-                    <li className={page === 'home' ? 'nav-item active' : 'nav-item'}>
+                    <li className={'home' === page ? 'nav-item active' : 'nav-item'}>
                         <Link
                             className='nav-link'
                             to={`/contest/${contestId}/home`}
                         >Home</Link>
                     </li>
-                    <li className={page === 'problems' ? 'nav-item active' : 'nav-item'}>
+                    <li className={'problems' === page ? 'nav-item active' : 'nav-item'}>
                         <Link
                             className='nav-link'
                             to={`/contest/${contestId}/problems/add`}
                         >Problems</Link>
                     </li>
-                    <li className={page === 'scoreboard' ? 'nav-item active' : 'nav-item'}>
+                    <li className={'scoreboard' === page ? 'nav-item active' : 'nav-item'}>
                         <Link
                             className='nav-link'
                             to={`/contest/${contestId}/scoreboard`}
                         >ScoreBoard</Link>
                     </li>
-                    <li className={page === 'submissions' ? 'nav-item active' : 'nav-item'}>
+                    <li className={'submissions' === page ? 'nav-item active' : 'nav-item'}>
                         <Link
                             className='nav-link'
                             to={`/contest/${contestId}/submissions`}
@@ -42,28 +42,28 @@ class ContestNavigator extends React.Component {
                     </li>
                 </ul>
             );
-        } else if (userRole === 'participant') {
+        } else if ('participant' === userRole) {
             navLinks = (
                 <ul className='nav navbar-nav navbar-toggler-left'>
-                    <li className={page === 'home' ? 'nav-item active' : 'nav-item'}>
+                    <li className={'home' === page ? 'nav-item active' : 'nav-item'}>
                         <Link
                             className='nav-link'
                             to={`/contest/${contestId}/home`}
                         >Home</Link>
                     </li>
-                    <li className={page === 'problems' ? 'nav-item active' : 'nav-item'}>
+                    <li className={'problems' === page ? 'nav-item active' : 'nav-item'}>
                         <Link
                             className='nav-link'
                             to={`/contest/${contestId}/problems/${teamId}/1`}
                         >Problems</Link>
                     </li>
-                    <li className={page === 'scoreboard' ? 'nav-item active' : 'nav-item'}>
+                    <li className={'scoreboard' === page ? 'nav-item active' : 'nav-item'}>
                         <Link
                             className='nav-link'
                             to={`/contest/${contestId}/scoreboard/${teamId}`}
                         >ScoreBoard</Link>
                     </li>
-                    <li className={page === 'submissions' ? 'nav-item active' : 'nav-item'}>
+                    <li className={'submissions' === page ? 'nav-item active' : 'nav-item'}>
                         <Link
                             className='nav-link'
                             to={`/contest/${contestId}/submissions/${teamId}`}
@@ -78,12 +78,12 @@ class ContestNavigator extends React.Component {
                     {navLinks}
                     <ul className='nav navbar-nav navbar-toggler-right'>
                         <li className='nav-item'>
-                            <Link to={`/profile`} className='nav-link'>
-                                <span className='glyphicon glyphicon-user'/>{username}
+                            <Link to={'/profile'} className='nav-link'>
+                                <span className='glyphicon glyphicon-user' />{username}
                             </Link>
                         </li>
                         <li className='nav-item'>
-                            <Link to={`/login`} className='nav-link' onClick={this.logout.bind(this)}>
+                            <Link to={'/'} className='nav-link' onClick={this.logout.bind(this)}>
                                 Logout
                             </Link>
                         </li>
@@ -97,7 +97,7 @@ class ContestNavigator extends React.Component {
 ContestNavigator.propTypes = {
     contestId: React.PropTypes.string.isRequired,
     page: React.PropTypes.oneOf([
-        'home', 'problems', 'scoreboard', 'submissions',
+        'home', 'problems', 'scoreboard', 'submissions', 'none',
     ]).isRequired,
     teamId: React.PropTypes.string,
     username: React.PropTypes.string.isRequired,

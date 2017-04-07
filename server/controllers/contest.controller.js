@@ -147,9 +147,9 @@ export function testProblemAttempt(req, res) {
         const { code, lang, testcases } = req.body.problem;
         hackerrankCall(code, lang, testcases, (error, response) => {
             const { stderr, stdout, compileMessage, message, time } = JSON.parse(response.body).result;
-            const hadStdError = stderr !== null && !stderr.every((error) => error === false);
+            const hadStdError = null !== stderr && !stderr.every((error) => false === error);
       // Parse result
-            const feedBack = createTestFeedbackMessage(message, compileMessage, stdout, time, hadStdError, stderr);
+            const feedback = createTestFeedbackMessage(message, compileMessage, stdout, time, hadStdError, stderr);
       // Send feedback
             Contest.findOne({ cuid: req.params.contest_id }, (err, contest) => {
                 if (err) {
@@ -159,12 +159,12 @@ export function testProblemAttempt(req, res) {
                 } else {
                     const team = contest.teams.id(req.params.team_id);
                     if (team) {
-                        team.messages.push(feedBack);
+                        team.messages.push(feedback);
                         contest.save((err2) => {
                             if (err2) {
                                 res.status(500).send(err);
                             } else {
-                                res.json(feedBack);
+                                res.json(feedback);
                             }
                         });
                     } else {
@@ -190,13 +190,13 @@ export function addProblemAttempt(req, res) {
         Contest.findOne({ cuid: req.params.contest_id }, (err, contest) => {
             if (err) {
                 res.status(500).send(err);
-            } else if (!contest || typeof contest.start !== 'number') {
+            } else if (!contest || 'number' !== typeof contest.start) {
                 res.status(400).send(err);
             } else if (contest.closed) {
                 const team = contest.teams.id(req.params.team_id);
                 if (team) {
-                    const feedBack = 'The contest is over! No more submissions!';
-                    team.messages.push({ from: 'Automated', message: feedBack });
+                    const feedback = 'The contest is over! No more submissions!';
+                    team.messages.push({ from: 'Automated', message: feedback });
                     res.status(400).send({ err: 'Contest is closed' });
                 } else {
                     res.status(400).send({ err: 'Team does not exist' });
@@ -207,33 +207,26 @@ export function addProblemAttempt(req, res) {
                     const problem = team.problem_attempts[number]; // problem object of team
                     if (problem) {
                         if (problem.solved) {
-                            const feedBack = 'You have already solved this problem';
-                            team.messages.push({ from: 'Automated', message: feedBack });
-                            res.status(500).send({ err: feedBack });
+                            const feedback = 'You have already solved this problem';
+                            team.messages.push({ from: 'Automated', message: feedback });
+                            res.status(500).send({ err: feedback });
                             contest.save();
                         } else if (problem.attempts.indexOf(code) !== -1) {
-                            const feedBack = 'You have already submitted this code';
-                            team.messages.push({ from: 'Automated', message: feedBack });
-                            res.status(500).send({ err: feedBack });
+                            const feedback = 'You have already submitted this code';
+                            team.messages.push({ from: 'Automated', message: feedback });
+                            res.status(500).send({ err: feedback });
                             contest.save();
                         } else {
                             const fileName = contest.problems[number].fileName + '.txt';
                             readTextFile('input/' + fileName).then((input) => {
                                 hackerrankCall(code, lang, [input], (error, response) => {
                                     const { stderr, stdout, compilemessage, message } = JSON.parse(response.body).result;
-                                    const hadStdError = stderr !== null && !stderr.every((error) => error === false);
+                                    const hadStdError = Boolean(stderr && !stderr.every((error) => false === error));
                                     problem.attempts.push(code);
                                     readTextFile('output/' + fileName).then((expectedOutput) => {
-                                        if (!hadStdError && stdout !== null) { // no error => check output
-                                            problem.solved = true;
-                                            if (stdout.length === expectedOutput.length) {
-                                                for (let i = 0; i < stdout.length; i++) {
-                                                    if (stdout[i] !== expectedOutput[i]) {
-                                                        problem.solved = false;
-                                                        break;
-                                                    }
-                                                }
-                                            }
+                                        const stdOutput = (Array.isArray(stdout)) && 0 !== stdout.length ? stdout[0] : null;
+                                        if (!hadStdError && stdOutput) { // no error => check output
+                                            problem.solved = stdOutput === expectedOutput;
                                             if (problem.solved) {
                                                 team.score += computeScore(contest.start, problem.attempts.length);
                                                 team.numSolved++;
@@ -243,13 +236,12 @@ export function addProblemAttempt(req, res) {
                                                 }
                                             }
                                         }
-                                        const stdOutput = (Array.isArray(stdout)) && stdout.length !== 0 ? stdout[0] : null;
-                                        const stdError = (Array.isArray(stderr)) && stderr.length !== 0 ? stderr[0] : null;
+                                        const stdError = (Array.isArray(stderr)) && 0 !== stderr.length ? stderr[0] : null;
                                         const output = hadStdError ? stdError : stdOutput || compilemessage;
                                         const actualOutputFileName = shortid.generate() + '.txt';
                                         fs.writeFile('submission/' + actualOutputFileName, output);
-                                        const feedBack = createFeedbackMessage(problem.solved, message, compilemessage, number, hadStdError, stderr);
-                                        team.messages.push(feedBack);
+                                        const feedback = createFeedbackMessage(problem.solved, message, compilemessage, number + 1, hadStdError, stderr);
+                                        team.messages.push(feedback);
                                         createSubmission({
                                             cuid: cuid(),
                                             teamName: team.name,
@@ -261,7 +253,7 @@ export function addProblemAttempt(req, res) {
                                             correct: problem.solved,
                                             expectedOutputFileName: fileName,
                                             actualOutputFileName,
-                                            feedBack,
+                                            feedback: feedback.message,
                                             code,
                                         });
                                         contest.save((err) => {
@@ -269,7 +261,7 @@ export function addProblemAttempt(req, res) {
                                                 res.status(500).send(err);
                                             } else {
                                                 res.json({
-                                                    feedBack,
+                                                    feedback,
                                                     correct: problem.solved,
                                                 });
                                             }
@@ -398,7 +390,7 @@ export function createProblem(req, res) {
                 res.status(500).send(err);
             } else if (!contest) {
                 res.status(400).send({ err: 'Contest does not exist' });
-            } else if (typeof contest.start === 'number') {
+            } else if ('number' === typeof contest.start) {
                 res.status(400).send({ err: 'Contest already started' });
             } else {
                 const fileName = shortid.generate();
@@ -432,7 +424,7 @@ export function deleteProblem(req, res) {
                 res.status(500).send(err);
             } else if (!contest) {
                 res.status(400).send({ err: 'Contest does not exist' });
-            } else if (typeof contest.start === 'number') {
+            } else if ('number' === typeof contest.start) {
                 res.status(400).send({ err: 'Contest already started' });
             } else if (problemNum < contest.problems.length) {
                 contest.problems.splice(problemNum, 1);
@@ -608,7 +600,7 @@ export function getContestInfo(req, res) {
             } else if (!contest) {
                 res.status(400).send({ err: 'Contest does not exist' });
             } else {
-                const open = typeof contest.start === 'number';
+                const open = 'number' === typeof contest.start;
                 const { about, admin, closed, name, rules } = contest;
                 res.json({ about, admin, closed, name, open, rules });
             }
@@ -663,14 +655,14 @@ export function getNumberOfProblems(req, res) {
         res.status(403).end();
     } else {
         Contest.findOne({ cuid: req.params.contest_id }).select('problems start').exec((err, contest) => {
-            if (err || !contest) {
+            if (err) {
                 res.status(500).send(err);
             } else if (!contest) {
                 res.status(400).send({ err: 'Contest does not exist' });
             } else {
                 res.json({
                     numberOfProblems: contest.problems.length,
-                    started: typeof contest.start === 'number',
+                    started: 'number' === typeof contest.start,
                 });
             }
         });
@@ -692,7 +684,7 @@ export function openContest(req, res) {
                 res.status(500).send(err);
             } else if (!contest) {
                 res.status(400).send({ err: 'Contest does not exist' });
-            } else if (contest.problems.length === 0) {
+            } else if (0 === contest.problems.length) {
                 res.json({ success: false });
             } else if (!contest.start) {
                 contest.start = Date.now();

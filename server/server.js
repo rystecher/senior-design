@@ -39,8 +39,6 @@ import messages from './routes/messaging.routes';
 import hackerRank from './routes/hackerRank.routes';
 import users from './routes/users.routes';
 import auth from './routes/auth.routes';
-import dummyContests from './dummyContests';
-import dummySubmissions from './dummySubmissions';
 import serverConfig from './config';
 
 // Set native promises as mongoose promise
@@ -52,10 +50,6 @@ mongoose.connect(serverConfig.mongoURL, (error) => {
         console.error('Please make sure Mongodb is installed and running!'); // eslint-disable-line no-console
         throw error;
     }
-
-  // feed some dummy data in DB.
-  dummyContests();
-  dummySubmissions();
 });
 
 // Timeout any requests that take longer than 5 minutes
@@ -157,7 +151,9 @@ app.use((req, res, next) => {
 
 // Handle timed-out connections
 function haltOnTimedout(req, res, next) {
-    if (!req.timedout) next();
+    if (!req.timedout) {
+      next();
+    }
 }
 
 // start app

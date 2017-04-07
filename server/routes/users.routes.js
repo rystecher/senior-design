@@ -11,7 +11,7 @@ function validateInput(data, otherValidations) {
 
     return User.find({ username: data.username })
   .then(user => {
-      if (user.length > 0) {
+      if (0 < user.length) {
           errors.username = 'Username already taken';
       }
       return {
@@ -21,8 +21,8 @@ function validateInput(data, otherValidations) {
   });
 }
 
-router.get('/:identifier', (req, res) => {
-    User.find({ username: req.params.identifier }, { _id: 0, username: 1 })
+router.get('/:username', (req, res) => {
+    User.find({ username: req.params.username }, { _id: 0, username: 1 })
   .then(user => {
       res.json({ user });
   });

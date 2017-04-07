@@ -22,7 +22,7 @@ export default class ProblemViewer extends React.Component {
         this.problemNum = problemNum;
         this.setState({ pdfUrl: false, loadedPdf: false });
         fetchProblem(contestId, problemNum).then(response => {
-            if (typeof response.blob === 'function') {
+            if ('function' === typeof response.blob) {
                 response.blob().then(blob => {
                     const pdf = new File([blob], `problem${problemNum}.pdf`);
                     const pdfUrl = URL.createObjectURL(pdf);

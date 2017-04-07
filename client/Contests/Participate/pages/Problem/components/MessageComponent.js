@@ -15,7 +15,7 @@ export default class MessageComponent extends React.Component {
         const intervalFunc = () => getTeamMessages(contest_id, team_id).then((messages) => {
             if (messages) {
                 const messageObjs = messages.map((message) => {
-                    const type = message.from === 'Team' ? 0 : 1;
+                    const type = 'Team' === message.from ? 0 : 1;
                     return new Message(type, message.message);
                 });
                 this.setState({ messageObjs });
@@ -31,7 +31,7 @@ export default class MessageComponent extends React.Component {
 
     sendMessage(eve) {
         const { contest_id, team_id } = this.props;
-        if (eve.keyCode === 13) {
+        if (13 === eve.keyCode) {
             sendMessageToJudge(contest_id, team_id, this.state.value);
             this.state.messageObjs.push(new Message(0, this.state.value));
             this.setState({

@@ -38,7 +38,7 @@ export default class JudgeChatBox extends React.Component {
             const intervalFunc = () => getBroadcastMessages(contestId).then((messages) => {
                 if (messages) {
                     const messageObjs = messages.map((message) => {
-                        const type = message.from === 'Team' ? 1 : 0;
+                        const type = 'Team' === message.from ? 1 : 0;
                         return new Message(type, message.message);
                     });
                     this.setState({ messageObjs });
@@ -50,7 +50,7 @@ export default class JudgeChatBox extends React.Component {
             const intervalFunc = () => getTeamMessagesForJudge(contestId, teamId).then((messages) => {
                 if (messages) {
                     const messageObjs = messages.map((message) => {
-                        const type = message.from === 'Team' ? 1 : 0;
+                        const type = 'Team' === message.from ? 1 : 0;
                         return new Message(type, message.message);
                     });
                     this.setState({ messageObjs });
@@ -63,7 +63,7 @@ export default class JudgeChatBox extends React.Component {
 
     sendMessage(event) {
         const { contestId, teamId, broadcast } = this.props;
-        if (event.keyCode === 13) {
+        if (13 === event.keyCode) {
             if (broadcast) {
                 sendBroadcastMessage(contestId, this.state.value);
                 this.state.messageObjs.push(new Message(0, this.state.value));

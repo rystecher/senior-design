@@ -81,12 +81,12 @@ export default class ProblemFields extends React.Component {
 
     onSave() {
         const { input, output, problemName } = this.state;
-        if (problemName.length === 0) {
+        if (0 === problemName.length) {
             Alert.warning('Cannot add problem without a name', {
                 position: 'bottom-right',
                 effect: 'slide',
             });
-        } else if (input.length === 0 || output.length === 0) {
+        } else if (0 === input.length || 0 === output.length) {
             Alert.warning('Please enter input or output', {
                 position: 'bottom-right',
                 effect: 'slide',
@@ -120,9 +120,9 @@ export default class ProblemFields extends React.Component {
         }
         const dragAndDropText = this.state.fileName ?
             `Uploaded File: ${this.state.fileName}` : 'Click here to upload a new problem PDF.';
-        const output = this.state.output.length < 500 ? this.state.output.substring(0, 500) :
+        const output = 500 > this.state.output.length ? this.state.output.substring(0, 500) :
             this.state.output.substring(0, 500) + '...';
-        const input = this.state.input.length < 500 ? this.state.input.substring(0, 500) :
+        const input = 500 > this.state.input.length ? this.state.input.substring(0, 500) :
             this.state.input.substring(0, 500) + '...';
         return (
             <div className='problem-fields'>
@@ -137,18 +137,16 @@ export default class ProblemFields extends React.Component {
                     className='dropzone'
                     onDrop={this.updateInput}
                     multiple={false}
-                    accept='.txt'
                 >
-                    Click here to upload a new input file
+                    Click here to upload a new input file (must be a text file)
                 </Dropzone>
                 <div className='file-text'>{input}</div>
                 <Dropzone
                     className='dropzone'
                     onDrop={this.updateOutput}
                     multiple={false}
-                    accept='.txt'
                 >
-                    Click here to upload a new output file
+                    Click here to upload a new output file (must be a text file)
                 </Dropzone>
                 <div className='file-text'>{output}</div>
                 <Dropzone

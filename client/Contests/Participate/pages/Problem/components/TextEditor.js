@@ -12,11 +12,12 @@ if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
     require('codemirror/mode/javascript/javascript');
     require('codemirror/mode/clike/clike');
     require('codemirror/mode/ruby/ruby');
+    require('codemirror/mode/octave/octave');
 }
 
 // Initial text editor prompts in different languages
 const prompts = {
-    python: 'def addOne(x):\n    return x + 1\nprint addOne(1)',
+    python: 'def addOne(x):\n  return x + 1\nprint addOne(1)',
 };
 
 // The text editor where users can write and edit code
@@ -63,9 +64,6 @@ export default class TextEditor extends React.Component {
             break;
         case 'python3':
             mode = 'python';
-            break;
-        case 'octave':
-            mode = 'text/x-octave';
             break;
         case 'scala':
             mode = 'text/x-scala';

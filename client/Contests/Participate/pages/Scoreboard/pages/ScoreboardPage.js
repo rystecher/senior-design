@@ -84,7 +84,7 @@ export default class Scoreboard extends React.Component {
             </div>: null;
         return (
             <div className='contest-scoreboard'>
-                {this.props.userRole === 'admin' ?
+                {'admin' === this.props.userRole ?
                     <div className='full-width'>
                         <div className='btn-wrapper'>
                             <button
@@ -100,7 +100,7 @@ export default class Scoreboard extends React.Component {
                         </div>
                     </div> : null
                 }
-                {this.props.userRole === 'admin' || scoreboardVisible ?
+                {'admin' === this.props.userRole || scoreboardVisible ?
                     barchart :
                     <div>
                         <h4 className='hidden-text'>

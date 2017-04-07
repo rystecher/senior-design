@@ -116,6 +116,20 @@ function markSubmissionCorrect(contestId, teamId, problemNum) {
             const team = contest.teams.id(teamId);
             const problem = team.problem_attempts[problemNum]; // problem object of team
             team.score += computeScore(contest.start, problem.attempts.length);
+            team.numSolved += 1;
+            contest.save();
+        }
+    });
+}
+
+function markSubmissionIncorrect(contestId, teamId, problemNum) {
+    Contest.findOne({ cuid: contestId }, (err, contest) => {
+        if (!err && contest) {
+            const team = contest.teams.id(teamId);
+            const problem = team.problem_attempts[problemNum]; // problem object of team
+            team.score -= computeScore(contest.start, problem.attempts.length); // this won't be exact
+            team.score = Math.max(team.score, 0); // make sure they don't have negative time score
+            team.numSolved -= 1;
             contest.save();
         }
     });
@@ -142,8 +156,12 @@ export function sendFeedback(req, res) {
                     submission.correct = true;
                     const { contestID, teamID, problemNumber } = submission;
                     markSubmissionCorrect(contestID, teamID, problemNumber);
+                } else if (!req.body.correct && submission.correct) {
+                    submission.correct = false;
+                    const { contestID, teamID, problemNumber } = submission;
+                    markSubmissionIncorrect(contestID, teamID, problemNumber);
                 }
-                sendTeamMessage(genSubmissionResponse(submission), submission.teamID);
+                sendTeamMessage(genSubmissionResponse(submission), submission.contestID, submission.teamID);
                 submission.save(err => {
                     if (err) {
                         res.status(500).send(err);
@@ -195,7 +213,7 @@ export function deleteSubmission(req, res) {
 function genSubmissionResponse(submission) {
     return {
         from: 'Judges',
-        message: `Judge: Your submission for problem #${submission.problemNumber},
+        message: `Judge: Your submission for problem #${submission.problemNumber + 1},
         ${submission.problemName}, has been marked: ${submission.feedback}`,
     };
 }
@@ -204,9 +222,9 @@ export function createFeedbackMessage(correct, msg, compileMessage, problemNum, 
     let message = 'Awaiting feedback from judges...';
     if (correct) {
         message = 'Your solution was correct!';
-    } else if (msg === 'Terminated due to timeout') {
+    } else if ('Terminated due to timeout' === msg) {
         message = msg + ' after 10 seconds.';
-    } else if (compileMessage !== '') {
+    } else if ('' !== compileMessage) {
         message = compileMessage;
     } else if (hadStdError) {
         message = 'Standard Error ' + stderr.toString();
@@ -215,16 +233,16 @@ export function createFeedbackMessage(correct, msg, compileMessage, problemNum, 
 }
 
 export function createTestFeedbackMessage(message, compileMessage, stdout, time, hadStdError, stderr) {
-    let feedBack = 'Awaiting feedback from our server...';
+    let feedback = 'Awaiting feedback from our server...';
   // Ran out of time
-    if (message === 'Terminated due to timeout' && time === 10) {
-        feedBack = message + ' after 10 seconds.';
+    if ('Terminated due to timeout' === message && 10 === time) {
+        feedback = message + ' after 10 seconds.';
     } else if (compileMessage !== undefined) {
-        feedBack = compileMessage;
+        feedback = compileMessage;
     } else if (hadStdError) {
-        feedBack = 'Standard Error: ' + stderr.toString();
+        feedback = 'Standard Error: ' + stderr.toString();
     } else {
-        feedBack = stdout;
+        feedback = stdout;
     }
-    return { from: 'Automated', message: 'Test result: ' + feedBack + `\nRan in ${time} seconds` };
+    return { from: 'Automated', message: 'Test result: ' + feedback + `\nRan in ${time} seconds` };
 }
