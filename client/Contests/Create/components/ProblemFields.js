@@ -137,18 +137,16 @@ export default class ProblemFields extends React.Component {
                     className='dropzone'
                     onDrop={this.updateInput}
                     multiple={false}
-                    accept='.txt'
                 >
-                    Click here to upload a new input file
+                    Click here to upload a new input file (must be a text file)
                 </Dropzone>
                 <div className='file-text'>{input}</div>
                 <Dropzone
                     className='dropzone'
                     onDrop={this.updateOutput}
                     multiple={false}
-                    accept='.txt'
                 >
-                    Click here to upload a new output file
+                    Click here to upload a new output file (must be a text file)
                 </Dropzone>
                 <div className='file-text'>{output}</div>
                 <Dropzone
