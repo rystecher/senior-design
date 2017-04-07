@@ -23,4 +23,5 @@
 .SimplePDF {
   height: 760px;
   overflow-y: scroll;
+  border: 1px solid #c3c3c3;
 }
