@@ -1,6 +1,14 @@
 {
   "presets": ["react", "es2015", "stage-0"],
-  "plugins": ["react-hot-loader/babel"],
+  "plugins": ["react-hot-loader/babel", ["babel-plugin-espower", {
+        "embedAst": true,
+        "patterns": [
+          "assert.isNull(object, [message])",
+          "assert.same(actual, expected, [message])",
+          "assert.near(actual, expected, delta, [message])"
+        ]
+      }]
+  ],
   "env": {
     "production": {
       "presets": ["es2015", "react", "react-optimize", "es2015-native-modules", "stage-0"]

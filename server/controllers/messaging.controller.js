@@ -5,8 +5,7 @@ export function sendTeamMessageApi(req, res) {
     if (!contestId || !teamId || !req.body.message) {
         res.status(403).end();
     } else {
-        sendTeamMessage({ from: 'Judges', message: req.body.message }, contestId, teamId);
-        res.json({ success: true });
+        sendTeamMessage({ from: 'Judges', message: req.body.message }, contestId, teamId, res);
     }
 }
 
@@ -15,8 +14,7 @@ export function sendJudgeMessage(req, res) {
     if (!contestId || !teamId || !req.body.message) {
         res.status(403).end();
     } else {
-        sendTeamMessage({ from: 'Team', message: req.body.message }, contestId, teamId);
-        res.json({ success: true });
+        sendTeamMessage({ from: 'Team', message: req.body.message }, contestId, teamId, res);
     }
 }
 
@@ -129,16 +127,36 @@ export function getBroadcastMessages(req, res) {
     }
 }
 
-export function sendTeamMessage(message, contestId, teamId) {
+export function sendTeamMessage(message, contestId, teamId, res) {
     Contest.findOne({ cuid: contestId }, (err, contest) => {
-        if (!err && contest) {
+        if (err) {
+            if (res) {
+                res.status(500).send(err);
+            }
+        } else if (!contest) {
+            if (res) {
+                res.status(400).send({ err: 'Contest does not exist' });
+            }
+        } else {
             const team = contest.teams.id(teamId);
-            if (team) {
+            if (!team) {
+                if (res) {
+                    res.status(400).send({ err: 'Team does not exist' });
+                }
+            } else {
                 team.messages.push(message);
-                if ('Team' === message.from) {
+                if (message.from === 'Team') {
                     team.messagedJudge = true;
                 }
-                contest.save();
+                contest.save((err2) => {
+                    if (res) {
+                        if (err2) {
+                            res.status(500).send(err2);
+                        } else {
+                            res.json({ success: true });
+                        }
+                    }
+                });
             }
         }
     });
