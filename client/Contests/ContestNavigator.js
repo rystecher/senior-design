@@ -21,11 +21,13 @@ class ContestNavigator extends React.Component {
    * get contest name for home link
    */
   componentDidMount() {
-    getContestInfo(this.props.contestId).then(res => {
-      if (res.name) {
-        this.setState({ name: res.name});
-      }
-    });
+    if(this.props.contestId != 'wont be used') {
+      getContestInfo(this.props.contestId).then(res => {
+        if (res.name) {
+          this.setState({name: res.name});
+        }
+      });
+    }
   }
 
   render() {
