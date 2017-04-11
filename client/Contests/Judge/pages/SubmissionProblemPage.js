@@ -25,6 +25,7 @@ class SingleSubmissionPage extends React.Component {
         }];
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.onSuccess = this.onSuccess.bind(this);
     }
 
     componentDidMount() {
@@ -67,6 +68,13 @@ class SingleSubmissionPage extends React.Component {
         }
     }
 
+    onSuccess() {
+        Alert.success('Code copied to your clipboard, paste it in your favorite editor!', {
+            position: 'bottom-right',
+            effect: 'slide',
+        });
+    }
+
     render() {
         const teamName = this.state.teamName || '';
         const problemName = this.state.problemName || '';
@@ -86,6 +94,7 @@ class SingleSubmissionPage extends React.Component {
 
         return (
             <div className='single-submissions-container'>
+                <Alert stack={{ limit: 3 }} timeout={2500} />
                 <h2>{teamName}: {problemName}</h2>
                 <h6>Previous feedback: <b>{this.state.feedback}</b></h6>
                 <div className='feedback-container'>
@@ -105,8 +114,8 @@ class SingleSubmissionPage extends React.Component {
                                 type='button'
                             >Send</button>
                         </span>
-                        <ClipboardButton data-clipboard-text={text}>
-                            Copy code to my clipboard
+                        <ClipboardButton data-clipboard-text={text} onSuccess={this.onSuccess} button-title="Copies code to my clipboard">
+                            Copy code
                         </ClipboardButton>
                     </div>
                 </div>
