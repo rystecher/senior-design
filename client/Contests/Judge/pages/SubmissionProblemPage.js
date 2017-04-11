@@ -6,6 +6,7 @@ import ReactTable from 'react-table';
 import Alert from 'react-s-alert';
 import './single-submission.css';
 import styles from 'react-table/react-table.css';
+import ClipboardButton from 'react-clipboard.js';
 
 class SingleSubmissionPage extends React.Component {
 
@@ -38,6 +39,8 @@ class SingleSubmissionPage extends React.Component {
                     expectedOutput: res.expectedOutput,
                     actualOutput: res.actualOutput,
                     loading: false,
+                    feedback: res.submission.feedback,
+                    code: res.submission.code,
                 });
             }
         });
@@ -79,10 +82,12 @@ class SingleSubmissionPage extends React.Component {
             actual: this.state.actualOutput,
             diff,
         }];
+        const text = this.state.code ? this.state.code : '';
 
         return (
             <div className='single-submissions-container'>
                 <h2>{teamName}: {problemName}</h2>
+                <h6>Previous feedback: <b>{this.state.feedback}</b></h6>
                 <div className='feedback-container'>
                     <div className='input-group'>
                         <select value={this.state.value} onChange={this.handleChange} >
@@ -100,6 +105,9 @@ class SingleSubmissionPage extends React.Component {
                                 type='button'
                             >Send</button>
                         </span>
+                        <ClipboardButton data-clipboard-text={text}>
+                            Copy code to my clipboard
+                        </ClipboardButton>
                     </div>
                 </div>
                 <ReactTable

@@ -49,6 +49,7 @@
     "mongoose": "^4.4.20",
     "react": "^15.4.2",
     "react-chartjs": "^0.8.0",
+    "react-clipboard.js": "^1.0.1",
     "react-codemirror": "^0.3.0",
     "react-diff": "0.0.7",
     "react-dom": "^15.4.2",
