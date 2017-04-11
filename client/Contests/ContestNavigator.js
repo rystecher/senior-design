@@ -70,7 +70,7 @@ class ContestNavigator extends React.Component {
             <Link
               className='nav-link'
               to={`/contest/${contestId}/home`}
-            >{contestName}</Link>
+            >{this.state.name}</Link>
           </li>
           <li className={'problems' === page ? 'nav-item active' : 'nav-item'}>
             <Link
