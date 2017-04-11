@@ -6,6 +6,7 @@ import ReactTable from 'react-table';
 import Alert from 'react-s-alert';
 import './single-submission.css';
 import styles from 'react-table/react-table.css';
+import ClipboardButton from 'react-clipboard.js';
 
 class SingleSubmissionPage extends React.Component {
 
@@ -24,6 +25,7 @@ class SingleSubmissionPage extends React.Component {
         }];
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.onSuccess = this.onSuccess.bind(this);
     }
 
     componentDidMount() {
@@ -38,6 +40,8 @@ class SingleSubmissionPage extends React.Component {
                     expectedOutput: res.expectedOutput,
                     actualOutput: res.actualOutput,
                     loading: false,
+                    feedback: res.submission.feedback,
+                    code: res.submission.code,
                 });
             }
         });
@@ -64,6 +68,13 @@ class SingleSubmissionPage extends React.Component {
         }
     }
 
+    onSuccess() {
+        Alert.success('Code copied to your clipboard, paste it in your favorite editor!', {
+            position: 'bottom-right',
+            effect: 'slide',
+        });
+    }
+
     render() {
         const teamName = this.state.teamName || '';
         const problemName = this.state.problemName || '';
@@ -79,10 +90,13 @@ class SingleSubmissionPage extends React.Component {
             actual: this.state.actualOutput,
             diff,
         }];
+        const text = this.state.code ? this.state.code : '';
 
         return (
             <div className='single-submissions-container'>
+                <Alert stack={{ limit: 3 }} timeout={2500} />
                 <h2>{teamName}: {problemName}</h2>
+                <h6>Previous feedback: <b>{this.state.feedback}</b></h6>
                 <div className='feedback-container'>
                     <div className='input-group'>
                         <select value={this.state.value} onChange={this.handleChange} >
@@ -100,6 +114,9 @@ class SingleSubmissionPage extends React.Component {
                                 type='button'
                             >Send</button>
                         </span>
+                        <ClipboardButton data-clipboard-text={text} onSuccess={this.onSuccess} button-title="Copies code to my clipboard">
+                            Copy code
+                        </ClipboardButton>
                     </div>
                 </div>
                 <ReactTable
