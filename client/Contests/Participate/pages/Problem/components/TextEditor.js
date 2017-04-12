@@ -17,7 +17,7 @@ if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
 
 // Initial text editor prompts in different languages
 const prompts = {
-    python: '# Your code will be saved automatically\ndef addOne(x):\n  return x + 1\nprint addOne(1)',
+    python: '# This is just an example\n# Your code will be saved automatically\ndef addOne(x):\n  return x + 1\nprint addOne(1)',
 };
 // local storage addresses
 let code_str, mode_str, lang_str = "";
