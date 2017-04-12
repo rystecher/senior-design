@@ -148,9 +148,9 @@ export function testProblemAttempt(req, res) {
         hackerrankCall(code, lang, testcases, (error, response) => {
             const { stderr, stdout, compilemessage, message, time } = JSON.parse(response.body).result;
             const hadStdError = Boolean(stderr && !stderr.every((error) => false === error));
-            // Parse result
             const feedback = createTestFeedbackMessage(stderr, stdout, compilemessage, message, time, hadStdError);
-      // Send feedback
+            const trimmedFeedback = feedback.length > 250 ?
+                feedback.substring(0, 250) + '... trimmed due to length' : feedback;
             Contest.findOne({ cuid: req.params.contest_id }, (err, contest) => {
                 if (err) {
                     res.status(500).send(err);
@@ -159,12 +159,12 @@ export function testProblemAttempt(req, res) {
                 } else {
                     const team = contest.teams.id(req.params.team_id);
                     if (team) {
-                        team.messages.push(feedback);
+                        team.messages.push(trimmedFeedback);
                         contest.save((err2) => {
                             if (err2) {
                                 res.status(500).send(err);
                             } else {
-                                res.json(feedback);
+                                res.json(trimmedFeedback);
                             }
                         });
                     } else {
@@ -239,7 +239,9 @@ export function addProblemAttempt(req, res) {
                                         const stdError = (Array.isArray(stderr)) && 0 !== stderr.length ? stderr[0] : null;
                                         const output = hadStdError ? stdError : stdOutput || compilemessage;
                                         const actualOutputFileName = shortid.generate() + '.txt';
-                                        fs.writeFile('submission/' + actualOutputFileName, output);
+                                        const trimmedOutput = output.length > expectedOutput.length + 200 ?
+                                            output.substring(0, expectedOutput.length + 200) + '... trimmed due to length' : output;
+                                        fs.writeFile('submission/' + actualOutputFileName, trimmedOutput);
                                         const feedback = createFeedbackMessage(problem.solved, number + 1, hadStdError, stderr, compilemessage, message);
                                         team.messages.push(feedback);
                                         createSubmission({
