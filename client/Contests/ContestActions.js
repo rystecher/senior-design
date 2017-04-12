@@ -28,6 +28,10 @@ export function getContestInfo(contestId) {
     return callApi(`contests/${contestId}/info`);
 }
 
+export function hasNewMessage(contestId) {
+    return callApi(`messages/${contestId}/new`);
+}
+
 export function updateContestInfo(contestId, info) {
     return callApi(`contests/${contestId}/info`, 'post', { info });
 }

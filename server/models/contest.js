@@ -39,6 +39,7 @@ const contestSchema = new Schema({
     cuid: { type: 'String', required: true },
     judges: [String],
     name: { type: 'String', required: true },
+    newMessage: { type: 'String', default: 'none', required: true }, // holds teamId
     problems: [contestProblem],
     rules: String,
     scoreboardVisible: { type: 'Boolean', default: true, required: true },

@@ -1,8 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import ContestNavigator from './ContestNavigator';
-import { getUserRole } from './ContestActions';
+import MessageAlert from './MessageAlert';
+import { getUserRole, hasNewMessage } from './ContestActions';
+import { Link } from 'react-router';
 import './contest.css';
 import Alert from 'react-s-alert';
 import 'react-s-alert/dist/s-alert-default.css';
@@ -25,7 +26,28 @@ class ContestWrapper extends React.Component {
         if (this.props.params.contestId !== contestId) {
             this.setState({ userRole: null });
             this.getUserRoleWrapper(contestId);
+            if (this.chatIntervId) {
+                clearInterval(this.chatIntervId);
+            }
         }
+    }
+
+    componentWillUnmount() {
+        if (this.chatIntervId) {
+            clearInterval(this.chatIntervId);
+        }
+    }
+
+    onNewMessage(teamId) {
+        console.log(teamId);
+        this.setState({ contentTemplate: MessageAlert });
+        Alert.info('You have a ', {
+            position: 'bottom-right',
+            customFields: {
+                contestId: this.props.params.contestId,
+            },
+            onClose: () => { this.setState({ contentTemplate: null }); },
+        });
     }
 
     getUserRoleWrapper(contestId) {
@@ -33,6 +55,15 @@ class ContestWrapper extends React.Component {
         getUserRole(contestId, username).then(res => {
             if (res.userRole) {
                 this.setState({ userRole: res.userRole, teamId: res.teamId });
+                if (res.userRole === 'admin') {
+                    const intervalFunc = () => hasNewMessage(contestId).then(res2 => {
+                        if (res2.newMessage) {
+                            this.onNewMessage(res2.newMessage);
+                        }
+                    });
+                    intervalFunc();
+                    this.chatIntervId = setInterval(intervalFunc, 5000);
+                }
             } else {
                 this.setState({ err: 'Failed to get user role' });
             }
@@ -76,7 +107,7 @@ class ContestWrapper extends React.Component {
                 <div className='contest-child-container'>
                     {childrenWithProps}
                 </div>
-                <Alert stack={{ limit: 3 }} timeout={2500} />
+                <Alert stack={{ limit: 3 }} timeout={112500} contentTemplate={this.state.contentTemplate} />
             </div>
         );
     }
@@ -90,6 +121,9 @@ ContestWrapper.propTypes = {
     }).isRequired,
     params: React.PropTypes.shape({
         contestId: React.PropTypes.string.isRequired,
+    }).isRequired,
+    router: React.PropTypes.shape({
+        push: React.PropTypes.func.isRequired,
     }).isRequired,
 };
 
