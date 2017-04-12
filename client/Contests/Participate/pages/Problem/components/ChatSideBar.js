@@ -74,7 +74,7 @@ export default class ChatSideBar extends React.Component {
                     {this.state.teams.map((team, idx) => {
                         return (
                             <li
-                                className={'list-group-item' + (team.messagedJudge ? '' : ' read')}
+                                className={'list-group-item' + (team.messagedJudge ? ' unread-badge' : '')}
                                 onClick={this.openChat.bind(this, idx)}
                                 key={idx}
                             >

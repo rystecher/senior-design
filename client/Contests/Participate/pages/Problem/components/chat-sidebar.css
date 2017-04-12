@@ -11,8 +11,18 @@
     background: #ffffff;
 }
 
-.list-group-item.read {
-    opacity: 0.38;
+
+.unread-badge:after{
+  content:"";
+  position: absolute;
+  background: red;
+  height:0.5rem;
+  width:0.5rem;
+  text-align: center;
+  line-height: 0.5rem;;
+  font-size: 1rem;
+  border-radius: 50%;
+  border:1px solid red;
 }
 
 .chat-sidebar > .list-group-item:first-child,

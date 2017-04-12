@@ -146,10 +146,10 @@ export function testProblemAttempt(req, res) {
     // Send query to HackerRank
         const { code, lang, testcases } = req.body.problem;
         hackerrankCall(code, lang, testcases, (error, response) => {
-            const { stderr, stdout, compileMessage, message, time } = JSON.parse(response.body).result;
-            const hadStdError = null !== stderr && !stderr.every((error) => false === error);
-      // Parse result
-            const feedback = createTestFeedbackMessage(message, compileMessage, stdout, time, hadStdError, stderr);
+            const { stderr, stdout, compilemessage, message, time } = JSON.parse(response.body).result;
+            const hadStdError = Boolean(stderr && !stderr.every((error) => false === error));
+            // Parse result
+            const feedback = createTestFeedbackMessage(stderr, stdout, compilemessage, message, time, hadStdError);
       // Send feedback
             Contest.findOne({ cuid: req.params.contest_id }, (err, contest) => {
                 if (err) {
@@ -240,7 +240,7 @@ export function addProblemAttempt(req, res) {
                                         const output = hadStdError ? stdError : stdOutput || compilemessage;
                                         const actualOutputFileName = shortid.generate() + '.txt';
                                         fs.writeFile('submission/' + actualOutputFileName, output);
-                                        const feedback = createFeedbackMessage(problem.solved, message, compilemessage, number + 1, hadStdError, stderr);
+                                        const feedback = createFeedbackMessage(problem.solved, number + 1, hadStdError, stderr, compilemessage, message);
                                         team.messages.push(feedback);
                                         createSubmission({
                                             cuid: cuid(),
