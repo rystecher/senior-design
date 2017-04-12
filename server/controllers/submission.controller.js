@@ -181,7 +181,6 @@ export function sendFeedback(req, res) {
  * @returns void
  */
 export function deleteSubmission(req, res) {
-    console.log('in delete submissions controller');
     Submission.findOne({ cuid: req.params.submissionId }).exec((err, submission) => {
         if (err) {
             res.status(500).send(err);
@@ -218,31 +217,40 @@ function genSubmissionResponse(submission) {
     };
 }
 
-export function createFeedbackMessage(correct, msg, compileMessage, problemNum, hadStdError, stderr) {
-    let message = 'Awaiting feedback from judges...';
-    if (correct) {
-        message = 'Your solution was correct!';
-    } else if ('Terminated due to timeout' === msg) {
-        message = msg + ' after 10 seconds.';
-    } else if ('' !== compileMessage) {
-        message = compileMessage;
-    } else if (hadStdError) {
-        message = 'Standard Error ' + stderr.toString();
+export function createFeedbackMessage(correct, problemNum, hadStdError, stderr, compilemessage, message) {
+  let feedback = 'Awaiting feedback from judges...';
+    try {
+      if (correct) {
+        feedback = 'Your solution was correct!';
+      } else if (compilemessage !== '') {
+        feedback = compilemessage;
+      } else if (hadStdError) {
+        feedback = `${message}: ${stderr}`;
+      } else if ('Terminated due to timeout' === message) {
+        feedback = `${message} after 10 seconds`;
+      }
+    } // try
+    catch (err) {
+        feedback = 'There was an error processing your request';
     }
-    return { from: 'Automated', message: `Problem ${problemNum}: ` + message };
+    return { from: 'Automated', message: `Problem ${problemNum}: ${feedback}`};
 }
 
-export function createTestFeedbackMessage(message, compileMessage, stdout, time, hadStdError, stderr) {
+export function createTestFeedbackMessage(stderr, stdout, compilemessage, message, time, hadStdError) {
     let feedback = 'Awaiting feedback from our server...';
-  // Ran out of time
-    if ('Terminated due to timeout' === message && 10 === time) {
-        feedback = message + ' after 10 seconds.';
-    } else if (compileMessage !== undefined) {
-        feedback = compileMessage;
-    } else if (hadStdError) {
-        feedback = 'Standard Error: ' + stderr.toString();
-    } else {
-        feedback = stdout;
+    try {
+      if (compilemessage !== '') {
+        feedback = compilemessage;
+      } else if (hadStdError) {
+        feedback = `${message}: ${stderr}`;
+      } else if ('Terminated due to timeout' === message && 10 === time) {
+        feedback = message;
+      } else {
+        feedback = `Test result: ${stdout} (${time} sec)`;
+      }
+    } // try
+    catch(err) {
+      feedback = 'There was an error processing your request';
     }
-    return { from: 'Automated', message: 'Test result: ' + feedback + `\nRan in ${time} seconds` };
+    return { from: 'Automated', message: feedback };
 }

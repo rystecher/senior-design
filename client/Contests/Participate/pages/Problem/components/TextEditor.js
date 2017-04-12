@@ -17,8 +17,11 @@ if (typeof window !== 'undefined' && typeof window.navigator !== 'undefined') {
 
 // Initial text editor prompts in different languages
 const prompts = {
-    python: 'def addOne(x):\n  return x + 1\nprint addOne(1)',
+    python: '# Your code will be saved automatically\ndef addOne(x):\n  return x + 1\nprint addOne(1)',
 };
+// local storage addresses
+let code_str, mode_str, lang_str = "";
+
 
 // The text editor where users can write and edit code
 export default class TextEditor extends React.Component {
@@ -34,18 +37,19 @@ export default class TextEditor extends React.Component {
         };
         this.onTestClick = this.onTestClick.bind(this);
         this.onSubmitClick = this.onSubmitClick.bind(this);
+        code_str = `${this.props.contest_id}p${this.props.problemNum}code`;
+        mode_str = `${this.props.contest_id}p${this.props.problemNum}mode`;
+        lang_str = `${this.props.contest_id}p${this.props.problemNum}lang`;
         // Check local storage to recover any autosaved code
-        if (localStorage[`problem${this.props.problemNum}code`]) {
-            this.state.code = localStorage[`problem${this.props.problemNum}code`];
-            this.state.mode = localStorage[`problem${this.props.problemNum}mode`];
-            this.state.lang = localStorage[`problem${this.props.problemNum}lang`];
-        }
+        if (localStorage[code_str]) { this.state.code = localStorage[code_str]; }
+        if (localStorage[mode_str]) { this.state.mode = localStorage[mode_str]; }
+        if (localStorage[lang_str]) { this.state.lang = localStorage[lang_str]; }
     }
 
     updateCode = (newCode) => {
         this.setState({ code: newCode });
         // autosave code to local storage for each problem
-        localStorage[`problem${this.props.problemNum}code`] = this.state.code;
+        localStorage[code_str] = this.state.code;
     };
 
     changeMode = (e) => {
@@ -74,8 +78,8 @@ export default class TextEditor extends React.Component {
           lang: lang
         });
         // Update local storage
-        localStorage[`problem${this.props.problemNum}mode`] = mode;
-        localStorage[`problem${this.props.problemNum}lang`] = lang;
+        localStorage[mode_str] = mode;
+        localStorage[lang_str] = lang;
     };
 
     onTestClick() {
