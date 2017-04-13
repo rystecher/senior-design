@@ -36,7 +36,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 const styles = {
   chatbubble: {
-    backgroundColor: "#03b4f4",
+    backgroundColor: "#000000",
     borderRadius: 20,
     clear: 'both',
     marginTop: 1,

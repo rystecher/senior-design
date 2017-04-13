@@ -6,13 +6,14 @@ import Contest from '../contest';
 import sinon from 'sinon';
 import { connectDB, dropDB } from '../../util/test-helpers';
 import * as controller from '../../controllers/contest.controller';
+import * as messenger from '../../controllers/messaging.controller';
 
 const contestId1 = 'randomContestId1';
 const contestId2 = 'randomContestId2';
 const teamId1 = '000000010000000000000000';
 const teamId2 = '000000020000000000000000';
 const problemName = 'problem one';
-const problemNumber = 3;
+const problemNumber = 0;
 
 const submissions = [
     new Submission({
@@ -86,13 +87,23 @@ test.serial('Should send correct data when queried against a cuid', async t => {
 });
 
 test.serial('Should correctly change feedback', async t => {
+    const spy = sinon.spy(messenger, 'sendTeamMessage');
     const cuid = 'f34gb2bh24b24b6';
     const sub = new Submission({
         cuid, teamName: 'team four', teamID: teamId1, contestID: contestId2,
         problemName, problemNumber, correct: true, hadStdError: false, feedback: 'Your solution was correct',
         expectedOutputFileName: 'output.txt', actualOutputFileName: 'sub3.txt', code: 'python python',
     });
-    sub.save();
+    await sub.save();
+    const contest = new Contest({
+        cuid: contestId2, slug: 'new-contest', name: 'New Contest', closed: false,
+        scoreboardVisible: false, start: 20, teams: [{
+            _id: teamId1, name: 'team four', numSolved: 2, score: 50,
+            problem_attempts: [{ attempts: ['python python'], solved: false }],
+            messagedJudge: false,
+        }],
+    });
+    await contest.save();
 
     const res = await request(app)
     .post(`/api/submissions/feedback/${cuid}`)
@@ -101,6 +112,63 @@ test.serial('Should correctly change feedback', async t => {
     t.is(res.status, 200);
     const savedSubmission = await Submission.findOne({ cuid }).exec();
     t.is(savedSubmission.feedback, 'I changed');
+    t.is(spy.calledOnce, true);
+});
+
+test.serial('Should call markSubmisisonCorrect when feedback is changed to correct', async t => {
+    const cuid = 'f34gb2bh24b24b6';
+    const sub = new Submission({
+        cuid, teamName: 'team four', teamID: teamId1, contestID: contestId2,
+        problemName, problemNumber, correct: false, hadStdError: false, feedback: 'Your solution was correct',
+        expectedOutputFileName: 'output.txt', actualOutputFileName: 'sub3.txt', code: 'python python',
+    });
+    await sub.save();
+    const contest = new Contest({
+        cuid: contestId2, slug: 'new-contest', name: 'New Contest', closed: false,
+        scoreboardVisible: false, start: 20, teams: [{
+            _id: teamId1, name: 'team four', numSolved: 2, score: 50,
+            problem_attempts: [{ attempts: ['python python'], solved: false }],
+            messagedJudge: false,
+        }],
+    });
+    await contest.save();
+
+    const res = await request(app)
+    .post(`/api/submissions/feedback/${cuid}`)
+    .send({ correct: true, feedback: 'I changed' })
+    .set('Accept', 'application/json');
+    t.is(res.status, 200);
+    const queriedContest = await Contest.findOne({ cuid: contestId2 }).exec();
+    t.is(queriedContest.teams[0].numSolved, 3);
+    t.is(queriedContest.teams[0].messages.length, 1);
+});
+
+test.serial('Should call mark submisison incorrect when feedback is changed to incorrect', async t => {
+    const cuid = 'f34gb2bh24b24b6';
+    const sub = new Submission({
+        cuid, teamName: 'team four', teamID: teamId1, contestID: contestId2,
+        problemName, problemNumber, correct: true, hadStdError: false, feedback: 'Your solution was correct',
+        expectedOutputFileName: 'output.txt', actualOutputFileName: 'sub3.txt', code: 'python python',
+    });
+    await sub.save();
+    const contest = new Contest({
+        cuid: contestId2, slug: 'new-contest', name: 'New Contest', closed: false,
+        scoreboardVisible: false, start: 20, teams: [{
+            _id: teamId1, name: 'team four', numSolved: 3, score: 50,
+            problem_attempts: [{ attempts: ['python python'], solved: false }],
+            messagedJudge: false,
+        }],
+    });
+    await contest.save();
+
+    const res = await request(app)
+    .post(`/api/submissions/feedback/${cuid}`)
+    .send({ correct: false, feedback: 'I changed' })
+    .set('Accept', 'application/json');
+    t.is(res.status, 200);
+    const queriedContest = await Contest.findOne({ cuid: contestId2 }).exec();
+    t.is(queriedContest.teams[0].numSolved, 2);
+    t.is(queriedContest.teams[0].messages.length, 1);
 });
 
 test.serial('Should correctly delete a submission', async t => {

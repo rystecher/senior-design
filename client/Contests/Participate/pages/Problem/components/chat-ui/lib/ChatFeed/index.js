@@ -17,8 +17,10 @@ export default class ChatFeed extends Component {
     }
   }
 
-  componentDidUpdate() {
-      this._scrollToBottom();
+  componentWillReceiveProps(nextProps) {
+      if (nextProps.messages.length !== this.props.messages.length) {
+          this._scrollToBottom();
+      }
   }
 
   _scrollToBottom() {

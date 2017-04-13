@@ -13,6 +13,7 @@ class ContestWrapper extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log();
         this.getUserRoleWrapper = this.getUserRoleWrapper.bind(this);
         this.state = {};
     }
@@ -39,15 +40,24 @@ class ContestWrapper extends React.Component {
     }
 
     onNewMessage(teamId) {
-        console.log(teamId);
-        this.setState({ contentTemplate: MessageAlert });
-        Alert.info('You have a ', {
-            position: 'bottom-right',
-            customFields: {
-                contestId: this.props.params.contestId,
-            },
-            onClose: () => { this.setState({ contentTemplate: null }); },
-        });
+        if (this.getPage() !== 'submissions') {
+            this.setState({ contentTemplate: MessageAlert });
+            Alert.info('You have a ', {
+                position: 'bottom-right',
+                customFields: {
+                    contestId: this.props.params.contestId,
+                },
+                onClose: () => { this.setState({ contentTemplate: null }); },
+            });
+        }
+    }
+
+    getPage() {
+        try {
+            return this.props.children.props.route.page;
+        } catch (error) {
+            return '';
+        }
     }
 
     getUserRoleWrapper(contestId) {
@@ -87,7 +97,7 @@ class ContestWrapper extends React.Component {
         if (!this.state.userRole) {
             return null;
         }
-        const page = this.props.location.pathname.split('/')[3];
+        const page = this.getPage();
         const childrenProps = {
             joinedContest: this.getUserRoleWrapper,
             getForbiddenComponent: this.getForbiddenComponent,
@@ -107,7 +117,7 @@ class ContestWrapper extends React.Component {
                 <div className='contest-child-container'>
                     {childrenWithProps}
                 </div>
-                <Alert stack={{ limit: 3 }} timeout={112500} contentTemplate={this.state.contentTemplate} />
+                <Alert stack={{ limit: 3 }} timeout={2500} contentTemplate={this.state.contentTemplate} />
             </div>
         );
     }
@@ -121,9 +131,6 @@ ContestWrapper.propTypes = {
     }).isRequired,
     params: React.PropTypes.shape({
         contestId: React.PropTypes.string.isRequired,
-    }).isRequired,
-    router: React.PropTypes.shape({
-        push: React.PropTypes.func.isRequired,
     }).isRequired,
 };
 

@@ -96,7 +96,7 @@ export function sendBroadcastMessage(req, res) {
                 res.status(400).send({ err: 'Contest does not exist' });
             } else {
                 contest.teams.forEach(team => {
-                    team.messages.push({ from: 'Judges', message: req.body.message });
+                    team.messages.push({ from: 'Judges', message: 'Broadcast: ' + req.body.message });
                 });
                 contest.broadcastMessages.push({ from: 'Judges', message: req.body.message });
                 contest.save((err) => {
@@ -128,7 +128,7 @@ export function getBroadcastMessages(req, res) {
 }
 
 export function sendTeamMessage(message, contestId, teamId, res) {
-    Contest.findOne({ cuid: contestId }, (err, contest) => {
+    Contest.findOne({ cuid: contestId }).select('teams').exec((err, contest) => {
         if (err) {
             if (res) {
                 res.status(500).send(err);

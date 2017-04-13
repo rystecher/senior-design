@@ -9,20 +9,27 @@
     z-index: 500;
     border-left: 1px solid #82B1FF;
     background: #ffffff;
+    overflow-y: scroll;
 }
 
 
 .unread-badge:after{
-  content:"";
-  position: absolute;
-  background: red;
-  height:0.5rem;
-  width:0.5rem;
-  text-align: center;
-  line-height: 0.5rem;;
-  font-size: 1rem;
-  border-radius: 50%;
-  border:1px solid red;
+    content:"";
+    position: absolute;
+    background: #2962FF;
+    height:0.5rem;
+    width:0.5rem;
+    text-align: center;
+    line-height: 0.5rem;;
+    font-size: 1rem;
+    border-radius: 50%;
+    border:1px solid #2962FF;
+    right: 16px;
+    top: 18px;
+}
+
+.chat-sidebar > .list-group-item {
+    min-height: 44px;
 }
 
 .chat-sidebar > .list-group-item:first-child,

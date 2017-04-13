@@ -243,7 +243,7 @@ export function addProblemAttempt(req, res) {
                                             output.substring(0, expectedOutput.length + 200) + '... trimmed due to length' : output;
                                         fs.writeFile('submission/' + actualOutputFileName, trimmedOutput);
                                         const feedback = createFeedbackMessage(problem.solved, number + 1, hadStdError, stderr, compilemessage, message);
-                                        team.messages.push(feedback);
+                                        team.messages.push(feedback.userFeedback);
                                         createSubmission({
                                             cuid: cuid(),
                                             teamName: team.name,
@@ -255,7 +255,7 @@ export function addProblemAttempt(req, res) {
                                             correct: problem.solved,
                                             expectedOutputFileName: fileName,
                                             actualOutputFileName,
-                                            feedback: feedback.message,
+                                            feedback: feedback.judgeFeedback,
                                             code,
                                         });
                                         contest.save((err) => {

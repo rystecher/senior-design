@@ -69,6 +69,7 @@ export default (
     >
         <Route
             path='home'
+            page='home'
             getComponent={(nextState, cb) => {
                 require.ensure([], require => {
                     cb(null, requireAuth(require('./Contests/ContestHome/pages/HomePage').default));
@@ -77,6 +78,7 @@ export default (
         />
         <Route
             path='edit'
+            page='home'
             getComponent={(nextState, cb) => {
                 require.ensure([], require => {
                     cb(null, requireAuth(require('./Contests/ContestHome/pages/EditContestPage').default));
@@ -85,6 +87,7 @@ export default (
         />
         <Route
             path='problems/add'
+            page='problems'
             getComponent={(nextState, cb) => {
                 require.ensure([], require => {
                     cb(null, require('./Contests/Create/pages/ProblemPage').default);
@@ -93,6 +96,7 @@ export default (
         />
         <Route
             path='problems/:problemNum/edit'
+            page='problems'
             getComponent={(nextState, cb) => {
                 require.ensure([], require => {
                     cb(null, require('./Contests/Create/pages/ProblemPage').default);
@@ -101,6 +105,7 @@ export default (
         />
         <Route
             path='problems/:teamId/:problemNum'
+            page='problems'
             getComponent={(nextState, cb) => {
                 require.ensure([], require => {
                     cb(null, requireAuth(require('./Contests/Participate/pages/Problem/pages/ProblemPage').default));
@@ -109,6 +114,7 @@ export default (
         />
         <Route
             path='scoreboard(/:teamId)'
+            page='scoreboard'
             getComponent={(nextState, cb) => {
                 require.ensure([], require => {
                     cb(null, requireAuth(require('./Contests/Participate/pages/Scoreboard/pages/ScoreboardPage').default));
@@ -117,6 +123,7 @@ export default (
         />
         <Route
             path='submissions'
+            page='submissions'
             getComponent={(nextState, cb) => {
                 require.ensure([], require => {
                     cb(null, requireAuth(require('./Contests/Judge/pages/AdminPage').default));
@@ -125,6 +132,7 @@ export default (
         />
         <Route
             path='submissions/admin/:submissionId'
+            page='submissions'
             getComponent={(nextState, cb) => {
                 require.ensure([], require => {
                     cb(null, requireAuth(require('./Contests/Judge/pages/SubmissionProblemPage').default));
@@ -132,20 +140,21 @@ export default (
             }}
         />
         <Route
-          path='submissions/:teamId'
-          getComponent={(nextState, cb) => {
-            require.ensure([], require => {
-              cb(null, requireAuth(require('./Contests/Participate/pages/Submission/pages/ParticipantSubmissionsPage').default));
-            });
-          }}
+            path='submissions/:teamId'
+            page='submissions'
+            getComponent={(nextState, cb) => {
+                require.ensure([], require => {
+                    cb(null, requireAuth(require('./Contests/Participate/pages/Submission/pages/ParticipantSubmissionsPage').default));
+                });
+            }}
         />
         <Route
-          path='submissions/:teamId/:submissionId'
-          getComponent={(nextState, cb) => {
-            require.ensure([], require => {
-              cb(null, requireAuth(require('./Contests/Participate/pages/Submission/pages/ParticipantSubmissionProblemPage').default));
-            });
-          }}
+            path='submissions/:teamId/:submissionId'
+            getComponent={(nextState, cb) => {
+                require.ensure([], require => {
+                    cb(null, requireAuth(require('./Contests/Participate/pages/Submission/pages/ParticipantSubmissionProblemPage').default));
+                });
+            }}
         />
 
     </Route>

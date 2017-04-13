@@ -4,18 +4,27 @@ import { Link, withRouter } from 'react-router';
 
 class MessageAlert extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.goToNewMessage = this.goToNewMessage.bind(this);
+    }
+
     handleConfirm() {
         Alert.close(this.props.id);
     }
 
+    goToNewMessage() {
+        Alert.close(this.props.id);
+        this.props.router.push(`/contest/${this.props.customFields.contestId}/submissions`);
+    }
+
     render() {
-        console.log(this.props);
         return (
             <div className={this.props.classNames} id={this.props.id} style={this.props.styles}>
                 <div className='s-alert-box-inner'>
                     {this.props.message}
                     <Link
-                        to={`/contest/${this.props.customFields.contestId}/submissions`}
+                        onClick={this.goToNewMessage}
                         className='new-message-link'
                     >new message</Link>
                 </div>

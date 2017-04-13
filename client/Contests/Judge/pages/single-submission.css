@@ -24,12 +24,17 @@
 
 .feedback-container .input-group {
     margin: 24px auto;
-    width: 350px;
+    width: 430px;
 }
 
 .single-submissions-container .input-group .btn {
     padding: .25em;
     width: 80px;
+}
+
+.single-submissions-container .input-group .btn.clipboard {
+    padding: .25em;
+    width: 125px;
 }
 
 .single-submissions-container .input-group select {

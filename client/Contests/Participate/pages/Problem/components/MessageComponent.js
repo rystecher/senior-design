@@ -47,7 +47,7 @@ export default class MessageComponent extends React.Component {
 
     render() {
         return (
-            <div className="chatbox">
+            <div className='chatbox'>
                 <ChatFeed
                     messages={this.state.messageObjs}
                     bubblesCentered={false}
@@ -66,10 +66,9 @@ export default class MessageComponent extends React.Component {
 }
 
 const styles = {
-  inputField: {
-    display:'inherit',
-  }
-
+    inputField: {
+        display: 'inherit',
+    },
 };
 
 MessageComponent.propTypes = {
