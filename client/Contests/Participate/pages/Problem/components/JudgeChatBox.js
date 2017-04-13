@@ -33,7 +33,7 @@ export default class JudgeChatBox extends React.Component {
 
     getMessages(contestId, teamId, broadcast) {
         clearInterval(this.chatIntervId);
-        const then = (messages) => {
+        const addMessagesToState = (messages) => {
             if (messages) {
                 const messageObjs = messages.map((message) => {
                     const type = 'Team' === message.from ? 1 : 0;
@@ -47,12 +47,12 @@ export default class JudgeChatBox extends React.Component {
         };
         if (broadcast) {
             const intervalFunc = () => getBroadcastMessages(contestId)
-            .then(then);
+            .then(addMessagesToState);
             intervalFunc();
             this.chatIntervId = setInterval(intervalFunc, 10000);
         } else {
             const intervalFunc = () => getTeamMessagesForJudge(contestId, teamId)
-            .then(then);
+            .then(addMessagesToState);
             intervalFunc();
             this.chatIntervId = setInterval(intervalFunc, 10000);
         }
