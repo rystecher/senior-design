@@ -6,8 +6,7 @@ export default class MessageComponent extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { messageObjs: [], value: '' };
-        this.handleChange = this.handleChange.bind(this);
+        this.state = { messageObjs: [] };
     }
 
     componentDidMount() {
@@ -18,7 +17,10 @@ export default class MessageComponent extends React.Component {
                     const type = 'Team' === message.from ? 0 : 1;
                     return new Message(type, message.message);
                 });
-                this.setState({ messageObjs });
+                if (this.state.messageObjs.length < messageObjs.length) {
+                    this.setState({ messageObjs });
+                    this.child._scrollToBottom();
+                }
             }
         });
         intervalFunc();
@@ -29,26 +31,22 @@ export default class MessageComponent extends React.Component {
         clearInterval(this.chatIntervId);
     }
 
-    sendMessage(eve) {
+    sendMessage(event) {
         const { contest_id, team_id } = this.props;
-        if (13 === eve.keyCode) {
-            sendMessageToJudge(contest_id, team_id, this.state.value);
-            this.state.messageObjs.push(new Message(0, this.state.value));
-            this.setState({
-                value: '',
-                messageObjs: this.state.messageObjs,
-            });
+        if (event.keyCode === 13) {
+            sendMessageToJudge(contest_id, team_id, event.target.value);
+            this.state.messageObjs.push(new Message(0, event.target.value));
+            event.target.value = '';
+            this.setState({ messageObjs: this.state.messageObjs });
+            setTimeout(() => this.child._scrollToBottom(), 250);
         }
-    }
-
-    handleChange(event) {
-        this.setState({ value: event.target.value });
     }
 
     render() {
         return (
             <div className='chatbox'>
                 <ChatFeed
+                    ref={instance => { this.child = instance; }}
                     messages={this.state.messageObjs}
                     bubblesCentered={false}
                 />
@@ -56,8 +54,7 @@ export default class MessageComponent extends React.Component {
                     placeholder='Have a question for the judges...'
                     className='message-input'
                     onKeyDown={this.sendMessage.bind(this)}
-                    type='text' value={this.state.value}
-                    onChange={this.handleChange}
+                    type='text'
                     style={styles.inputField}
                 />
             </div>

@@ -196,7 +196,7 @@ export function addProblemAttempt(req, res) {
         Contest.findOne({ cuid: req.params.contest_id }, (err, contest) => {
             if (err) {
                 res.status(500).send(err);
-            } else if (!contest || 'number' !== typeof contest.start) {
+            } else if (!contest || typeof contest.start !== 'number') {
                 res.status(400).send(err);
             } else if (contest.closed) {
                 const team = contest.teams.id(req.params.team_id);
@@ -228,10 +228,10 @@ export function addProblemAttempt(req, res) {
                                 hackerrankCall(code, lang, [input], (error, response) => {
                                     try {
                                         const { stderr, stdout, compilemessage, message } = JSON.parse(response.body).result;
-                                        const hadStdError = Boolean(stderr && !stderr.every((error) => false === error));
+                                        const hadStdError = Boolean(stderr && !stderr.every((error) => error === false));
                                         problem.attempts.push(code);
                                         readTextFile('output/' + fileName).then((expectedOutput) => {
-                                            const stdOutput = (Array.isArray(stdout)) && 0 !== stdout.length ? stdout[0] : null;
+                                            const stdOutput = (Array.isArray(stdout)) && stdout.length !== 0 ? stdout[0] : null;
                                             if (!hadStdError && stdOutput) { // no error => check output
                                                 problem.solved = stdOutput === expectedOutput;
                                                 if (problem.solved) {
@@ -243,7 +243,7 @@ export function addProblemAttempt(req, res) {
                                                     }
                                                 }
                                             }
-                                            const stdError = (Array.isArray(stderr)) && 0 !== stderr.length ? stderr[0] : null;
+                                            const stdError = (Array.isArray(stderr)) && stderr.length !== 0 ? stderr[0] : null;
                                             const output = hadStdError ? stdError : stdOutput || compilemessage;
                                             const actualOutputFileName = shortid.generate() + '.txt';
                                             const trimmedOutput = output.length > expectedOutput.length + 200 ?

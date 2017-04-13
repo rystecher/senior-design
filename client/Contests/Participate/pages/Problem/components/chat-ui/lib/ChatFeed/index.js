@@ -17,12 +17,6 @@ export default class ChatFeed extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-      if (nextProps.messages.length !== this.props.messages.length) {
-          this._scrollToBottom();
-      }
-  }
-
   _scrollToBottom() {
     const {chat} = this.refs;
     const scrollHeight = chat.scrollHeight;

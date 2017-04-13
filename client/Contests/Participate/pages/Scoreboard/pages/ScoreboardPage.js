@@ -88,18 +88,18 @@ export default class Scoreboard extends React.Component {
                     scores={scores}
                     numSolved={numSolved}
                 />
-                <ReactTable
-                    data={data}
-                    columns={this.columns}
-                    loading={loading}
-                    showPageSizeOptions={false}
-                    defaultPageSize={10}
-                    showFilters
-                    className='-highlight'
-                />
             </div>;
         return (
             <div className='contest-scoreboard'>
+                {this.props.userRole === 'admin' || scoreboardVisible ?
+                    barchart :
+                    <div>
+                        <h4 className='hidden-text'>
+                            The contest administrator is hiding the scoreboard!
+                            Things must be getting interesting...
+                        </h4>
+                    </div>
+                }
                 {this.props.userRole === 'admin' && !loading ?
                     <div className='full-width'>
                         <div className='btn-wrapper'>
@@ -116,16 +116,6 @@ export default class Scoreboard extends React.Component {
                         </div>
                     </div> : null
                 }
-                {this.props.userRole === 'admin' || scoreboardVisible ?
-                    barchart :
-                    <div>
-                        <h4 className='hidden-text'>
-                            The contest administrator is hiding the scoreboard!
-                            Things must be getting interesting...
-                        </h4>
-                    </div>
-                }
-
             </div>
         );
     }
