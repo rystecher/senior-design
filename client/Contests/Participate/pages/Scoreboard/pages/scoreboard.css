@@ -11,11 +11,12 @@
 .contest-scoreboard .btn-wrapper {
     margin: 0 auto;
     width: 604px;
+    margin-bottom: 48px;
 }
 
 .chart-wrapper {
     width: 1000px;
-    margin: 48px auto;
+    margin: 72px auto 48px;
 }
 
 .hidden-text {

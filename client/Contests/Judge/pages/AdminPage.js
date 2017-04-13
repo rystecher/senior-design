@@ -57,6 +57,7 @@ class AdminSubmissionsPage extends React.Component {
                 <ReactTable
                     loading={loading}
                     data={data}
+                    showFilters
                     columns={this.columns}
                     showPageSizeOptions={false}
                     defaultPageSize={10}

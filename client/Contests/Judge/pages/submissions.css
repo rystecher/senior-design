@@ -11,3 +11,11 @@
 .submissions-container {
     margin-right: 200px;
 }
+.submissions-container .ReactTable .rt-tbody .rt-td {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.submissions-container .ReactTable .rt-tbody .rt-tr-group {
+    max-height: 34px;
+}

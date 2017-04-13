@@ -17,10 +17,6 @@ export default class ChatFeed extends Component {
     }
   }
 
-  componentDidUpdate() {
-      this._scrollToBottom();
-  }
-
   _scrollToBottom() {
     const {chat} = this.refs;
     const scrollHeight = chat.scrollHeight;

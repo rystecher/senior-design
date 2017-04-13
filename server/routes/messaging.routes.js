@@ -17,6 +17,9 @@ router.route('/messages/:contestId/team/:teamId/forjudge').get(MessageController
 // Gets an array of objects for the judges to see which teams have messaged
 router.route('/messages/:contestId/judge').get(MessageController.getJudgeMessages);
 
+// Gets an array of objects for the judges to see which teams have messaged
+router.route('/messages/:contestId/new').get(MessageController.hasNewMessage);
+
 // Posts a message for all teams in a contest
 router.route('/messages/:contestId/broadcast').post(MessageController.sendBroadcastMessage);
 

@@ -96,7 +96,7 @@ export function sendBroadcastMessage(req, res) {
                 res.status(400).send({ err: 'Contest does not exist' });
             } else {
                 contest.teams.forEach(team => {
-                    team.messages.push({ from: 'Judges', message: req.body.message });
+                    team.messages.push({ from: 'Judges', message: 'Broadcast: ' + req.body.message });
                 });
                 contest.broadcastMessages.push({ from: 'Judges', message: req.body.message });
                 contest.save((err) => {
@@ -128,7 +128,7 @@ export function getBroadcastMessages(req, res) {
 }
 
 export function sendTeamMessage(message, contestId, teamId, res) {
-    Contest.findOne({ cuid: contestId }, (err, contest) => {
+    Contest.findOne({ cuid: contestId }).select('teams').exec((err, contest) => {
         if (err) {
             if (res) {
                 res.status(500).send(err);
@@ -147,6 +147,7 @@ export function sendTeamMessage(message, contestId, teamId, res) {
                 team.messages.push(message);
                 if (message.from === 'Team') {
                     team.messagedJudge = true;
+                    contest.newMessage = teamId;
                 }
                 contest.save((err2) => {
                     if (res) {
@@ -160,4 +161,24 @@ export function sendTeamMessage(message, contestId, teamId, res) {
             }
         }
     });
+}
+
+export function hasNewMessage(req, res) {
+    if (!req.params.contestId) {
+        res.status(403).end();
+    } else {
+        Contest.findOne({ cuid: req.params.contestId }).select('newMessage').exec((err, contest) => {
+            if (err) {
+                res.status(500).send(err);
+            } else if (!contest) {
+                res.status(400).send({ err: 'Contest does not exist' });
+            } else if (contest.newMessage === 'none') {
+                res.json({ newMessage: false });
+            } else {
+                const newMessage = contest.newMessage;
+                contest.newMessage = 'none';
+                contest.save(() => res.json({ newMessage }));
+            }
+        });
+    }
 }

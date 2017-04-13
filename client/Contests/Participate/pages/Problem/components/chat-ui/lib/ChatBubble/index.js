@@ -54,7 +54,7 @@ const styles = {
     float: 'right'
   },
   recipientChatbubble: {
-    backgroundColor: '#ccc'
+    backgroundColor: "#000000"
   },
   recipientChatbubbleOrientationNormal: {
     float: 'left'

@@ -114,9 +114,15 @@ class SingleSubmissionPage extends React.Component {
                                 type='button'
                             >Send</button>
                         </span>
-                        <ClipboardButton data-clipboard-text={text} onSuccess={this.onSuccess} button-title="Copies code to my clipboard">
-                            Copy code
-                        </ClipboardButton>
+                        <span className='input-group-btn'>
+                            <ClipboardButton
+                                data-clipboard-text={text}
+                                onSuccess={this.onSuccess}
+                                button-title='Copies code to my clipboard'
+                                className='btn clipboard'
+                            >Copy code
+                            </ClipboardButton>
+                        </span>
                     </div>
                 </div>
                 <ReactTable

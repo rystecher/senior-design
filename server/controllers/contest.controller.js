@@ -148,35 +148,35 @@ export function testProblemAttempt(req, res) {
         hackerrankCall(code, lang, testcases, (error, response) => {
             let feedback;
             try {
-              const { stderr, stdout, compilemessage, message, time } = JSON.parse(response.body).result;
-              const hadStdError = Boolean(stderr && !stderr.every((error) => false === error));
-              feedback = createTestFeedbackMessage(stderr, stdout, compilemessage, message, time, hadStdError);
-              feedback = feedback.length > 250 ?
+                const { stderr, stdout, compilemessage, message, time } = JSON.parse(response.body).result;
+                const hadStdError = Boolean(stderr && !stderr.every((error) => false === error));
+                feedback = createTestFeedbackMessage(stderr, stdout, compilemessage, message, time, hadStdError);
+                feedback = feedback.length > 250 ?
                 feedback.substring(0, 250) + '... trimmed due to length' : feedback;
             } catch (err) {
-              feedback = { from: 'Automated', message: `There was an error processing your request`};
+                feedback = { from: 'Automated', message: 'There was an error processing your request' };
             }
             // Send feedback to team
             Contest.findOne({ cuid: req.params.contest_id }, (err, contest) => {
-              if (err) {
-                res.status(500).send(err);
-              } else if (!contest) {
-                res.status(400).send({ err: 'Contest does not exist' });
-              } else {
-                const team = contest.teams.id(req.params.team_id);
-                if (team) {
-                  team.messages.push(feedback);
-                  contest.save((err2) => {
-                    if (err2) {
-                      res.status(500).send(err);
-                    } else {
-                      res.json(feedback);
-                    }
-                  });
+                if (err) {
+                    res.status(500).send(err);
+                } else if (!contest) {
+                    res.status(400).send({ err: 'Contest does not exist' });
                 } else {
-                  res.status(400).send({ err: 'Team does not exist' });
+                    const team = contest.teams.id(req.params.team_id);
+                    if (team) {
+                        team.messages.push(feedback);
+                        contest.save((err2) => {
+                            if (err2) {
+                                res.status(500).send(err);
+                            } else {
+                                res.json(feedback);
+                            }
+                        });
+                    } else {
+                        res.status(400).send({ err: 'Team does not exist' });
+                    }
                 }
-              }
             });
         });
     }
@@ -196,7 +196,7 @@ export function addProblemAttempt(req, res) {
         Contest.findOne({ cuid: req.params.contest_id }, (err, contest) => {
             if (err) {
                 res.status(500).send(err);
-            } else if (!contest || 'number' !== typeof contest.start) {
+            } else if (!contest || typeof contest.start !== 'number') {
                 res.status(400).send(err);
             } else if (contest.closed) {
                 const team = contest.teams.id(req.params.team_id);
@@ -226,61 +226,64 @@ export function addProblemAttempt(req, res) {
                             const fileName = contest.problems[number].fileName + '.txt';
                             readTextFile('input/' + fileName).then((input) => {
                                 hackerrankCall(code, lang, [input], (error, response) => {
-                                  let feedback;
-                                  try {
-                                    const { stderr, stdout, compilemessage, message } = JSON.parse(response.body).result;
-                                    const hadStdError = Boolean(stderr && !stderr.every((error) => false === error));
-                                    problem.attempts.push(code);
-                                    readTextFile('output/' + fileName).then((expectedOutput) => {
-                                        const stdOutput = (Array.isArray(stdout)) && 0 !== stdout.length ? stdout[0] : null;
-                                        if (!hadStdError && stdOutput) { // no error => check output
-                                          problem.solved = stdOutput === expectedOutput;
-                                          if (problem.solved) {
-                                            team.score += computeScore(contest.start, problem.attempts.length);
-                                            team.numSolved++;
-                                            if (!contest.problems[number].solved) {
-                                              contest.problems[number].solved = true;
-                                              contest.problems[number].solvedBy = team.name;
+                                    try {
+                                        const { stderr, stdout, compilemessage, message } = JSON.parse(response.body).result;
+                                        const hadStdError = Boolean(stderr && !stderr.every((error) => error === false));
+                                        problem.attempts.push(code);
+                                        readTextFile('output/' + fileName).then((expectedOutput) => {
+                                            const stdOutput = (Array.isArray(stdout)) && stdout.length !== 0 ? stdout[0] : null;
+                                            if (!hadStdError && stdOutput) { // no error => check output
+                                                problem.solved = stdOutput === expectedOutput;
+                                                if (problem.solved) {
+                                                    team.score += computeScore(contest.start, problem.attempts.length);
+                                                    team.numSolved++;
+                                                    if (!contest.problems[number].solved) {
+                                                        contest.problems[number].solved = true;
+                                                        contest.problems[number].solvedBy = team.name;
+                                                    }
+                                                }
                                             }
-                                          }
-                                        }
-                                        const stdError = (Array.isArray(stderr)) && 0 !== stderr.length ? stderr[0] : null;
-                                        const output = hadStdError ? stdError : stdOutput || compilemessage;
-                                        const actualOutputFileName = shortid.generate() + '.txt';
-                                        const trimmedOutput = output.length > expectedOutput.length + 200 ?
-                                          output.substring(0, expectedOutput.length + 200) + '... trimmed due to length' : output;
-                                        fs.writeFile('submission/' + actualOutputFileName, trimmedOutput);
-                                        feedback = createFeedbackMessage(problem.solved, number + 1, hadStdError, stderr, compilemessage, message);
-                                        createSubmission({
-                                          cuid: cuid(),
-                                          teamName: team.name,
-                                          teamID: req.params.team_id,
-                                          contestID: req.params.contest_id,
-                                          problemName: contest.problems[number].name,
-                                          problemNumber: number,
-                                          hadStdError,
-                                          correct: problem.solved,
-                                          expectedOutputFileName: fileName,
-                                          actualOutputFileName,
-                                          feedback: feedback.message,
-                                          code,
-                                        });
-                                        contest.save((err) => {
-                                          if (err) {
-                                            res.status(500).send(err);
-                                          } else {
-                                            res.json({
-                                              feedback,
-                                              correct: problem.solved,
+                                            const stdError = (Array.isArray(stderr)) && stderr.length !== 0 ? stderr[0] : null;
+                                            const output = hadStdError ? stdError : stdOutput || compilemessage;
+                                            const actualOutputFileName = shortid.generate() + '.txt';
+                                            const trimmedOutput = output.length > expectedOutput.length + 200 ?
+                                                output.substring(0, expectedOutput.length + 200) + '... trimmed due to length' : output;
+                                            fs.writeFile('submission/' + actualOutputFileName, trimmedOutput);
+                                            const feedback = createFeedbackMessage(problem.solved, number + 1, hadStdError, stderr, compilemessage, message);
+                                            team.messages.push(feedback.userFeedback);
+                                            createSubmission({
+                                                cuid: cuid(),
+                                                teamName: team.name,
+                                                teamID: req.params.team_id,
+                                                contestID: req.params.contest_id,
+                                                problemName: contest.problems[number].name,
+                                                problemNumber: number,
+                                                hadStdError,
+                                                correct: problem.solved,
+                                                expectedOutputFileName: fileName,
+                                                actualOutputFileName,
+                                                feedback: feedback.judgeFeedback,
+                                                code,
                                             });
-                                          }
-                                        });
-                                      }, err => res.status(500).send(err)
+                                            contest.save((err) => {
+                                                if (err) {
+                                                    res.status(500).send(err);
+                                                } else {
+                                                    res.json({
+                                                        feedback,
+                                                        correct: problem.solved,
+                                                    });
+                                                }
+                                            });
+                                        }, err => res.status(500).send(err)
                                     );
-                                  } catch (err) {
-                                    feedback = { from: 'Automated', message: `There was an error processing your request`};
-                                  }
-                                  team.messages.push(feedback);
+                                    } catch (err) {
+                                        team.messages.push({
+                                            from: 'Automated',
+                                            message: 'There was an error processing your request',
+                                        });
+                                        contest.save(() => res.status(500).send({ err: 'error processing request' }));
+                                    }
                                 });
                             }, err => res.status(500).send(err)
                             );

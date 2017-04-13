@@ -8,8 +8,7 @@ export default class JudgeChatBox extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { messageObjs: [], value: '' };
-        this.handleChange = this.handleChange.bind(this);
+        this.state = { messageObjs: [] };
         this.sendMessage = this.sendMessage.bind(this);
     }
 
@@ -34,28 +33,26 @@ export default class JudgeChatBox extends React.Component {
 
     getMessages(contestId, teamId, broadcast) {
         clearInterval(this.chatIntervId);
-        if (broadcast) {
-            const intervalFunc = () => getBroadcastMessages(contestId).then((messages) => {
-                if (messages) {
-                    const messageObjs = messages.map((message) => {
-                        const type = 'Team' === message.from ? 1 : 0;
-                        return new Message(type, message.message);
-                    });
+        const addMessagesToState = (messages) => {
+            if (messages) {
+                const messageObjs = messages.map((message) => {
+                    const type = 'Team' === message.from ? 1 : 0;
+                    return new Message(type, message.message);
+                });
+                if (this.state.messageObjs.length < messageObjs.length) {
                     this.setState({ messageObjs });
+                    this.child._scrollToBottom();
                 }
-            });
+            }
+        };
+        if (broadcast) {
+            const intervalFunc = () => getBroadcastMessages(contestId)
+            .then(addMessagesToState);
             intervalFunc();
             this.chatIntervId = setInterval(intervalFunc, 10000);
         } else {
-            const intervalFunc = () => getTeamMessagesForJudge(contestId, teamId).then((messages) => {
-                if (messages) {
-                    const messageObjs = messages.map((message) => {
-                        const type = 'Team' === message.from ? 1 : 0;
-                        return new Message(type, message.message);
-                    });
-                    this.setState({ messageObjs });
-                }
-            });
+            const intervalFunc = () => getTeamMessagesForJudge(contestId, teamId)
+            .then(addMessagesToState);
             intervalFunc();
             this.chatIntervId = setInterval(intervalFunc, 10000);
         }
@@ -63,27 +60,17 @@ export default class JudgeChatBox extends React.Component {
 
     sendMessage(event) {
         const { contestId, teamId, broadcast } = this.props;
-        if (13 === event.keyCode) {
+        if (event.keyCode === 13) {
             if (broadcast) {
-                sendBroadcastMessage(contestId, this.state.value);
-                this.state.messageObjs.push(new Message(0, this.state.value));
-                this.setState({
-                    value: '',
-                    messageObjs: this.state.messageObjs,
-                });
+                sendBroadcastMessage(contestId, event.target.value);
             } else {
-                sendMessageToTeam(contestId, teamId, this.state.value);
-                this.state.messageObjs.push(new Message(0, this.state.value));
-                this.setState({
-                    value: '',
-                    messageObjs: this.state.messageObjs,
-                });
+                sendMessageToTeam(contestId, teamId, event.target.value);
             }
+            this.state.messageObjs.push(new Message(0, event.target.value));
+            event.target.value = '';
+            this.setState({ messageObjs: this.state.messageObjs });
+            setTimeout(() => this.child._scrollToBottom(), 250);
         }
-    }
-
-    handleChange(event) {
-        this.setState({ value: event.target.value });
     }
 
     render() {
@@ -94,6 +81,7 @@ export default class JudgeChatBox extends React.Component {
                     <span className='close' onClick={this.props.closeChat}>X</span>
                 </div>
                 <ChatFeed
+                    ref={instance => { this.child = instance; }}
                     messages={this.state.messageObjs}
                     bubblesCentered={false}
                 />
@@ -101,8 +89,7 @@ export default class JudgeChatBox extends React.Component {
                     placeholder='Have a question for the judges...'
                     className='message-input'
                     onKeyDown={this.sendMessage}
-                    type='text' value={this.state.value}
-                    onChange={this.handleChange}
+                    type='text'
                 />
             </div>
         );

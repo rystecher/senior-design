@@ -28,6 +28,10 @@ export function getContestInfo(contestId) {
     return callApi(`contests/${contestId}/info`);
 }
 
+export function hasNewMessage(contestId) {
+    return callApi(`messages/${contestId}/new`);
+}
+
 export function updateContestInfo(contestId, info) {
     return callApi(`contests/${contestId}/info`, 'post', { info });
 }
@@ -117,19 +121,19 @@ export function fetchSubmissions(contestId) {
 }
 
 export function sendFeedback(submissionId, req) {
-    return callApi(`/submissions/feedback/${submissionId}`, 'post', req).then(res => {
+    return callApi(`submissions/feedback/${submissionId}`, 'post', req).then(res => {
         console.log('Sending feedback..' + res);
     });
 }
 
 export function getSubmission(submissionId) {
-    return callApi(`/submissions/${submissionId}`).then(res => {
+    return callApi(`submissions/${submissionId}`).then(res => {
         return res;
     });
 }
 
 export function deleteSubmission(submissionId) {
-    return callApi(`/submissions/${submissionId}`, 'delete').then(res => {
+    return callApi(`submissions/${submissionId}`, 'delete').then(res => {
         console.log('deleting submission..' + res);
     });
 }
