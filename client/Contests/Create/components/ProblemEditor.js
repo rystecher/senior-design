@@ -93,8 +93,8 @@ export default class ProblemEditor extends React.Component {
         const pdf = this.state.pdfUrl ?
             (<spdf.SimplePDF file={this.state.pdfUrl} />) : null;
         return (
-            <div id='edit'>
-                <div>
+            <div id='edit' className='row'>
+                <div className='col-md-6 left-col'>
                     {pdf}
                 </div>
                 <ProblemFields

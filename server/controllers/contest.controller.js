@@ -57,14 +57,14 @@ export function createContest(req, res) {
  * @returns void
  */
 export function joinContest(req, res) {
-    if (!req.body.username || !req.params.contest_id) {
+    if (!req.body.username || !req.params.contestId) {
         res.status(403).end();
     } else {
         const newTeam = new Team();
         const username = req.body.username;
         newTeam.name = sanitizeHtml(username);
         newTeam.slug = slug(newTeam.name.toLowerCase(), { lowercase: true });
-        Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+        Contest.findOne({ cuid: req.params.contestId }).exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else if (!contest) {
@@ -83,7 +83,7 @@ export function joinContest(req, res) {
                     } else {
                         const team = saved.teams.pop();
                         User.joinContest(username, contest.cuid, team._id);
-                        res.json({ success: true });
+                        res.json({ success: true, teamId: team._id });
                     }
                 });
             }
@@ -99,14 +99,14 @@ export function joinContest(req, res) {
  * @returns void
  */
 export function addAccountToTeam(req, res) {
-    if (!req.params.contest_id || !req.params.team_id || !req.body.account_id) {
+    if (!req.params.contestId || !req.params.teamId || !req.body.account_id) {
         res.status(403).end();
     } else {
-        Contest.findOne({ cuid: req.params.contest_id }, (err, contest) => {
+        Contest.findOne({ cuid: req.params.contestId }, (err, contest) => {
             if (err) {
                 res.status(500).send(err);
             }
-            const team = contest.teams.id(req.params.team_id);
+            const team = contest.teams.id(req.params.teamId);
             if (team.memberList.indexOf(req.body.account_id) === -1) {
                 team.memberList.push(req.body.account_id);
                 contest.save((err, saved) => {
@@ -140,7 +140,7 @@ export function readTextFile(fileName) {
  * @param res
  */
 export function testProblemAttempt(req, res) {
-    if (!req.params.contest_id || !req.params.team_id || !req.body.problem) {
+    if (!req.params.contestId || !req.params.teamId || !req.body.problem) {
         res.status(403).end();
     } else {
     // Send query to HackerRank
@@ -157,13 +157,13 @@ export function testProblemAttempt(req, res) {
                 feedback = { from: 'Automated', message: 'There was an error processing your request' };
             }
             // Send feedback to team
-            Contest.findOne({ cuid: req.params.contest_id }, (err, contest) => {
+            Contest.findOne({ cuid: req.params.contestId }, (err, contest) => {
                 if (err) {
                     res.status(500).send(err);
                 } else if (!contest) {
                     res.status(400).send({ err: 'Contest does not exist' });
                 } else {
-                    const team = contest.teams.id(req.params.team_id);
+                    const team = contest.teams.id(req.params.teamId);
                     if (team) {
                         team.messages.push(feedback);
                         contest.save((err2) => {
@@ -189,26 +189,27 @@ export function testProblemAttempt(req, res) {
  * @returns void
  */
 export function addProblemAttempt(req, res) {
-    if (!req.params.contest_id || !req.params.team_id || !req.body.problem) {
+    if (!req.params.contestId || !req.params.teamId || !req.body.problem) {
         res.status(403).end();
     } else {
         const { code, lang, number } = req.body.problem;
-        Contest.findOne({ cuid: req.params.contest_id }, (err, contest) => {
+        Contest.findOne({ cuid: req.params.contestId }, (err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else if (!contest || typeof contest.start !== 'number') {
                 res.status(400).send(err);
             } else if (contest.closed) {
-                const team = contest.teams.id(req.params.team_id);
+                const team = contest.teams.id(req.params.teamId);
                 if (team) {
                     const feedback = 'The contest is over! No more submissions!';
                     team.messages.push({ from: 'Automated', message: feedback });
                     res.status(400).send({ err: 'Contest is closed' });
+                    contest.save();
                 } else {
                     res.status(400).send({ err: 'Team does not exist' });
                 }
             } else {
-                const team = contest.teams.id(req.params.team_id);
+                const team = contest.teams.id(req.params.teamId);
                 if (team) {
                     const problem = team.problem_attempts[number]; // problem object of team
                     if (problem) {
@@ -254,8 +255,8 @@ export function addProblemAttempt(req, res) {
                                             createSubmission({
                                                 cuid: cuid(),
                                                 teamName: team.name,
-                                                teamID: req.params.team_id,
-                                                contestID: req.params.contest_id,
+                                                teamID: req.params.teamId,
+                                                contestID: req.params.contestId,
                                                 problemName: contest.problems[number].name,
                                                 problemNumber: number,
                                                 hadStdError,
@@ -313,17 +314,17 @@ export function addProblemAttempt(req, res) {
  * @returns void
  */
 export function getSolvedArrays(req, res) {
-    if (!req.params.contest_id || !req.params.team_id) {
+    if (!req.params.contestId || !req.params.teamId) {
         res.status(403).end();
     }
-    Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+    Contest.findOne({ cuid: req.params.contestId }).exec((err, contest) => {
         if (err) {
             res.status(500).send(err);
         } else if (!contest) {
             res.status(400).send({ err: 'Contest does not exist' });
         } else {
             const solvedInContest = contest.problems.map((problem) => problem.solved);
-            const team = contest.teams.id(req.params.team_id);
+            const team = contest.teams.id(req.params.teamId);
             if (team) {
                 const solvedByTeam = team.problem_attempts.map((problem) => problem.solved);
                 res.json({ solvedInContest, solvedByTeam });
@@ -336,10 +337,10 @@ export function getSolvedArrays(req, res) {
 
 
 export function getSolvedBy(req, res) {
-    if (!req.params.contest_id) {
+    if (!req.params.contestId) {
         res.status(403).end();
     }
-    Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+    Contest.findOne({ cuid: req.params.contestId }).exec((err, contest) => {
         if (err) {
             res.status(500).send(err);
         } else if (!contest) {
@@ -364,11 +365,11 @@ export function getSolvedBy(req, res) {
  * @returns void
  */
 export function getProblemFile(req, res) {
-    if (!req.params.contest_id || !req.params.problem_no) {
+    if (!req.params.contestId || !req.params.problem_no) {
         res.status(403).end();
     }
     const problemNum = req.params.problem_no - 1;
-    Contest.findOne({ cuid: req.params.contest_id }).select('problems').exec((err, contest) => {
+    Contest.findOne({ cuid: req.params.contestId }).select('problems').exec((err, contest) => {
         if (err) {
             res.status(500).send(err);
         } else if (!contest) {
@@ -398,10 +399,10 @@ export function getProblemFile(req, res) {
  * @returns void
  */
 export function createProblem(req, res) {
-    if (!req.params.contest_id) {
+    if (!req.params.contestId) {
         res.status(403).end();
     } else {
-        Contest.findOne({ cuid: req.params.contest_id }).select('problems').exec((err, contest) => {
+        Contest.findOne({ cuid: req.params.contestId }).select('problems').exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else if (!contest) {
@@ -465,11 +466,11 @@ export function deleteProblem(req, res) {
  * @returns void
  */
 export function changeProblemPdf(req, res) {
-    if (!req.params.contest_id || !req.params.problem_no) {
+    if (!req.params.contestId || !req.params.problem_no) {
         res.status(403).end();
     } else {
         const problem_no = req.params.problem_no - 1;
-        Contest.findOne({ cuid: req.params.contest_id }).select('problems').exec((err, contest) => {
+        Contest.findOne({ cuid: req.params.contestId }).select('problems').exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else if (!contest) {
@@ -499,11 +500,11 @@ export function changeProblemPdf(req, res) {
  * @returns void
  */
 export function setProblemMetaData(req, res) {
-    if (!req.params.contest_id || !req.params.problem_no || !req.body.metadata) {
+    if (!req.params.contestId || !req.params.problem_no || !req.body.metadata) {
         res.status(403).end();
     } else {
         const problem_no = req.params.problem_no - 1;
-        Contest.findOne({ cuid: req.params.contest_id }).select('problems').exec((err, contest) => {
+        Contest.findOne({ cuid: req.params.contestId }).select('problems').exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else if (!contest) {
@@ -547,11 +548,11 @@ export function setProblemMetaData(req, res) {
  * @returns void
  */
 export function getProblemMetaData(req, res) {
-    if (!req.params.contest_id || !req.params.problem_no) {
+    if (!req.params.contestId || !req.params.problem_no) {
         res.status(403).end();
     } else {
         const problem_no = req.params.problem_no - 1;
-        Contest.findOne({ cuid: req.params.contest_id }).select('problems').exec((err, contest) => {
+        Contest.findOne({ cuid: req.params.contestId }).select('problems').exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else if (!contest) {
@@ -583,10 +584,10 @@ export function getProblemMetaData(req, res) {
  * @returns void
  */
 export function getContest(req, res) {
-    if (!req.params.contest_id) {
+    if (!req.params.contestId) {
         res.status(403).end();
     } else {
-        Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+        Contest.findOne({ cuid: req.params.contestId }).exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else if (!contest) {
@@ -605,10 +606,10 @@ export function getContest(req, res) {
  * @returns void
  */
 export function getContestInfo(req, res) {
-    if (!req.params.contest_id) {
+    if (!req.params.contestId) {
         res.status(403).end();
     } else {
-        Contest.findOne({ cuid: req.params.contest_id })
+        Contest.findOne({ cuid: req.params.contestId })
         .select('about admin closed name rules start')
         .exec((err, contest) => {
             if (err) {
@@ -667,10 +668,10 @@ export function updateContestInfo(req, res) {
  * @returns void
  */
 export function getNumberOfProblems(req, res) {
-    if (!req.params.contest_id) {
+    if (!req.params.contestId) {
         res.status(403).end();
     } else {
-        Contest.findOne({ cuid: req.params.contest_id }).select('problems start').exec((err, contest) => {
+        Contest.findOne({ cuid: req.params.contestId }).select('problems start').exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else if (!contest) {
@@ -692,10 +693,10 @@ export function getNumberOfProblems(req, res) {
  * @returns void
  */
 export function openContest(req, res) {
-    if (!req.params.contest_id) {
+    if (!req.params.contestId) {
         res.status(403).end();
     } else {
-        Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+        Contest.findOne({ cuid: req.params.contestId }).exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else if (!contest) {
@@ -725,10 +726,10 @@ export function openContest(req, res) {
  * @returns void
  */
 export function closeContest(req, res) {
-    if (!req.params.contest_id) {
+    if (!req.params.contestId) {
         res.status(403).end();
     } else {
-        Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+        Contest.findOne({ cuid: req.params.contestId }).exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else if (!contest) {
@@ -760,10 +761,10 @@ export function closeContest(req, res) {
  * @returns void
  */
 export function getTeamScores(req, res) {
-    if (!req.params.contest_id) {
+    if (!req.params.contestId) {
         res.status(403).end();
     } else {
-        Contest.findOne({ cuid: req.params.contest_id }).select('teams scoreboardVisible').exec((err, contest) => {
+        Contest.findOne({ cuid: req.params.contestId }).select('teams scoreboardVisible').exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else if (!contest) {
@@ -795,10 +796,10 @@ export function getTeamScores(req, res) {
  * @returns void
  */
 export function hideScoreboard(req, res) {
-    if (!req.params.contest_id) {
+    if (!req.params.contestId) {
         res.status(403).end();
     } else {
-        Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+        Contest.findOne({ cuid: req.params.contestId }).exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else if (!contest) {
@@ -824,10 +825,10 @@ export function hideScoreboard(req, res) {
  * @returns void
  */
 export function showScoreboard(req, res) {
-    if (!req.params.contest_id) {
+    if (!req.params.contestId) {
         res.status(400).end();
     } else {
-        Contest.findOne({ cuid: req.params.contest_id }).exec((err, contest) => {
+        Contest.findOne({ cuid: req.params.contestId }).exec((err, contest) => {
             if (err) {
                 res.status(500).send(err);
             } else if (!contest) {

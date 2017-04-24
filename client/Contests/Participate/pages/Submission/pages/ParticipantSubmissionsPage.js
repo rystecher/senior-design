@@ -27,7 +27,7 @@ class ParticipantSubmissionsPage extends React.Component {
     }
 
     goToSingleSubmissionPage(cuid) {
-        this.props.router.push(`/contest/${this.props.params.contestId}/submissions/${this.state.team_id}/${cuid}`);
+        this.props.router.push(`/contest/${this.props.params.contestId}/submissions/${this.state.teamId}/${cuid}`);
     }
 
     render() {

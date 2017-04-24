@@ -1,27 +1,26 @@
 .button {
-  color: #FFFFFF;
-  padding: 15px 32px;
-  border-radius: 12px;
+    color: #FFFFFF;
+    padding: 15px 32px;
+    border-radius: 12px;
 }
 .done {
-  color: black;
-  padding: 10px 20px;
-  border-radius: 12px;
-  background: whitesmoke;
-  border-top: 8pt solid #DC143C;
-  border-bottom: 8pt solid #DC143C;
+    color: black;
+    padding: 10px 20px;
+    border-radius: 12px;
+    background: whitesmoke;
+    border-top: 8pt solid #DC143C;
+    border-bottom: 8pt solid #DC143C;
 }
 .not {
-  color: black;
-  padding: 10px 20px;
-  border-radius: 12px;
-  background: whitesmoke;
-  border-top: 8pt solid #3CB371;
-  border-bottom: 8pt solid #3CB371;
+    color: black;
+    padding: 10px 20px;
+    border-radius: 12px;
+    background: whitesmoke;
+    border-top: 8pt solid #3CB371;
+    border-bottom: 8pt solid #3CB371;
 }
 
 .SimplePDF {
-  height: 760px;
-  overflow-y: scroll;
-  border: 1px solid #c3c3c3;
+    height: 100vh;
+    border: 1px solid #c3c3c3;
 }

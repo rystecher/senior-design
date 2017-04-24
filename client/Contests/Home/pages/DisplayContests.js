@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 import ReactTable from 'react-table';
 import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router';
-import { getCreatedContests, getJoinedContests, getJoinableContests } from '../DisplayActions';
+import { withRouter } from 'react-router';
+import { getCreatedContests, getJoinedContests, getJoinableContests, isFirstTimeUser } from '../DisplayActions';
 import 'react-table/react-table.css';
 import './display-contests.css';
 import { logout } from '../.././Login/actions/authActions';
 import ContestNavigator from '../../ContestNavigator';
+import ConfirmationDialog from '../../ContestHome/components/ConfirmationDialog';
 
 function getContestStatus(contest) {
     let status = 'Not started';
     if (contest.closed) {
         status = 'Closed';
-    } else if ('number' === typeof contest.start) {
+    } else if (typeof contest.start === 'number') {
         status = 'Open';
     }
     return status;
@@ -22,8 +23,9 @@ class DisplayContests extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
         this.goToContestHomePage = this.goToContestHomePage.bind(this);
+        this.closeModal = this.closeModal.bind(this);
+        this.state = {};
         this.columns = [{
             header: 'Contest name',
             accessor: 'contestName',
@@ -41,6 +43,9 @@ class DisplayContests extends Component {
 
     componentDidMount() {
         const username = this.props.auth.user.username;
+        isFirstTimeUser(username).then(res => {
+            this.setState({ showDialog: res.isFirstTimeUser });
+        });
         getCreatedContests(username).then(res => {
             this.setState({ createdContests: res.contests });
         });
@@ -50,6 +55,10 @@ class DisplayContests extends Component {
         getJoinableContests(username).then(res => {
             this.setState({ joinableContests: res.contests });
         });
+    }
+
+    closeModal() {
+        this.setState({ showDialog: false });
     }
 
     goToContestHomePage(contestId) {
@@ -117,6 +126,21 @@ class DisplayContests extends Component {
                             },
                         };
                     }}
+                />
+                <ConfirmationDialog
+                    showDialog={this.state.showDialog}
+                    confirmText='Got it'
+                    confirm={this.closeModal}
+                    closeModal={this.closeModal}
+                    noCancel
+                    text={`Thank you for using our site! To learn more about how this
+                        site was made you can click on the link in the footer. This page
+                        allows you to create contests or view existing contests by
+                        clicking on one of the rows in the table below (the top row is for
+                        filtering). Click on your username in the top right of the page
+                        to return to this page anytime.
+                        `}
+                    title='Welcome to our site!'
                 />
             </div>
         );

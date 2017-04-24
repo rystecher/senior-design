@@ -14,14 +14,14 @@ export default class ProblemUploader extends React.Component {
     onDrop(files) {
         this.setState({ files });
         const filename = shortid.generate();
-        const contest_id = 'cikqgkv4q01ck7453ualdn3hn';
-        const req = request.post(`/api/contests/${contest_id}/problem/${filename}`);
+        const contestId = 'cikqgkv4q01ck7453ualdn3hn';
+        const req = request.post(`/api/contests/${contestId}/problem/${filename}`);
         req.set('Content-Length', files[0].size);
         req.set('Content-Type', 'application/pdf');
         req.set('Content-Disposition', 'attachment; filename=new.pdf');
         req.attach('file', files[0]);
         req.end();
-        // setProblemMetaData(contest_id, filename, {
+        // setProblemMetaData(contestId, filename, {
         //     name:   'New Problem Name',
         //     testCases: { input: [''], output: ['']}
         // })

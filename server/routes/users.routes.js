@@ -46,6 +46,8 @@ router.post('/', (req, res) => {
 
 router.route('/:username/created').get(UserController.getCreatedContests);
 
+router.route('/:username/firsttime').get(UserController.isFirstTimeUser);
+
 router.route('/:username/joined').get(UserController.getJoinedContests);
 
 router.route('/:username/joinable').get(UserController.getJoinableContests);

@@ -20,7 +20,7 @@ const prompts = {
     python: '# This is just an example\n# Your code will be saved automatically\ndef addOne(x):\n  return x + 1\nprint addOne(1)',
 };
 // local storage addresses
-let code_str, mode_str, lang_str = "";
+let code_str, mode_str, lang_str = '';
 
 
 // The text editor where users can write and edit code
@@ -37,9 +37,9 @@ export default class TextEditor extends React.Component {
         };
         this.onTestClick = this.onTestClick.bind(this);
         this.onSubmitClick = this.onSubmitClick.bind(this);
-        code_str = `${this.props.contest_id}p${this.props.problemNum}code`;
-        mode_str = `${this.props.contest_id}p${this.props.problemNum}mode`;
-        lang_str = `${this.props.contest_id}p${this.props.problemNum}lang`;
+        code_str = `${this.props.contestId}p${this.props.problemNum}code`;
+        mode_str = `${this.props.contestId}p${this.props.problemNum}mode`;
+        lang_str = `${this.props.contestId}p${this.props.problemNum}lang`;
         // Check local storage to recover any autosaved code
         if (localStorage[code_str]) { this.state.code = localStorage[code_str]; }
         if (localStorage[mode_str]) { this.state.mode = localStorage[mode_str]; }
@@ -74,8 +74,8 @@ export default class TextEditor extends React.Component {
             break;
         }
         this.setState({
-          mode: mode,
-          lang: lang
+            mode,
+            lang,
         });
         // Update local storage
         localStorage[mode_str] = mode;
@@ -83,19 +83,19 @@ export default class TextEditor extends React.Component {
     };
 
     onTestClick() {
-        this.setState({isBusy: true});
-        const { contest_id, team_id } = this.props;
+        this.setState({ isBusy: true });
+        const { contestId, teamId } = this.props;
         let userTestInput = document.getElementById('custom_in').value;
-        testCode(contest_id, team_id, this.state.code, this.state.lang, [userTestInput]).then(res => {
-          this.setState({isBusy: false});
+        testCode(contestId, teamId, this.state.code, this.state.lang, [userTestInput]).then(res => {
+            this.setState({ isBusy: false });
         });
     }
 
     onSubmitClick() {
-        this.setState({isBusy: true});
-        const { contest_id, team_id, problemNum } = this.props;
-        submitCode(contest_id, team_id, this.state.code, this.state.lang, (problemNum-1)).then(res => {
-          this.setState({isBusy: false});
+        this.setState({ isBusy: true });
+        const { contestId, teamId, problemNum } = this.props;
+        submitCode(contestId, teamId, this.state.code, this.state.lang, (problemNum - 1)).then(res => {
+            this.setState({ isBusy: false });
         });
     }
 
@@ -107,7 +107,7 @@ export default class TextEditor extends React.Component {
         };
 
         return (
-            <div>
+            <div className='text-editor'>
                 <select onChange={this.changeMode} value={this.state.lang}>
                     <option value='python'>Python</option>
                     <option value='python3'>Python 3</option>
@@ -127,8 +127,8 @@ export default class TextEditor extends React.Component {
                 <br />
                 <br />
                 <div className='form-group'>
-                  <button ref='testButton' disabled={this.state.isBusy} onClick={this.onTestClick} type="button" className="btn btn-primary">Test</button>
-                  <button ref='subButton' disabled={this.state.isBusy} onClick={this.onSubmitClick} type="button" className="btn btn-primary">Submit</button>
+                  <button ref='testButton' disabled={this.state.isBusy} onClick={this.onTestClick} type='button' className='btn btn-primary'>Test</button>
+                  <button ref='subButton' disabled={this.state.isBusy} onClick={this.onSubmitClick} type='button' className='btn btn-primary'>Submit</button>
                 </div>
             </div>
         );
@@ -136,7 +136,7 @@ export default class TextEditor extends React.Component {
 }
 
 TextEditor.propTypes = {
-    contest_id: React.PropTypes.string.isRequired,
-    team_id: React.PropTypes.string.isRequired,
+    contestId: React.PropTypes.string.isRequired,
+    teamId: React.PropTypes.string.isRequired,
     problemNum: React.PropTypes.string.isRequired,
 };

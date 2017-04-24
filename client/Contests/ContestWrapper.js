@@ -117,7 +117,7 @@ class ContestWrapper extends React.Component {
                 <div className='contest-child-container'>
                     {childrenWithProps}
                 </div>
-                <Alert stack={{ limit: 3 }} timeout={2500} contentTemplate={this.state.contentTemplate} />
+                <Alert stack={{ limit: 1 }} timeout={5000} contentTemplate={this.state.contentTemplate} />
             </div>
         );
     }

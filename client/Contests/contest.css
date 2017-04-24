@@ -1,3 +1,7 @@
 .contest-child-container {
     margin-top: 48px;
 }
+
+.modal-footer .btn {
+    width: auto;
+}

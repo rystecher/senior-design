@@ -26,10 +26,12 @@ export default class ConfirmationDialog extends React.Component {
                     <h2 className='modal-header modal-title'>{this.props.title}</h2>
                     <div className='modal-body'>{this.props.text}</div>
                     <div className='modal-footer'>
-                        <button
-                            onClick={this.props.closeModal}
-                            className='btn cancel'
-                        >Cancel</button>
+                        {this.props.noCancel ? null :
+                            <button
+                                onClick={this.props.closeModal}
+                                className='btn cancel'
+                            >Cancel</button>
+                        }
                         <button
                             onClick={this.props.confirm}
                             className={this.props.isDelete ? 'btn delete' : 'btn confirm'}
@@ -46,6 +48,7 @@ ConfirmationDialog.propTypes = {
     confirm: React.PropTypes.func,
     confirmText: React.PropTypes.string,
     isDelete: React.PropTypes.bool,
+    noCancel: React.PropTypes.bool,
     showDialog: React.PropTypes.bool,
     text: React.PropTypes.string,
     title: React.PropTypes.string,

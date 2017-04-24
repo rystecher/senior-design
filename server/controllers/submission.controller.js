@@ -5,7 +5,7 @@ import { readTextFile } from '../controllers/contest.controller';
 
 export function computeScore(contestStart, numAttempts) {
     const millisInMinutes = 1000 * 60;
-    return Math.round(((Date.now() - contestStart) / millisInMinutes)) + 20 * numAttempts;
+    return Math.round(((Date.now() - contestStart) / millisInMinutes)) + 20 * (numAttempts - 1);
 }
 
 /**

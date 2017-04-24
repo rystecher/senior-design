@@ -54,13 +54,13 @@ class ProblemPage extends React.Component {
                 </div>
                 <div className='col-md-6 right-col'>
                   <TextEditor
-                      team_id={this.teamId}
-                      contest_id={this.contestId}
+                      teamId={this.teamId}
+                      contestId={this.contestId}
                       problemNum={this.state.problemNum}
                   />
                   <MessageComponent
-                    team_id={this.teamId}
-                    contest_id={this.contestId}
+                    teamId={this.teamId}
+                    contestId={this.contestId}
                   />
                 </div>
               </div>
