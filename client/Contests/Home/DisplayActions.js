@@ -18,3 +18,7 @@ export function getJoinableContests(username) {
 export function getCreatedContests(username) {
     return callApi(`users/${username}/created`);
 }
+
+export function isFirstTimeUser(username) {
+    return callApi(`users/${username}/firsttime`);
+}

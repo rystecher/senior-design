@@ -2,7 +2,7 @@ import React from 'react';
 import request from 'superagent';
 import Alert from 'react-s-alert';
 import { setProblemMetaData, fetchProblem } from '../../ContestActions';
-import spdf from 'simple-react-pdf';
+import spdf from '../../Participate/pages/Problem/components/ProblemView/simplepdf';
 import ProblemFields from './ProblemFields';
 
 export default class ProblemEditor extends React.Component {
@@ -93,8 +93,8 @@ export default class ProblemEditor extends React.Component {
         const pdf = this.state.pdfUrl ?
             (<spdf.SimplePDF file={this.state.pdfUrl} />) : null;
         return (
-            <div id='edit'>
-                <div>
+            <div id='edit' className='row'>
+                <div className='col-md-6 left-col'>
                     {pdf}
                 </div>
                 <ProblemFields

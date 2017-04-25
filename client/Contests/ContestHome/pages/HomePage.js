@@ -12,6 +12,7 @@ class ContestHome extends React.Component {
         this.closeContest = this.closeContest.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.editContest = this.editContest.bind(this);
+        this.goToProblemPage = this.goToProblemPage.bind(this);
         this.join = this.join.bind(this);
         this.openConfirm = this.openConfirm.bind(this);
         this.openContest = this.openContest.bind(this);
@@ -44,6 +45,7 @@ class ContestHome extends React.Component {
                 showDialog: true,
                 confirm: this.closeContest,
                 confirmText: 'Close',
+                noCancel: false,
                 text: `You cannot reopen a contest after it is closed.
                     Are you sure want to open the contest?`,
                 title: 'Close Contest',
@@ -67,12 +69,28 @@ class ContestHome extends React.Component {
         }
     }
 
+    goToProblemPage(teamId) {
+        this.closeModal();
+        this.props.router.push(`/contest/${this.props.params.contestId}/problems/${teamId}/1`);
+    }
+
     join() {
         if (!this.joined) {
             this.joined = true;
             const { joinedContest, params, username } = this.props;
-            joinContest(params.contestId, username).then(() => {
+            joinContest(params.contestId, username).then((res) => {
                 joinedContest(params.contestId);
+                this.setState({
+                    showDialog: true,
+                    confirm: () => this.goToProblemPage(res.teamId),
+                    confirmText: 'Get Started!',
+                    noCancel: true,
+                    text: `You have successfully joined the contest!
+                        You can use the navigation bar to see the scoreboard
+                        view your submissions or return to the home page. Happy Hacking!
+                        `,
+                    title: 'Congratulations!',
+                });
             });
         }
     }
@@ -83,6 +101,7 @@ class ContestHome extends React.Component {
                 showDialog: true,
                 confirm: this.openContest,
                 confirmText: 'Open',
+                noCancel: false,
                 text: `You cannot add problems after opening a contest.
                     Are you sure want to open the contest?`,
                 title: 'Open Contest',
@@ -150,6 +169,7 @@ class ContestHome extends React.Component {
                         confirm={this.state.confirm}
                         confirmText={this.state.confirmText}
                         closeModal={this.closeModal}
+                        noCancel={this.state.noCancel}
                         text={this.state.text}
                         title={this.state.title}
                     />

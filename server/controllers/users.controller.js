@@ -138,3 +138,21 @@ export function getUserRole(req, res) {
         });
     }
 }
+
+export function isFirstTimeUser(req, res) {
+    if (!req.params.username) {
+        res.status(403).end();
+    } else {
+        User.findOne({ username: req.params.username }, (err, user) => {
+            if (err) {
+                res.status(500).send(err);
+            } else if (!user) {
+                res.status(400).send({ err: 'User does not exist' });
+            } else {
+                res.json({ isFirstTimeUser: user.isFirstTimeUser });
+                user.isFirstTimeUser = false;
+                user.save();
+            }
+        });
+    }
+}

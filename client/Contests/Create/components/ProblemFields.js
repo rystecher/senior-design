@@ -125,7 +125,7 @@ export default class ProblemFields extends React.Component {
         const input = 500 > this.state.input.length ? this.state.input.substring(0, 500) :
             this.state.input.substring(0, 500) + '...';
         return (
-            <div className='problem-fields'>
+            <div className='problem-fields col-md-6 right-col'>
                 <input
                     placeholder='Problem Name'
                     name='problemName'

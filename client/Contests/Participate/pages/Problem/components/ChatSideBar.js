@@ -13,8 +13,8 @@ export default class ChatSideBar extends React.Component {
     }
 
     componentDidMount() {
-        const { contest_id } = this.props;
-        const intervalFunc = () => fetchJudgeMessages(contest_id).then((teams) => {
+        const { contestId } = this.props;
+        const intervalFunc = () => fetchJudgeMessages(contestId).then((teams) => {
             if (teams) {
                 this.setState({ teams });
             }
@@ -58,7 +58,7 @@ export default class ChatSideBar extends React.Component {
             conversation = (<JudgeChatBox
                 broadcast={this.state.broadcast}
                 teamId={this.teamId}
-                contestId={this.props.contest_id}
+                contestId={this.props.contestId}
                 teamName={this.state.chatTeamName}
                 closeChat={this.closeChat}
             />);
@@ -89,5 +89,5 @@ export default class ChatSideBar extends React.Component {
 }
 
 ChatSideBar.propTypes = {
-    contest_id: React.PropTypes.string.isRequired,
+    contestId: React.PropTypes.string.isRequired,
 };

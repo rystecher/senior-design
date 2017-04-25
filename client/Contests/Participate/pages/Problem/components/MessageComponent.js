@@ -10,8 +10,8 @@ export default class MessageComponent extends React.Component {
     }
 
     componentDidMount() {
-        const { contest_id, team_id } = this.props;
-        const intervalFunc = () => getTeamMessages(contest_id, team_id).then((messages) => {
+        const { contestId, teamId } = this.props;
+        const intervalFunc = () => getTeamMessages(contestId, teamId).then((messages) => {
             if (messages) {
                 const messageObjs = messages.map((message) => {
                     const type = 'Team' === message.from ? 0 : 1;
@@ -32,9 +32,9 @@ export default class MessageComponent extends React.Component {
     }
 
     sendMessage(event) {
-        const { contest_id, team_id } = this.props;
+        const { contestId, teamId } = this.props;
         if (event.keyCode === 13) {
-            sendMessageToJudge(contest_id, team_id, event.target.value);
+            sendMessageToJudge(contestId, teamId, event.target.value);
             this.state.messageObjs.push(new Message(0, event.target.value));
             event.target.value = '';
             this.setState({ messageObjs: this.state.messageObjs });
@@ -69,6 +69,6 @@ const styles = {
 };
 
 MessageComponent.propTypes = {
-    contest_id: React.PropTypes.string.isRequired,
-    team_id: React.PropTypes.string.isRequired,
+    contestId: React.PropTypes.string.isRequired,
+    teamId: React.PropTypes.string.isRequired,
 };

@@ -1,9 +1,5 @@
 import callApi, { callApiForFile } from '../util/apiCaller';
 
-// Export Constants
-
-// Export Actions
-
 export function addContestRequest(contest) {
     return callApi('contests', 'post', contest);
 }

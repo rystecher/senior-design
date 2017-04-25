@@ -73,7 +73,7 @@ class AdminSubmissionsPage extends React.Component {
                     }}
                 />
                 <ChatSideBar
-                    contest_id={this.props.params.contestId}
+                    contestId={this.props.params.contestId}
                 />
             </div>
         );

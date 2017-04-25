@@ -2,6 +2,10 @@
   white-space:pre-wrap
 }
 
+.single-submissions-container .ReactTable .rt-td {
+    overflow: scroll;
+}
+
 .single-submissions-container .ReactTable,
 .single-submissions-container .rt-table {
     width: 1200px;
