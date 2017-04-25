@@ -13,7 +13,6 @@ class ContestWrapper extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log();
         this.getUserRoleWrapper = this.getUserRoleWrapper.bind(this);
         this.state = {};
     }
