@@ -2,7 +2,7 @@ import React from 'react';
 import request from 'superagent';
 import Alert from 'react-s-alert';
 import { setProblemMetaData, fetchProblem } from '../../ContestActions';
-import spdf from 'simple-react-pdf';
+import spdf from '../../Participate/pages/Problem/components/ProblemView/simplepdf';
 import ProblemFields from './ProblemFields';
 
 export default class ProblemEditor extends React.Component {
