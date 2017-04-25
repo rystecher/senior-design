@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
-import './contest-navigator.css';
+import './contestnavigator.css';
 import { logout } from './Login/actions/authActions';
 import { connect } from 'react-redux';
 import { getContestInfo } from './ContestActions';

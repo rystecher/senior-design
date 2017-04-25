@@ -18,18 +18,18 @@ if (typeof require.ensure !== 'function') {
 if (process.env.NODE_ENV !== 'production') {
     // Require async routes only in development for react-hot-reloader to work.
     require('./Contests/ContestWrapper');
-    require('./Contests/Create/pages/CreateContest');
-    require('./Contests/Create/pages/ProblemPage');
-    require('./Contests/Home/pages/HomePage');
-    require('./Contests/ContestHome/pages/HomePage');
-    require('./Contests/ContestHome/pages/EditContestPage');
-    require('./Contests/Participate/pages/Problem/pages/ProblemPage');
-    require('./Contests/Participate/pages/Scoreboard/pages/ScoreboardPage');
-    require('./Contests/Home/pages/DisplayContests');
-    require('./Contests/Judge/pages/AdminPage');
-    require('./Contests/Judge/pages/SubmissionProblemPage');
-    require('./Contests/Participate/pages/Submission/pages/ParticipantSubmissionsPage');
-    require('./Contests/Participate/pages/Submission/pages/ParticipantSubmissionProblemPage');
+    require('./Contests/pages/CreateContest');
+    require('./Contests/pages/EditProblemPage');
+    require('./Contests/pages/ContestHomePage');
+    require('./Contests/pages/HomePage');
+    require('./Contests/pages/EditContestPage');
+    require('./Contests/pages/ProblemPage');
+    require('./Contests/pages/ScoreboardPage');
+    require('./Contests/pages/DisplayContests');
+    require('./Contests/pages/JudgeSubmissionPage');
+    require('./Contests/pages/SingleSubmissionPage');
+    require('./Contests/pages/ParticipantSubmissionsPage');
+    require('./Contests/pages/ParticipantSubmissionProblemPage');
 }
 
 // react-router setup with code-splitting
@@ -39,7 +39,7 @@ export default (
     <IndexRoute
         getComponent={(nextState, cb) => {
             require.ensure([], require => {
-                cb(null, require('./Contests/Home/pages/HomePage').default);
+                cb(null, require('./Contests/pages/HomePage').default);
             });
         }}
     />
@@ -47,7 +47,7 @@ export default (
         path='/profile'
         getComponent={(nextState, cb) => {
             require.ensure([], require => {
-                cb(null, requireAuth(require('./Contests/Home/pages/DisplayContests').default));
+                cb(null, requireAuth(require('./Contests/pages/DisplayContests').default));
             });
         }}
     />
@@ -55,7 +55,7 @@ export default (
         path='/create-contest'
         getComponent={(nextState, cb) => {
             require.ensure([], require => {
-                cb(null, requireAuth(require('./Contests/Create/pages/CreateContest').default));
+                cb(null, requireAuth(require('./Contests/pages/CreateContest').default));
             });
         }}
     />
@@ -72,7 +72,7 @@ export default (
             page='home'
             getComponent={(nextState, cb) => {
                 require.ensure([], require => {
-                    cb(null, requireAuth(require('./Contests/ContestHome/pages/HomePage').default));
+                    cb(null, requireAuth(require('./Contests/pages/ContestHomePage').default));
                 });
             }}
         />
@@ -81,7 +81,7 @@ export default (
             page='home'
             getComponent={(nextState, cb) => {
                 require.ensure([], require => {
-                    cb(null, requireAuth(require('./Contests/ContestHome/pages/EditContestPage').default));
+                    cb(null, requireAuth(require('./Contests/pages/EditContestPage').default));
                 });
             }}
         />
@@ -90,7 +90,7 @@ export default (
             page='problems'
             getComponent={(nextState, cb) => {
                 require.ensure([], require => {
-                    cb(null, require('./Contests/Create/pages/ProblemPage').default);
+                    cb(null, require('./Contests/pages/EditProblemPage').default);
                 });
             }}
         />
@@ -99,7 +99,7 @@ export default (
             page='problems'
             getComponent={(nextState, cb) => {
                 require.ensure([], require => {
-                    cb(null, require('./Contests/Create/pages/ProblemPage').default);
+                    cb(null, require('./Contests/pages/EditProblemPage').default);
                 });
             }}
         />
@@ -108,7 +108,7 @@ export default (
             page='problems'
             getComponent={(nextState, cb) => {
                 require.ensure([], require => {
-                    cb(null, requireAuth(require('./Contests/Participate/pages/Problem/pages/ProblemPage').default));
+                    cb(null, requireAuth(require('./Contests/pages/ProblemPage').default));
                 });
             }}
         />
@@ -117,7 +117,7 @@ export default (
             page='scoreboard'
             getComponent={(nextState, cb) => {
                 require.ensure([], require => {
-                    cb(null, requireAuth(require('./Contests/Participate/pages/Scoreboard/pages/ScoreboardPage').default));
+                    cb(null, requireAuth(require('./Contests/pages/ScoreboardPage').default));
                 });
             }}
         />
@@ -126,7 +126,7 @@ export default (
             page='submissions'
             getComponent={(nextState, cb) => {
                 require.ensure([], require => {
-                    cb(null, requireAuth(require('./Contests/Judge/pages/AdminPage').default));
+                    cb(null, requireAuth(require('./Contests/pages/JudgeSubmissionPage').default));
                 });
             }}
         />
@@ -135,7 +135,7 @@ export default (
             page='submissions'
             getComponent={(nextState, cb) => {
                 require.ensure([], require => {
-                    cb(null, requireAuth(require('./Contests/Judge/pages/SubmissionProblemPage').default));
+                    cb(null, requireAuth(require('./Contests/pages/SingleSubmissionPage').default));
                 });
             }}
         />
@@ -144,7 +144,7 @@ export default (
             page='submissions'
             getComponent={(nextState, cb) => {
                 require.ensure([], require => {
-                    cb(null, requireAuth(require('./Contests/Participate/pages/Submission/pages/ParticipantSubmissionsPage').default));
+                    cb(null, requireAuth(require('./Contests/pages/ParticipantSubmissionsPage').default));
                 });
             }}
         />
@@ -152,7 +152,7 @@ export default (
             path='submissions/:teamId/:submissionId'
             getComponent={(nextState, cb) => {
                 require.ensure([], require => {
-                    cb(null, requireAuth(require('./Contests/Participate/pages/Submission/pages/ParticipantSubmissionProblemPage').default));
+                    cb(null, requireAuth(require('./Contests/pages/ParticipantSubmissionProblemPage').default));
                 });
             }}
         />

@@ -1,0 +1,16 @@
+a.page-link:not([href]) {
+    color: #0275d8;
+}
+
+a:not([href]):not([tabindex]):hover {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.pagination {
+    padding-top: 16px
+}
+
+a.page-link.solved:not([href]) {
+  color: #00E900;
+}
