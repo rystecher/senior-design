@@ -52,7 +52,7 @@ class JudgeSubmissionsPage extends React.Component {
 
     millisToReadableDate(millis) {
         const date = Date(millis);
-        return date.toUTCString();
+        return date.toString();
     }
 
     render() {
