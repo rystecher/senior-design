@@ -47,7 +47,12 @@ class JudgeSubmissionsPage extends React.Component {
     millisToMinutesAndSeconds(millis) {
         const minutes = Math.floor(millis / 60000);
         const seconds = ((millis % 60000) / 1000).toFixed(0);
-        return (seconds === 60 ? (minutes + 1) + ':00' : minutes + ':' + (seconds < 10 ? '0' : '') + seconds);
+        return (seconds == 60 ? (minutes + 1) + ':00' : minutes + ':' + (seconds < 10 ? '0' : '') + seconds);
+    }
+
+    millisToReadableDate(millis) {
+        const date = Date(millis);
+        return date.toUTCString();
     }
 
     render() {
@@ -61,7 +66,7 @@ class JudgeSubmissionsPage extends React.Component {
                     problemName: submission.problemName,
                     feedback: submission.feedback,
                     cuid: submission.cuid,
-                    submissionTime: submission.submissionTime.toUTCString(),
+                    submissionTime: this.millisToReadableDate(submission.submissionTime),
                     timeSinceContestStarted: this.millisToMinutesAndSeconds(submission.timeSinceContestStarted),
                 });
             });
