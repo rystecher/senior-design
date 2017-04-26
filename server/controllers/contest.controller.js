@@ -228,6 +228,9 @@ export function addProblemAttempt(req, res) {
                             readTextFile('input/' + fileName).then((input) => {
                                 hackerrankCall(code, lang, [input], (error, response) => {
                                     try {
+                                        if (JSON.parse(response.body).result.errors.api_key === 'The API key field is required.') {
+                                            throw 'Missing API Key';
+                                        }
                                         const { stderr, stdout, compilemessage, message } = JSON.parse(response.body).result;
                                         const hadStdError = Boolean(stderr && !stderr.every((error) => error === false));
                                         problem.attempts.push(code);
