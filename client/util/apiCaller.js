@@ -17,7 +17,8 @@ export default function callApi(endpoint, method = 'get', body) {
             return Promise.reject(json);
         }
         return json;
-    }).then(response => response, error => error);
+    })
+    .then(response => response, error => error);
 }
 
 export function callApiForFile(endpoint, method = 'get', body) {

@@ -134,9 +134,9 @@ app.use((req, res, next) => {
         return fetchComponentData(store, renderProps.components, renderProps.params)
       .then(() => {
           const initialView = renderToString(
-          <Provider store={store}>
-              <RouterContext {...renderProps} />
-          </Provider>
+              <Provider store={store}>
+                  <RouterContext {...renderProps} />
+              </Provider>
         );
           const finalState = store.getState();
 
@@ -152,7 +152,7 @@ app.use((req, res, next) => {
 // Handle timed-out connections
 function haltOnTimedout(req, res, next) {
     if (!req.timedout) {
-      next();
+        next();
     }
 }
 
