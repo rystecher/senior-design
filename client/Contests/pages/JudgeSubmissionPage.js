@@ -23,7 +23,7 @@ class JudgeSubmissionsPage extends React.Component {
             header: 'Submission Time',
             accessor: 'submissionTime',
         }, {
-            header: 'Time since start of contest',
+            header: 'Time since contest started',
             accessor: 'timeSinceContestStarted',
         }];
     }
