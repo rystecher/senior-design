@@ -50,6 +50,11 @@ class JudgeSubmissionsPage extends React.Component {
         return `${minutes} : ${(seconds < 10 ? '0' : '')} ${seconds}`;
     }
 
+    millisToReadableDate(millis) {
+        const date = Date(millis);
+        return date.toString();
+    }
+
     render() {
         let data = [];
         let loading = true;
@@ -61,7 +66,7 @@ class JudgeSubmissionsPage extends React.Component {
                     problemName: submission.problemName,
                     feedback: submission.feedback,
                     cuid: submission.cuid,
-                    submissionTime: Date(submission.submissionTime),
+                    submissionTime: this.millisToReadableDate(submission.submissionTime),
                     timeSinceContestStarted: this.millisToMinutesAndSeconds(submission.timeSinceContestStarted),
                 });
             });
