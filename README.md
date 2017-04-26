@@ -31,6 +31,7 @@ export key=value
 ```
 
 **List of necessary environment variables**:
+
 HR_API_KEY='YOUR_HACKERRANK_API'
 
 NODE_ENV='development'
