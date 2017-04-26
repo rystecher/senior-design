@@ -61,7 +61,7 @@ class JudgeSubmissionsPage extends React.Component {
                     problemName: submission.problemName,
                     feedback: submission.feedback,
                     cuid: submission.cuid,
-                    submissionTime: new Date(submission.submissionTime),
+                    submissionTime: Date(submission.submissionTime),
                     timeSinceContestStarted: this.millisToMinutesAndSeconds(submission.timeSinceContestStarted),
                 });
             });
