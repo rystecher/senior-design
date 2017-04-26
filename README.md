@@ -1,5 +1,6 @@
 # Programming Competition Management Platform
 [![Build Status](https://travis-ci.org/rystecher/senior-design.svg?branch=master)](https://travis-ci.org/rystecher/senior-design)
+
 The annual Spring Programming Contest hosted by Bucknell has a costly amount of manual work involved for judges and participants alike. Because the judges have to go through the timely process of downloading, compiling and testing every submission, Bucknell is forced to limit the amount of teams that can participate. In addition, the scores are computed by hand and displayed on a whiteboard in the classroom. Our goal with this project was to give Bucknell a convenient and well-designed web app that automates these tasks and allows the organizer to communicate with the participants. As a result, judges will have an easier time running the contest and more teams will be able to participate.
 
 # Getting Started
