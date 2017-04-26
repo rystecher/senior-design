@@ -14,6 +14,8 @@ const submissionSchema = new Schema({
     expectedOutputFileName: String,
     actualOutputFileName: String,
     code: { type: String },
+    submissionTime: Number,
+    timeSinceContestStarted: Number,
 });
 
 export default mongoose.model('Submission', submissionSchema);
