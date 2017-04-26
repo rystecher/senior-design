@@ -265,6 +265,8 @@ export function addProblemAttempt(req, res) {
                                                 actualOutputFileName,
                                                 feedback: feedback.judgeFeedback,
                                                 code,
+                                                submissionTime: Date.now(),
+                                                timeSinceContestStarted: Date.now() - contest.start,
                                             });
                                             contest.save((err) => {
                                                 if (err) {

@@ -19,6 +19,12 @@ class JudgeSubmissionsPage extends React.Component {
         }, {
             header: 'Feedback',
             accessor: 'feedback',
+        }, {
+            header: 'Submission Time',
+            accessor: 'submissionTime',
+        }, {
+            header: 'Time since start of contest',
+            accessor: 'timeSinceContestStarted',
         }];
     }
 
@@ -49,6 +55,8 @@ class JudgeSubmissionsPage extends React.Component {
                     problemName: submission.problemName,
                     feedback: submission.feedback,
                     cuid: submission.cuid,
+                    submissionTime: submission.submissionTime,
+                    timeSinceContestStarted: submission.timeSinceContestStarted,
                 });
             });
         }
