@@ -44,6 +44,12 @@ class JudgeSubmissionsPage extends React.Component {
         this.props.router.push(`/contest/${this.props.params.contestId}/submissions/admin/${cuid}`);
     }
 
+    millisToMinutesAndSeconds(millis) {
+        const minutes = Math.floor(millis / 60000);
+        const seconds = ((millis % 60000) / 1000).toFixed(0);
+        return `${minutes} : ${(seconds < 10 ? '0' : '')} seconds`;
+    }
+
     render() {
         let data = [];
         let loading = true;
@@ -55,8 +61,8 @@ class JudgeSubmissionsPage extends React.Component {
                     problemName: submission.problemName,
                     feedback: submission.feedback,
                     cuid: submission.cuid,
-                    submissionTime: submission.submissionTime,
-                    timeSinceContestStarted: submission.timeSinceContestStarted,
+                    submissionTime: new Date(submission.submissionTime),
+                    timeSinceContestStarted: this.millisToMinutesAndSeconds(submission.timeSinceContestStarted),
                 });
             });
         }
