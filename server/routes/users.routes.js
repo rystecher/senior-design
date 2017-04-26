@@ -7,11 +7,11 @@ import isEmpty from 'lodash/isEmpty';
 const router = new Router();
 
 function validateInput(data, otherValidations) {
-    let { errors } = otherValidations(data);
+    const { errors } = otherValidations(data);
 
     return User.find({ username: data.username })
   .then(user => {
-      if (0 < user.length) {
+      if (user.length > 0) {
           errors.username = 'Username already taken';
       }
       return {

@@ -47,11 +47,18 @@ class SingleSubmissionPage extends React.Component {
         });
     }
 
+    onSuccess() {
+        Alert.success('Code copied to your clipboard, paste it in your favorite editor!', {
+            position: 'bottom-right',
+            effect: 'slide',
+        });
+    }
+
     handleChange(event) {
         this.setState({ value: event.target.value });
     }
 
-    handleSubmit(args) {
+    handleSubmit() {
         if (this.state.value === 'Delete Submission') {
             deleteSubmission(this.props.params.submissionId);
             this.props.router.push(`/contest/${this.state.contestId}/submissions`);
@@ -66,13 +73,6 @@ class SingleSubmissionPage extends React.Component {
                 feedback: this.state.value,
             }).then(() => this.props.router.push(`/contest/${this.state.contestId}/submissions`));
         }
-    }
-
-    onSuccess() {
-        Alert.success('Code copied to your clipboard, paste it in your favorite editor!', {
-            position: 'bottom-right',
-            effect: 'slide',
-        });
     }
 
     render() {

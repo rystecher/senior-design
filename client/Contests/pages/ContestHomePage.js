@@ -3,6 +3,7 @@ import ConfirmationDialog from '../components/ConfirmationDialog';
 import { getContestInfo, joinContest, openContest, closeContest } from '../ContestActions';
 import './contesthomepage.css';
 import { withRouter } from 'react-router';
+import Alert from 'react-s-alert';
 
 class ContestHome extends React.Component {
 

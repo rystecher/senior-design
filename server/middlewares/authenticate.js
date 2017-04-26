@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/user';
 
 export default (req, res, next) => {
-    const authorizationHeader = req.headers['authorization'];
+    const authorizationHeader = req.headers.authorization;
     let token;
 
     if (authorizationHeader) {
@@ -15,7 +15,7 @@ export default (req, res, next) => {
                 res.status(401).json({ error: 'Failed to authenticate' });
             } else {
                 User.find({ id: decoded.id }, { _id: 1, username: 1 }).then(user => {
-                    if (0 >= user.length) {
+                    if (user.length <= 0) {
                         res.status(404).json({ error: 'No such user' });
                     } else {
                         req.currentUser = user;
