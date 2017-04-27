@@ -2,13 +2,13 @@
 
 [![Build Status](https://travis-ci.org/rystecher/senior-design.svg?branch=master)](https://travis-ci.org/rystecher/senior-design)
 
-The annual Spring Programming Contest hosted by Bucknell has a costly amount of manual work involved for judges and participants alike. Because the judges have to go through the timely process of downloading, compiling and testing every submission, Bucknell is forced to limit the amount of teams that can participate. In addition, the scores are computed by hand and displayed on a whiteboard in the classroom. Our goal with this project was to give Bucknell a convenient and well-designed web app that automates these tasks and allows the organizer to communicate with the participants. As a result, judges will have an easier time running the contest and more teams will be able to participate.
+The annual Spring Programming Contest hosted by Bucknell University had a costly amount of manual work involved for judges and participants alike. Because the judges had to go through the timely process of downloading, compiling and testing every submission. In addition, the scores were computed by hand and displayed on a whiteboard in the classroom. As a result, Bucknell was forced to limit the amount of teams that could participate. With this project, we were able to provide Bucknell with a convenient and well-designed web app that automates these tasks and allows the organizer to communicate with the participants. Now, judges will have an easier time running the contest and more teams will be able to participate.
 
 # Getting Started
 
 ## Installing Dependencies
 
-Since we are using the [npm JavaScript package manager](https://www.npmjs.com/), it’s easy to install all of our dependencies. Once you are in the root directory of our project simply run
+Since we are using the [npm JavaScript package manager](https://www.npmjs.com/) it’s easy to install all of our dependencies. Once you are in the root directory of our project simply run
 
     npm install
 
@@ -27,7 +27,7 @@ Our site is built on top of the MERN stack using the [MERN boilerplate](http://m
 
 ### APIs
 
-You will need to generate a [HackerRank API Key](https://www.hackerrank.com/api/docs). Visit the website, sign up and  create a new api key. Once that's done, you will need to store the key in an environment variable, as described below.
+You will need to generate a [HackerRank API Key](https://www.hackerrank.com/api/docs). Visit the website, sign up and create a new API key. Once that's done, you will need to store the key in an environment variable.
 
 ## Environment Variables
 
@@ -49,7 +49,7 @@ When making changes to the project as a developer, run
 
     npm run start
 
-This starts the development server with [hot reloading](https://facebook.github.io/react-native/blog/2016/03/24/introducing-hot-reloading.html) enabled. Hot reloading lets you make changes as your server is running, and you will see the browser immediately refelct these changes. This will run the project without any optimizations so that it recompiles faster after changes are made.
+This starts the development server and will bundle the project without any optimizations so that it recompiles faster after changes are made. Also developer mode features [hot reloading](https://facebook.github.io/react-native/blog/2016/03/24/introducing-hot-reloading.html), which lets you make changes while the server is running, and you will see the browser immediately reflect these changes.
 
 ### Production Mode
 
@@ -71,6 +71,6 @@ This command will minify all of the files in our project for optimization and st
 
 ## Configurations
 
-We use [Webpack](https://webpack.github.io/) which allows us to make our code more modular. If you look at our directory structure, many of our components are split up into their own .js files, and each has their own .css file. When you run `npm run` Webpack compiles all of these individual files into a nice bundle that is easily served to the browser. There are Webpack configuration files for both development and production servers.
+We use [Webpack](https://webpack.github.io/), which allows us to make our code more modular. If you look at our directory structure, many of our components are split up into their own .js files, and each has their own .css file. When you run `npm run` Webpack compiles all of these individual files into a nice bundle that is easily served to the browser. There are Webpack configuration files for both development and production servers.
 
 We also use [Travis-CI](https://travis-ci.org/) to run continuous integration testing. The `.travis.yml` contains all the configurations for Travis.
