@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/rystecher/senior-design.svg?branch=master)](https://travis-ci.org/rystecher/senior-design)
 
-The annual Spring Programming Contest hosted by Bucknell University had a costly amount of manual work involved for judges and participants alike. Because the judges had to go through the timely process of downloading, compiling and testing every submission. In addition, the scores were computed by hand and displayed on a whiteboard in the classroom. As a result, Bucknell was forced to limit the amount of teams that could participate. With this project, we were able to provide Bucknell with a convenient and well-designed web app that automates these tasks and allows the organizer to communicate with the participants. Now, judges will have an easier time running the contest and more teams will be able to participate.
+The annual Spring Programming Contest hosted by Bucknell University had a costly amount of manual work involved for judges and participants alike. The judges had to go through the timely process of downloading, compiling and testing every submission, and using email to communicate feedback. In addition, scoring was computed by hand and displayed on a whiteboard in the classroom. As a result, Bucknell was forced to limit the amount of teams that could participate. With this project, we were able to provide Bucknell with a convenient and well-designed web app that automates these tasks and allows the organizer to communicate with the participants. Now, judges will have an easier time running the contest and more teams will be able to participate.
 
 # Getting Started
 
