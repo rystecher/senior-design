@@ -2,7 +2,18 @@
 
 [![Build Status](https://travis-ci.org/rystecher/senior-design.svg?branch=master)](https://travis-ci.org/rystecher/senior-design)
 
+# Project Summary
+
 The annual Spring Programming Contest hosted by Bucknell University had a costly amount of manual work involved for judges and participants alike. The judges had to go through the timely process of downloading, compiling and testing every submission, and using email to communicate feedback. In addition, scoring was computed by hand and displayed on a whiteboard in the classroom. As a result, Bucknell was forced to limit the amount of teams that could participate. With this project, we were able to provide Bucknell with a convenient and well-designed web app that automates these tasks and allows the organizer to communicate with the participants. Now, judges will have an easier time running the contest and more teams will be able to participate.
+
+This was a senior design project for 2016-17 CSCI 475/6. Our team, CrayHQ, consisted of four developers:
+
+-   [Courtney Bolivar](https://github.com/courtneybolivar)
+-   [Andrew Wheeler](https://github.com/2wheels4)
+-   [Ryan Stecher](https://github.com/rystecher)
+-   [Yash Bhutwala](https://github.com/yashbhutwala)
+
+Special shoutouts to [Professor Lea Wittie](http://www.eg.bucknell.edu/~lwittie/) for presenting us with this project and for being a wonderful client, and to our professor/mentor for the course [Professor Brian King](http://www.eg.bucknell.edu/~brk009/).
 
 # Getting Started
 
