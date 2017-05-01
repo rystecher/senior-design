@@ -32,3 +32,17 @@ body {
 	font-family: 'Lato', sans-serif;
 	font-size: 16px;
 }
+
+footer {
+	background: #2962FF;
+    text-align: center;
+    color: rgba(255,255,255,.75);
+    height: 40px;
+    line-height: 40px;
+}
+
+footer > a {
+	color: white;
+	padding-right: 4px;
+	text-decoration: underline;
+}

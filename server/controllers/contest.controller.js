@@ -760,6 +760,16 @@ export function closeContest(req, res) {
                 res.status(400).send({ err: 'Contest does not exist' });
             } else {
                 contest.closed = true;
+                contest.teams.forEach(team => {
+                    team.messages.push({
+                        from: 'Judges',
+                        message: 'Broadcast: The contest is closed. Submissions will no longer be accepted.',
+                    });
+                });
+                contest.broadcastMessages.push({
+                    from: 'Judges',
+                    message: 'The contest is closed. Submissions will no longer be accepted.',
+                });
                 contest.save((err) => {
                     if (err) {
                         res.status(500).send(err);
