@@ -54,6 +54,13 @@ NODE_ENV='development'
 
 ## Setting Up and Running the Server
 
+Before running the server, please create the following directories in the main directory of the project:
+
+    /input
+    /output
+    /pdfs
+    /submission
+
 ### Developer Mode
 
 When making changes to the project as a developer, run
