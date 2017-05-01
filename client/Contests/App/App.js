@@ -25,6 +25,12 @@ export class App extends Component {
                     <div className={styles.container}>
                         {this.props.children}
                     </div>
+                    <footer>
+                        <a href='https://github.com/rystecher/senior-design'>
+                            Learn more
+                        </a>
+                        about CrayHQ and our project on GitHub
+                    </footer>
                 </div>
             </div>
         );

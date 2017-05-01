@@ -284,9 +284,28 @@ export function addProblemAttempt(req, res) {
                                         }, err => res.status(500).send(err)
                                     );
                                     } catch (err) {
+                                        const feedback = 'There was an error processing your request';
                                         team.messages.push({
                                             from: 'Automated',
-                                            message: 'There was an error processing your request',
+                                            message: feedback,
+                                        });
+                                        const actualOutputFileName = shortid.generate() + '.txt';
+                                        fs.writeFile('submission/' + actualOutputFileName, feedback);
+                                        createSubmission({
+                                            cuid: cuid(),
+                                            teamName: team.name,
+                                            teamID: req.params.teamId,
+                                            contestID: req.params.contestId,
+                                            problemName: contest.problems[number].name,
+                                            problemNumber: number,
+                                            hadStdError: false,
+                                            correct: false,
+                                            expectedOutputFileName: fileName,
+                                            actualOutputFileName,
+                                            feedback,
+                                            code,
+                                            submissionTime: Date.now(),
+                                            timeSinceContestStarted: Date.now() - contest.start,
                                         });
                                         contest.save(() => res.status(500).send({ err: 'error processing request' }));
                                     }
@@ -741,6 +760,16 @@ export function closeContest(req, res) {
                 res.status(400).send({ err: 'Contest does not exist' });
             } else {
                 contest.closed = true;
+                contest.teams.forEach(team => {
+                    team.messages.push({
+                        from: 'Judges',
+                        message: 'Broadcast: The contest is closed. Submissions will no longer be accepted.',
+                    });
+                });
+                contest.broadcastMessages.push({
+                    from: 'Judges',
+                    message: 'The contest is closed. Submissions will no longer be accepted.',
+                });
                 contest.save((err) => {
                     if (err) {
                         res.status(500).send(err);

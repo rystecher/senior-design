@@ -63,7 +63,8 @@ const styles = {
     color: '#FFFFFF',
     fontSize: 12,
     fontWeight: '300',
-    margin: 0
+    margin: 0,
+    "white-space": "pre-wrap",
   }
 };
 
