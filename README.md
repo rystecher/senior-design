@@ -50,7 +50,11 @@ We use environment variables (key-value pairs stored on the system) in certain p
 
 HR_API_KEY='YOUR_HACKERRANK_API'
 
-NODE_ENV='development'
+NODE_ENV='production'
+
+BABEL_DISABLE_CACHE=1
+
+Note: you may have to put these export statements in the `.bash_profile` file in the home directory.
 
 ## Setting Up and Running the Server
 
