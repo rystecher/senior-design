@@ -35,10 +35,15 @@ body {
 
 footer {
 	background: #2962FF;
-    text-align: center;
-    color: rgba(255,255,255,.75);
-    height: 40px;
-    line-height: 40px;
+  text-align: center;
+  color: rgba(255,255,255,.75);
+  height: 40px;
+  line-height: 40px;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 10;
 }
 
 footer > a {
