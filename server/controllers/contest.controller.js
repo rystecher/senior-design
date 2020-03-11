@@ -361,25 +361,17 @@ export function getSolvedArrays(req, res) {
 
 
 export function getSolvedBy(req, res) {
-    if (!req.params.contestId) {
-        res.status(403).end();
-    }
-    Contest.findOne({ cuid: req.params.contestId }).exec((err, contest) => {
-        if (err) {
-            res.status(500).send(err);
-        } else if (!contest) {
-            res.status(400).send({ err: 'Contest does not exist' });
-        } else {
-            const solvedBy = [];
-            contest.problems.forEach((problem) => {
-                solvedBy.push({
-                    name: problem.name,
-                    solvedBy: problem.solvedBy,
-                });
+    const _getSolvedBy = (contest) => {
+        const solvedBy = [];
+        contest.problems.forEach((problem) => {
+            solvedBy.push({
+                name: problem.name,
+                solvedBy: problem.solvedBy,
             });
-            res.json({ solvedBy });
-        }
-    });
+        });
+        res.json({ solvedBy });
+    };
+    callWithContest(req.params.contestId, _getSolvedBy, null, res);
 }
 
 /**
@@ -544,11 +536,11 @@ export function setProblemMetaData(req, res) {
                         } else {
                             fs.writeFile('output/' + fileName, output, (err2) => {
                                 if (err2) {
-                                    res.status(500).send(err);
+                                    res.status(500).send(err2);
                                 } else {
                                     contest.save((err3) => {
                                         if (err3) {
-                                            res.status(500).send(err);
+                                            res.status(500).send(err3);
                                         } else {
                                             res.json({ success: 'true' });
                                         }
@@ -608,19 +600,7 @@ export function getProblemMetaData(req, res) {
  * @returns void
  */
 export function getContest(req, res) {
-    if (!req.params.contestId) {
-        res.status(403).end();
-    } else {
-        Contest.findOne({ cuid: req.params.contestId }).exec((err, contest) => {
-            if (err) {
-                res.status(500).send(err);
-            } else if (!contest) {
-                res.status(400).send({ err: 'Contest does not exist' });
-            } else {
-                res.json({ contest });
-            }
-        });
-    }
+    callWithContest(req.params.contestId, (contest) => res.json({ contest }), null, res);
 }
 
 /**
@@ -630,23 +610,12 @@ export function getContest(req, res) {
  * @returns void
  */
 export function getContestInfo(req, res) {
-    if (!req.params.contestId) {
-        res.status(403).end();
-    } else {
-        Contest.findOne({ cuid: req.params.contestId })
-        .select('about admin closed name rules start')
-        .exec((err, contest) => {
-            if (err) {
-                res.status(500).send(err);
-            } else if (!contest) {
-                res.status(400).send({ err: 'Contest does not exist' });
-            } else {
-                const open = 'number' === typeof contest.start;
-                const { about, admin, closed, name, rules } = contest;
-                res.json({ about, admin, closed, name, open, rules });
-            }
-        });
-    }
+    const _getContestInfo = (contest) => {
+        const open = 'number' === typeof contest.start;
+        const { about, admin, closed, name, rules } = contest;
+        res.json({ about, admin, closed, name, open, rules });
+    };
+    callWithContest(req.params.contestId, _getContestInfo, 'about admin closed name rules start', res);
 }
 
 /**
@@ -656,32 +625,23 @@ export function getContestInfo(req, res) {
  * @returns void
  */
 export function updateContestInfo(req, res) {
-    if (!req.params.contestId || !req.body.info) {
-        res.status(403).end();
-    } else {
-        Contest.findOne({ cuid: req.params.contestId })
-        .select('about name rules')
-        .exec((err, contest) => {
-            if (err) {
-                res.status(500).send(err);
-            } else if (!contest) {
-                res.status(400).send({ err: 'Contest does not exist' });
-            } else if (typeof contest.start === 'number') {
-                res.status(400).send({ err: 'Contest already started' });
-            } else {
-                contest.about = req.body.info.about;
-                contest.name = req.body.info.name;
-                contest.rules = req.body.info.rules;
-                contest.save((err, saved) => {
-                    if (err) {
-                        res.status(500).send(err);
-                    } else {
-                        res.json({ success: true });
-                    }
-                });
-            }
-        });
-    }
+    const _updateContestInfo = (cocntest) => {
+        if (typeof contest.start === 'number') {
+            res.status(400).send({ err: 'Contest already started' });
+        } else {
+            contest.about = req.body.info.about;
+            contest.name = req.body.info.name;
+            contest.rules = req.body.info.rules;
+            contest.save((err, saved) => {
+                if (err) {
+                    res.status(500).send(err);
+                } else {
+                    res.json({ success: true });
+                }
+            });
+        }
+    };
+    callWithContest(req.params.contestId, _updateContestInfo, 'about name rules', res);
 }
 
 
@@ -692,22 +652,13 @@ export function updateContestInfo(req, res) {
  * @returns void
  */
 export function getNumberOfProblems(req, res) {
-    if (!req.params.contestId) {
-        res.status(403).end();
-    } else {
-        Contest.findOne({ cuid: req.params.contestId }).select('problems start').exec((err, contest) => {
-            if (err) {
-                res.status(500).send(err);
-            } else if (!contest) {
-                res.status(400).send({ err: 'Contest does not exist' });
-            } else {
-                res.json({
-                    numberOfProblems: contest.problems.length,
-                    started: 'number' === typeof contest.start,
-                });
-            }
+    const _getNumberOfProblems = (contest) => {
+        res.json({
+            numberOfProblems: contest.problems.length,
+            started: 'number' === typeof contest.start,
         });
-    }
+    };
+    callWithContest(req.params.contestId, _getNumberOfProblems, res);
 }
 
 /**
@@ -717,30 +668,23 @@ export function getNumberOfProblems(req, res) {
  * @returns void
  */
 export function openContest(req, res) {
-    if (!req.params.contestId) {
-        res.status(403).end();
-    } else {
-        Contest.findOne({ cuid: req.params.contestId }).exec((err, contest) => {
-            if (err) {
-                res.status(500).send(err);
-            } else if (!contest) {
-                res.status(400).send({ err: 'Contest does not exist' });
-            } else if (0 === contest.problems.length) {
-                res.json({ success: false });
-            } else if (!contest.start) {
-                contest.start = Date.now();
-                contest.save((err) => {
-                    if (err) {
-                        res.status(500).send(err);
-                    } else {
-                        res.json({ success: true });
-                    }
-                });
-            } else {
-                res.status(400).send({ err: 'Contest already started' });
-            }
-        });
-    }
+    const _openContest = (contest) => {
+        if (0 === contest.problems.length) {
+            res.json({ success: false });
+        } else if (!contest.start) {
+            contest.start = Date.now();
+            contest.save((err) => {
+                if (err) {
+                    res.status(500).send(err);
+                } else {
+                    res.json({ success: true });
+                }
+            });
+        } else {
+            res.status(400).send({ err: 'Contest already started' });
+        }
+    };
+    callWithContest(req.params.contestId, _openContest, null, res);
 }
 
 /**
@@ -750,36 +694,27 @@ export function openContest(req, res) {
  * @returns void
  */
 export function closeContest(req, res) {
-    if (!req.params.contestId) {
-        res.status(403).end();
-    } else {
-        Contest.findOne({ cuid: req.params.contestId }).exec((err, contest) => {
+    const _closeContest = (contest) => {
+        contest.closed = true;
+        contest.teams.forEach(team => {
+            team.messages.push({
+                from: 'Judges',
+                message: 'Broadcast: The contest is closed. Submissions will no longer be accepted.',
+            });
+        });
+        contest.broadcastMessages.push({
+            from: 'Judges',
+            message: 'The contest is closed. Submissions will no longer be accepted.',
+        });
+        contest.save((err) => {
             if (err) {
                 res.status(500).send(err);
-            } else if (!contest) {
-                res.status(400).send({ err: 'Contest does not exist' });
             } else {
-                contest.closed = true;
-                contest.teams.forEach(team => {
-                    team.messages.push({
-                        from: 'Judges',
-                        message: 'Broadcast: The contest is closed. Submissions will no longer be accepted.',
-                    });
-                });
-                contest.broadcastMessages.push({
-                    from: 'Judges',
-                    message: 'The contest is closed. Submissions will no longer be accepted.',
-                });
-                contest.save((err) => {
-                    if (err) {
-                        res.status(500).send(err);
-                    } else {
-                        res.json({ success: true });
-                    }
-                });
+                res.json({ success: true });
             }
         });
-    }
+    };
+    callWithContest(req.params.contestId, _closeContest, null, res);
 }
 
 /**
@@ -795,90 +730,65 @@ export function closeContest(req, res) {
  * @returns void
  */
 export function getTeamScores(req, res) {
-    if (!req.params.contestId) {
-        res.status(403).end();
-    } else {
-        Contest.findOne({ cuid: req.params.contestId }).select('teams scoreboardVisible').exec((err, contest) => {
-            if (err) {
-                res.status(500).send(err);
-            } else if (!contest) {
-                res.status(400).send({ err: 'Contest does not exist' });
-            } else {
-                const teamNames = new Array(contest.teams.length);
-                const teamScores = new Array(contest.teams.length);
-                const teamNumSolved = new Array(contest.teams.length);
-                contest.teams.forEach((team, index) => {
-                    teamNames[index] = team.name;
-                    teamScores[index] = team.score;
-                    teamNumSolved[index] = team.numSolved;
-                });
-                res.json({
-                    teamNames,
-                    teamScores,
-                    teamNumSolved,
-                    scoreboardVisible: contest.scoreboardVisible,
-                });
-            }
+    const _getTeamScores = (contest) => {
+        const teamNames = new Array(contest.teams.length);
+        const teamScores = new Array(contest.teams.length);
+        const teamNumSolved = new Array(contest.teams.length);
+        contest.teams.forEach((team, index) => {
+            teamNames[index] = team.name;
+            teamScores[index] = team.score;
+            teamNumSolved[index] = team.numSolved;
+        });
+        res.json({
+            teamNames,
+            teamScores,
+            teamNumSolved,
+            scoreboardVisible: contest.scoreboardVisible,
         });
     }
+    callWithContest(req.params.contestId, _getTeamScores, 'teams scoreboardVisible', res);
+}
+
+
+/**
+ * Sets the visibility of the scoreboard for the specified contest
+ * @param contestId
+ * @param visible
+ * @param res
+ * @returns void
+ */
+function setScoreboardVisibility(contestId, visible, res) {
+    const _setScoreboardVisibility = (contest) => {
+        contest.scoreboardVisible = visible;
+        contest.save((err, saved) => {
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                res.json({ success: true });
+            }
+        });
+    };
+    callWithContest(contestId, _setScoreboardVisibility, res);
 }
 
 /**
- * Toggles the scoreboard visibility
+ * Hides the scoreboard
  * @param req
  * @param res
  * @returns void
  */
 export function hideScoreboard(req, res) {
-    if (!req.params.contestId) {
-        res.status(403).end();
-    } else {
-        Contest.findOne({ cuid: req.params.contestId }).exec((err, contest) => {
-            if (err) {
-                res.status(500).send(err);
-            } else if (!contest) {
-                res.status(400).send({ err: 'Contest does not exist' });
-            } else {
-                contest.scoreboardVisible = false;
-                contest.save((err) => {
-                    if (err) {
-                        res.status(500).send(err);
-                    } else {
-                        res.json({ success: true });
-                    }
-                });
-            }
-        });
-    }
+    setScoreboardVisibility(req.params.contestId, false, res);
 }
 
 /**
- * Toggles the scoreboard visibility
+ * Makes the scoreboard visible
  * @param req
  * @param res
  * @returns void
  */
 export function showScoreboard(req, res) {
-    if (!req.params.contestId) {
-        res.status(400).end();
-    } else {
-        Contest.findOne({ cuid: req.params.contestId }).exec((err, contest) => {
-            if (err) {
-                res.status(500).send(err);
-            } else if (!contest) {
-                res.status(400).send({ err: 'Contest does not exist' });
-            } else {
-                contest.scoreboardVisible = true;
-                contest.save((err, saved) => {
-                    if (err) {
-                        res.status(500).send(err);
-                    } else {
-                        res.json({ success: true });
-                    }
-                });
-            }
-        });
-    }
+    setScoreboardVisibility(req.params.contestId, true, res);
 }
 
 /**
@@ -922,15 +832,31 @@ export function getContestsNotInIds(req, res) {
  * @returns void
  */
 export function deleteContest(req, res) {
-    Contest.findOne({ cuid: req.params.cuid }).exec((err, contest) => {
-        if (err) {
-            res.status(500).send(err);
-        } else if (!contest) {
-            res.status(400).send({ err: 'Contest does not exist' });
-        } else {
-            contest.remove(() => {
-                res.status(200).end();
-            });
+    const removeContest = (contest) => {
+        contest.remove(() => {
+            res.status(200).end();
+        });
+    };
+    callWithContest(req.params.cuid, removeContest, null, res);
+}
+
+
+function callWithContest(contestId, func, select, res) {
+    if (!contestId) {
+        res.status(400).end();
+    } else {
+        let query = Contest.findOne({ cuid: contestId });
+        if (select) {
+            query = query.select(select);
         }
-    });
+        query.exec((err, contest) => {
+            if (err) {
+                res.status(500).send(err);
+            } else if (!contest) {
+                res.status(400).send({ err: 'Contest does not exist' });
+            } else {
+                func(contest);
+            }
+        });
+    }
 }
